@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/SONG_LevelTheme.mp3</SourceFile>
+  <SourceTime>2022-05-13T19:35:37.2366304-04:00</SourceTime>
+  <DestFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/Content/SONG_LevelTheme.xnb</DestFile>
+  <DestTime>2022-05-15T20:44:30.7755997-04:00</DestTime>
+  <Importer>Mp3Importer</Importer>
+  <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
+  <Processor>SongProcessor</Processor>
+  <ProcessorTime>2020-08-10T12:17:54-04:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput>
+    <string>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/Content/SONG_LevelTheme.ogg</string>
+  </BuildOutput>
+</PipelineBuildEvent>

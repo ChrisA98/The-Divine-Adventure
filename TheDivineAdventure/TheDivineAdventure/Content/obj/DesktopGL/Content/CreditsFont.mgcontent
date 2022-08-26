@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/CreditsFont.spritefont</SourceFile>
+  <SourceTime>2022-05-13T19:35:37.0865076-04:00</SourceTime>
+  <DestFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/Content/CreditsFont.xnb</DestFile>
+  <DestTime>2022-05-15T20:44:23.2745569-04:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2020-08-10T12:17:54-04:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

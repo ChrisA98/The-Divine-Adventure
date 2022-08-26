@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/SOUND_TradeOff.wav</SourceFile>
+  <SourceTime>2022-05-13T19:35:37.2914576-04:00</SourceTime>
+  <DestFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/Content/SOUND_TradeOff.xnb</DestFile>
+  <DestTime>2022-05-15T20:44:32.6841852-04:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2020-08-10T12:17:54-04:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
