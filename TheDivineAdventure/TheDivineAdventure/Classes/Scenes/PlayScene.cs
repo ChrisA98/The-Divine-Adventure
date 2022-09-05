@@ -3,14 +3,19 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using MGSkinnedModel;
+using System.Diagnostics;
 
 using System;
 using System.Collections.Generic;
+using TheDivineAdventure.SkinModels;
 
 namespace TheDivineAdventure
 {
     public class PlayScene : Scene
     {
+        //Display
+        GraphicsDevice gpu;
         //2d Textures
         private Texture2D hudL1, hudL2, progIcon, healthBar, staminaBar, manaBar, clericIcon, clericProjectileTex, clericProjImpact,
             rogueIcon, warriorIcon, mageIcon;
@@ -23,15 +28,26 @@ namespace TheDivineAdventure
         private List<WorldSprite> projectileImpacts;
 
         // 3D Assets
-        public Model warriorModel, rogueModel, mageModel, clericModel;
+        public Model warriorModel, rogueModel, mageModel;
         public Model demonModel;
         public Model level1Model;
         public Model playerProjModel, enemyProjModel;
         public Model playerMelModel, enemyMelModel;
         public Model portalModel;
 
+        // Animated Models
+        SkinModelLoader skinModel_loader;           //Loads characters
+        SkinFx          skinFx;                     //controls for SkinEffect
+        SkinModel[]     playerModel;                //main character model
+        const int IDLE = 0, WALK = 1, RUN = 2, ATTACK1 = 3; // (could use enum but easier to index without casting)
+        Matrix mtx_hero_rotate;
+
         //Capture travel distance
         float travel;
+
+        bool init; // indicate loading into level
+
+
         //Camera
         private Camera camera;
         public Vector3 playerPos;
@@ -53,14 +69,14 @@ namespace TheDivineAdventure
 
         public PlayScene(SpriteBatch sb, GraphicsDeviceManager graph, Game1 game, ContentManager cont) : base(sb, graph, game, cont)
         {
+            //Display
+            gpu = game.GraphicsDevice;
 
         }
 
         //initialize game objects and load level
         public override void Initialize()
         {
-            base.Initialize();
-            LoadContent();
             //hide cursor
             parent.showCursor = false;
             Mouse.SetPosition((int)(1920*parent.currentScreenScale.X/2), (int)(1080f * parent.currentScreenScale.Y / 2));
@@ -77,7 +93,8 @@ namespace TheDivineAdventure
             {
                 Rot = new Vector3(0, 356, 0)
             };
-            camera = new Camera(parent.GraphicsDevice, Vector3.Up, player, this);
+            playerModel = new SkinModel[3];
+            camera = new Camera(parent.GraphicsDevice, Vector3.Up);
             enemyList = new List<Enemy>();
             projectileImpacts = new List<WorldSprite>();
 
@@ -102,6 +119,12 @@ namespace TheDivineAdventure
 
             //make player alive
             isDead = false;
+
+            init = true; // indicate loading into level
+
+
+            LoadContent();
+            base.Initialize();
         }
 
         public override void LoadContent()
@@ -132,12 +155,34 @@ namespace TheDivineAdventure
             //load skybox
             sky = new Skybox("TEX_SkyboxLevel1", Content);
 
-            // Load 3D models
-            // Heroes
-            warriorModel = Content.Load<Model>("MODEL_Warrior");
-            rogueModel = Content.Load<Model>("MODEL_Rogue");
-            mageModel = Content.Load<Model>("MODEL_Mage");
-            clericModel = Content.Load<Model>("MODEL_Cleric");
+            #region LOAD PLAYER 3D MODELS AND ANIMATIONS-------------
+
+            // SKIN MODEL LOADER //
+            skinFx = new SkinFx(Content, camera, "SkinEffect");
+            skinModel_loader = new SkinModelLoader(Content, gpu);
+            skinModel_loader.SetDefaultOptions(0.1f, "default_tex");
+
+            // LOAD HERO ANIMATIONS //
+            switch (player.role)
+            {
+                case "WARRIOR":
+                    warriorModel = Content.Load<Model>("MODEL_Warrior");
+                    break;
+                case "ROGUE":
+                    rogueModel = Content.Load<Model>("MODEL_Rogue");
+                    break;
+                case "MAGE":
+                    mageModel = Content.Load<Model>("MODEL_Mage");
+                    break;
+                case "CLERIC":
+                    playerModel[IDLE] = skinModel_loader.Load("MOD_Cleric/ANIM_Cleric_Idle.fbx", "MOD_Cleric", true, 3, skinFx, rescale: 2.2f);
+                    break;
+            }
+
+            mtx_hero_rotate = Matrix.CreateFromYawPitchRoll(MathHelper.Pi, 0, 0); // let's have the character facing the camera at first          
+            skinFx.world = mtx_hero_rotate;
+
+            #endregion -- player models and anims
 
             // Enemies
             demonModel = Content.Load<Model>("MODEL_Demon");
@@ -166,11 +211,17 @@ namespace TheDivineAdventure
 
         }
 
-        //function to do updates when player is playing in level.
+        #region UPDATE-----------
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (init) // INITIALIZE STARTING ANIMS
+            {
+                playerModel[IDLE].BeginAnimation(0, gameTime);  // Begin playing animation
+                init = false;
+            }
+
             //check if player is alive
             player.health = 500;
             if (!isDead)
@@ -179,7 +230,8 @@ namespace TheDivineAdventure
                 if (parent.IsActive)
                 {
                     player.Update(deltaTime, camera);
-                    camera.Update(deltaTime, player);
+                    camera.Update(player.head);
+                    playerModel[IDLE].Update(gameTime);
                 }
                 //pause game on pressing esc
                 if (Keyboard.GetState().IsKeyDown(Keys.Escape) && parent.lastKeyboard.IsKeyUp(Keys.Escape))
@@ -291,7 +343,22 @@ namespace TheDivineAdventure
                 parent.levelEnd1.Initialize();
                 return;
             }
+
+            base.Update(gameTime);
         }
+
+        #endregion -- end update --
+
+        #region SET 3D STATES -----------
+        RasterizerState rs_ccw = new RasterizerState() { FillMode = FillMode.Solid, CullMode = CullMode.CullCounterClockwiseFace};
+        void Set3dStates()
+        {
+            gpu.BlendState = BlendState.NonPremultiplied;
+            gpu.DepthStencilState = DepthStencilState.Default;
+            if(gpu.RasterizerState.CullMode == CullMode.None) { gpu.RasterizerState = rs_ccw;
+            }
+        }
+        #endregion
 
         //function to do draw when player is playing in level.
         public override void Draw(GameTime gameTime)
@@ -299,35 +366,28 @@ namespace TheDivineAdventure
             base.Draw(gameTime);
 
             //draw Skybox
-            sky.Draw(camera.View, camera.Proj, player.Pos, gameTime);
+            sky.Draw(camera.view, camera.proj, player.Pos, gameTime);
             parent.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             parent.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            Set3dStates();
 
             // Render world
             worldLevel = Matrix.CreateScale(1f) *
                         Matrix.CreateRotationY(MathHelper.ToRadians(180f)) *
                         Matrix.CreateTranslation(new Vector3(0, 0, -5));
 
-            level1Model.Draw(worldLevel, camera.View, camera.Proj);
+            level1Model.Draw(worldLevel, camera.view, camera.proj);
 
             // Render player
-            worldPlayer = player.world;
-            switch (player.role)
+            //playerModel[IDLE].Draw(camera, player.world);
+            SkinModel hero = playerModel[IDLE];
+            for (int i= 0; i < hero.meshes.Length; i++)
             {
-                case "WARRIOR":
-                    warriorModel.Draw(worldPlayer, camera.View, camera.Proj);
-                    break;
-                case "ROGUE":
-                    rogueModel.Draw(worldPlayer, camera.View, camera.Proj);
-                    break;
-                case "MAGE":
-                    mageModel.Draw(worldPlayer, camera.View, camera.Proj);
-                    break;
-                case "CLERIC":
-                    clericModel.Draw(worldPlayer, camera.View, camera.Proj);
-                    break;
-            }
-
+                skinFx.SetDiffuseCol(Color.White.ToVector4());
+                skinFx.SetSpecularCol(new Vector3(0.2f, 0.3f, 0.05f));
+                skinFx.SetSpecularPow(256f);
+                hero.DrawMesh(i, camera, player.world, false);
+            }           
 
             // Render player bullets
             foreach (Attack p in player.projList)
@@ -342,7 +402,7 @@ namespace TheDivineAdventure
 
                 if (p.IsMelee)
                 {
-                    playerMelModel.Draw(worldProj, camera.View, camera.Proj);
+                    playerMelModel.Draw(worldProj, camera.view, camera.proj);
                 }
                 else
                 {
@@ -351,11 +411,11 @@ namespace TheDivineAdventure
                     {
                         case "MAGE":
                             //draw 3d model for projectile
-                            playerProjModel.Draw(worldProj, camera.View, camera.Proj);
+                            playerProjModel.Draw(worldProj, camera.view, camera.proj);
                             break;
                         case "CLERIC":
                             //draw a 2d sprite for the projectile
-                            clericProjectile.Draw(secondaryProj, camera.View, camera.Proj);
+                            clericProjectile.Draw(secondaryProj, camera.view, camera.proj);
                             break;
                         default:
                             break;
@@ -376,7 +436,7 @@ namespace TheDivineAdventure
                     case "MAGE":
                         break;
                     case "CLERIC":
-                        imp.Draw(camera.View, camera.Proj);
+                        imp.Draw(camera.view, camera.proj);
                         break;
                 }
             }
@@ -390,17 +450,16 @@ namespace TheDivineAdventure
                 switch (e.Role)
                 {
                     case "DEMON":
-                        demonModel.Draw(worldEnemy, camera.View, camera.Proj);
+                        demonModel.Draw(worldEnemy, camera.view, camera.proj);
                         break;
                     case "HELLHOUND":
-                        //houndModel.Draw(worldEnemy, camera.View, camera.Proj);
+                        //houndModel.Draw(worldEnemy, camera.view, camera.proj);
                         break;
                     case "GOBLIN":
-                        //goblinModel.Draw(worldEnemy, camera.View, camera.Proj);
+                        //goblinModel.Draw(worldEnemy, camera.view, camera.proj);
                         break;
                     case "SKELETON":
-                        //skeleModel.Draw(worldEnemy, camera.View, camera.Proj);
-                        clericModel.Draw(worldEnemy, camera.View, camera.Proj);
+                        //skeleModel.Draw(worldEnemy, camera.view, camera.proj);
                         break;
                 }
 
@@ -411,11 +470,11 @@ namespace TheDivineAdventure
                         Matrix.CreateTranslation(p.Pos);
                     if (p.IsMelee)
                     {
-                        enemyMelModel.Draw(worldProj, camera.View, camera.Proj);
+                        enemyMelModel.Draw(worldProj, camera.view, camera.proj);
                     }
                     else
                     {
-                        enemyProjModel.Draw(worldProj, camera.View, camera.Proj);
+                        enemyProjModel.Draw(worldProj, camera.view, camera.proj);
                     }
                 }
             }

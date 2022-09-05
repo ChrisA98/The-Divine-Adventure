@@ -1,0 +1,274 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "TheDivineAdventure/1.0.0": {
+        "dependencies": {
+          "MonoGame.Content.Builder.Task": "3.8.0.1641",
+          "MonoGame.Framework.DesktopGL": "3.8.0.1641",
+          "Aether.Animation": "1.0.0.0",
+          "Aether.Atlas": "1.0.0.0",
+          "Aether.Content.Pipeline.AnimationImporters": "1.0.0.0",
+          "Aether.Content.Pipeline.AtlasImporter": "1.0.0.0",
+          "Aether.Content.Pipeline.DDSImporter": "1.0.0.0",
+          "Aether.Content.Pipeline.GraphicsImporters": "1.0.0.0",
+          "Aether.Content.Pipeline.RawModelProcessor": "1.0.0.0",
+          "Aether.Content.Pipeline.SLMCImporter": "1.0.0.0",
+          "Aether.Content.Pipeline.VoxelImporters": "1.0.0.0",
+          "Aether.Graphics": "1.0.0.0",
+          "Aether.Shaders.Deferred": "1.0.0.0",
+          "Aether.Shaders.FXAA": "1.0.0.0",
+          "Aether.Shaders.InfiniteGrid": "1.0.0.0"
+        },
+        "runtime": {
+          "TheDivineAdventure.dll": {}
+        }
+      },
+      "MonoGame.Content.Builder.Task/3.8.0.1641": {},
+      "MonoGame.Framework.DesktopGL/3.8.0.1641": {
+        "runtime": {
+          "lib/netstandard2.0/MonoGame.Framework.dll": {
+            "assemblyVersion": "3.8.0.1641",
+            "fileVersion": "3.8.0.1641"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libSDL2-2.0.so.0": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x64/native/libopenal.so.1": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx/native/libSDL2-2.0.0.dylib": {
+            "rid": "osx",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx/native/libopenal.1.dylib": {
+            "rid": "osx",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/SDL2.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "2.0.12.0"
+          },
+          "runtimes/win-x64/native/soft_oal.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/SDL2.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "2.0.12.0"
+          },
+          "runtimes/win-x86/native/soft_oal.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Aether.Animation/1.0.0.0": {
+        "runtime": {
+          "Aether.Animation.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Atlas/1.0.0.0": {
+        "runtime": {
+          "Aether.Atlas.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.AnimationImporters/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.AnimationImporters.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.AtlasImporter/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.AtlasImporter.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.DDSImporter/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.DDSImporter.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.GraphicsImporters/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.GraphicsImporters.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.RawModelProcessor/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.RawModelProcessor.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.SLMCImporter/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.SLMCImporter.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Content.Pipeline.VoxelImporters/1.0.0.0": {
+        "runtime": {
+          "Aether.Content.Pipeline.VoxelImporters.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Graphics/1.0.0.0": {
+        "runtime": {
+          "Aether.Graphics.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Shaders.Deferred/1.0.0.0": {
+        "runtime": {
+          "Aether.Shaders.Deferred.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Shaders.FXAA/1.0.0.0": {
+        "runtime": {
+          "Aether.Shaders.FXAA.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Aether.Shaders.InfiniteGrid/1.0.0.0": {
+        "runtime": {
+          "Aether.Shaders.InfiniteGrid.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TheDivineAdventure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MonoGame.Content.Builder.Task/3.8.0.1641": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oHA60q9MhkqGnSiJlXosdynD400sQ/j1Ef+0XkJYIQT4Io9RQ6Zk8i0vjpnIbQ0PgsoaQN3IRYjNzkhqq3uUGA==",
+      "path": "monogame.content.builder.task/3.8.0.1641",
+      "hashPath": "monogame.content.builder.task.3.8.0.1641.nupkg.sha512"
+    },
+    "MonoGame.Framework.DesktopGL/3.8.0.1641": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rJQlrlHQbnOECYV6EcQ8GlGRQ2lzPTroXQcyyOZ0ki+BQRSJEN2zVBm9skqLiXya348aGAfTSSGTaSKjAy9NaA==",
+      "path": "monogame.framework.desktopgl/3.8.0.1641",
+      "hashPath": "monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+    },
+    "Aether.Animation/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Atlas/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.AnimationImporters/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.AtlasImporter/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.DDSImporter/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.GraphicsImporters/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.RawModelProcessor/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.SLMCImporter/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Content.Pipeline.VoxelImporters/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Graphics/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Shaders.Deferred/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Shaders.FXAA/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aether.Shaders.InfiniteGrid/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

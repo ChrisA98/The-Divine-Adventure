@@ -100,6 +100,7 @@ namespace TheDivineAdventure
             //Rename window
             Window.Title = "The Divine Adventure";
 
+            #region GAME SETTINGS---------------------
             //switch commenting to use saved settings
             if (GameSettings.HasSettings())
             {
@@ -148,6 +149,9 @@ namespace TheDivineAdventure
 
             _graphics.ApplyChanges();
 
+            #endregion -- Settings End --
+           
+            
             //set game window
             _gameWindow = Window;
 
@@ -198,12 +202,6 @@ namespace TheDivineAdventure
 
         protected override void Update(GameTime gameTime)
         {
-            //DEBUG
-            //get screen position for helping place 2d assets
-            //Debug.WriteLine("X: " + mouseState.X);
-            //Debug.WriteLine("Y: " + mouseState.Y);
-            //Debug.WriteLine("----------");
-
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             //Update based on current scene

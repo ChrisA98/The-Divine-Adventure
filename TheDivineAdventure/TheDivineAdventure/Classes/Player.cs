@@ -116,7 +116,9 @@ namespace TheDivineAdventure
             isExhausted = false;
 
             world = Matrix.CreateScale(1f) *
+                        Matrix.CreateRotationX(MathHelper.ToRadians(90)) *
                         Matrix.CreateRotationY(MathHelper.ToRadians(Rot.Y)) *
+                        Matrix.CreateRotationX(MathHelper.ToRadians(0)) *
                         Matrix.CreateTranslation(Pos);
             head = Matrix.CreateScale(1f) *
                         Matrix.CreateRotationX(MathHelper.ToRadians(Rot.X)) *
@@ -244,7 +246,7 @@ namespace TheDivineAdventure
             Abilities(dt, cam);
 
             // Debugging
-            //DebugMode();
+            //DebugMode(dt);
             Mouse.SetPosition(gpu.Viewport.Width / 2, gpu.Viewport.Height / 2);
 
             previousMouseState = Mouse.GetState(); ;
@@ -357,6 +359,10 @@ namespace TheDivineAdventure
                         Matrix.CreateRotationY(MathHelper.ToRadians(Rot.Y)) *
                         Matrix.CreateTranslation(Pos);
 
+            if (Rot.X > 73)
+                rot.X = 73;
+            if (Rot.X < -33)
+                rot.X = -33;
             head = Matrix.CreateScale(1f) *
                         Matrix.CreateRotationX(MathHelper.ToRadians(Rot.X)) *
                         Matrix.CreateRotationY(MathHelper.ToRadians(Rot.Y)) *
@@ -398,7 +404,7 @@ namespace TheDivineAdventure
                             break;
                         case true:
                             soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                            AttackPattern.singleProj(this.Pos, head.Backward*100 + new Vector3(0,5,0),  this.projSpeed, attDmg1, this.projList);
+                            AttackPattern.singleProj(this.Pos, head.Backward*100 + new Vector3(0,-15,0),  this.projSpeed, attDmg1, this.projList);
                             break;
                     }
                     attTimer = maxAttTime;
@@ -436,7 +442,7 @@ namespace TheDivineAdventure
                         case "CLERIC":
                             soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                             soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                            AttackPattern.tripleProj(this.Pos, head.Backward * 1000 + new Vector3(0, 50, 0), this.projSpeed, attDmg2, this.projList);
+                            AttackPattern.tripleProj(this.Pos, head.Backward * 100 + new Vector3(0, -15, 0), this.projSpeed, attDmg2, this.projList);
                             break;
                     }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/MODEL_Warrior.fbx</SourceFile>
-  <SourceTime>2022-05-13T19:35:37.1677903-04:00</SourceTime>
-  <DestFile>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/MODEL_Warrior.xnb</DestFile>
-  <DestTime>2022-08-18T01:15:27.7760002-04:00</DestTime>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MODEL_Warrior.fbx</SourceFile>
+  <SourceTime>2022-08-26T21:46:08.004428-04:00</SourceTime>
+  <DestFile>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/MODEL_Warrior.xnb</DestFile>
+  <DestTime>2022-09-03T20:40:14.5353154-04:00</DestTime>
   <Importer>FbxImporter</Importer>
-  <ImporterTime>2020-08-10T12:17:54-04:00</ImporterTime>
+  <ImporterTime>2018-12-08T11:35:54-05:00</ImporterTime>
   <Processor>ModelProcessor</Processor>
-  <ProcessorTime>2020-08-10T12:17:54-04:00</ProcessorTime>
+  <ProcessorTime>2018-12-08T11:35:54-05:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>0,0,0,0</Value>
@@ -66,7 +66,7 @@
   </Parameters>
   <Dependencies />
   <BuildAsset>
-    <string>D:/Holder/School/TheDivineAdventure/The-Divine-Adventure-main/The-Divine-Adventure-main/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/TEX_Warrior_0.xnb</string>
+    <string>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/TEX_Warrior_0.xnb</string>
   </BuildAsset>
   <BuildOutput />
 </PipelineBuildEvent>

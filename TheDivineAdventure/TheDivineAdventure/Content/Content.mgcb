@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\SKINMESH_DLLs\MGSkinmeshPipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -27,11 +28,38 @@
 /processorParam:TextureFormat=Compressed
 /build:CreditsFont.spritefont
 
+#begin default_tex.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:default_tex.png
+
 #begin EFFECT_Skybox.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:EFFECT_Skybox.fx
+
+#begin MOD_Cleric/ANIM_Cleric_Idle.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Idle.fbx
+
+#begin MOD_Cleric/TEX_Cleric.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Cleric/TEX_Cleric.png
 
 #begin MODEL_Cleric.fbx
 /importer:FbxImporter
@@ -317,6 +345,12 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:MODEL_Warrior.fbx
+
+#begin SkinEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:SkinEffect.fx
 
 #begin SmallFont.spritefont
 /importer:FontDescriptionImporter

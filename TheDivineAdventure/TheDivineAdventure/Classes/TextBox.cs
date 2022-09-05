@@ -12,17 +12,17 @@ namespace TheDivineAdventure
 {
     class TextBox
     {
-        private String text,endMarker;
-        private MouseState mouseState;
-        private KeyboardState keyState;
-        private Vector2 mousePos;
-        private Vector2 pos, res, scale, center;
-        private Color backdrop;
-        private Texture2D baseTex;
-        private bool isSelected, isHi;
-        private SpriteFont font;
-        private Keys[] integerKeys;
-        private int delay, markDelay,maxLength;
+        private String          text,endMarker;
+        private MouseState      mouseState;
+        private KeyboardState   keyState;
+        private Vector2         mousePos;
+        private Vector2         pos, res, scale, center;
+        private Color           backdrop;
+        private Texture2D       baseTex;
+        private bool            isSelected, isHi;
+        private SpriteFont      font;
+        private Keys[]          integerKeys;
+        private int             delay, markDelay,maxLength;
 
         public TextBox (String? placeholder, int maxLength,SpriteFont font, Vector2 Location, int size, Color backColor, Game1 parent)
         {
