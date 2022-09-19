@@ -213,13 +213,7 @@ float4 PixelShader_3Lights_Skin(VS_Out pin) : SV_Target0
     ColorPair lit = ComputeLights(eyeVector, normal, 3);
 
     color.rgb *= lit.diffuse;
-
-    if ((color.a < 0.8) && (lit.specular.r > 0.8)) {              // ADDED THIS TO MAKE EYES LOOK REALLY SHINY:    
-        color.rgb += lit.specular;
-        color.a = 1;
-    }
-    color.rgb += lit.specular * Shine_Amplify * ((1 - color.a) * 100); // <-- super-shiny control version (*100 adds a shine halo)
-    //color.rgb += specular * color.a;                                 // <-- original version
+    color.rgb += lit.specular *  ((1 - color.a) * 100);                                 // <-- original version
     if (FogVector.w > 0) color.rgb = lerp(color.rgb, FogColor * color.a, pin.worldPos.w);
     return color;
 }
@@ -241,7 +235,7 @@ float4 PixelShader_3Lights_Skin_Nmap(VS_N_Out pin) : SV_Target0
     if ((color.a < 0.8) && (lit.specular.r > 0.8)) {                  // ADDED THIS TO MAKE EYES LOOK REALLY SHINY: 
         color.rgb += lit.specular;   color.a = 1;
     }
-    color.rgb += lit.specular * Shine_Amplify * ((1 - color.a) * 100);     // <-- super-shiny control version (*100 adds a shine halo)   //color.rgb += lit.specular * color.a; // <-- original version
+    color.rgb += lit.specular * color.a; // <-- original version
 
     if (FogVector.w > 0) color.rgb = lerp(color.rgb, FogColor * color.a, pin.worldPos.w);
     return color;

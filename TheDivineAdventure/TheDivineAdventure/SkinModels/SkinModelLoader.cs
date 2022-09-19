@@ -74,7 +74,7 @@ namespace TheDivineAdventure.SkinModels
         {
             new NoSkeletonMeshesConfig(false),      // true to disable dummy-skeleton mesh
             new FBXImportCamerasConfig(false),     // true would import cameras
-            //new SortByPrimitiveTypeConfig(Assimp.PrimitiveType.Point | Assimp.PrimitiveType.Line), // primitive types we should remove
+            new SortByPrimitiveTypeConfig(Assimp.PrimitiveType.Point | Assimp.PrimitiveType.Line), // primitive types we should remove
             new VertexBoneWeightLimitConfig(4),    // max weights per vertex (4 is very common - our shader will use 4)
             new NormalSmoothingAngleConfig(100), // if no normals, generate (threshold 66 degrees) 
             new FBXStrictModeConfig(false),        // true only for fbx-strict-mode
@@ -164,7 +164,7 @@ namespace TheDivineAdventure.SkinModels
             foreach (var p in configurations) importer.SetConfig(p);
             importer.Scale = rescale;
 
-            // LOAD FILE INTO "SCENE" (an assimp imported model is in a thing called  Assimp.Scene)
+            // LOAD FILE INTO "SCENE" (an assimp imported model is in a thing called Scene)
             try
             {
                 switch (LoadingLevelPreset)
@@ -243,7 +243,7 @@ namespace TheDivineAdventure.SkinModels
         // C R E A T E   R O O T   N O D E 
         //--------------------------------
         /// <summary> Create a root node </summary>
-        private void CreateRootNode(SkinModel model,  Assimp.Scene scene)
+        private void CreateRootNode(SkinModel model, Assimp.Scene scene)
         {
             model.rootNodeOfTree = new SkinModel.ModelNode();
             model.rootNodeOfTree.name = scene.RootNode.Name;        // set the rootnode
@@ -265,7 +265,7 @@ namespace TheDivineAdventure.SkinModels
         #region C R E A T E   M E S H E S   A N D   B O N E S
         //---------------------------------------------------
         /// <summary> We create model mesh instances for each mesh in scene.meshes. This is just set up here - it doesn't load any data. </summary>
-        private void CreateMeshesAndBones(SkinModel model,  Assimp.Scene scene, int meshIndex)
+        private void CreateMeshesAndBones(SkinModel model, Assimp.Scene scene, int meshIndex)
         {
             if (MeshBoneCreationInfo) Console.WriteLine("\n\n@@@CreateModelMeshesAndBones \n");
 
@@ -314,7 +314,6 @@ namespace TheDivineAdventure.SkinModels
 
                 }
                 model.meshes[mi] = sMesh;        // add the new SkinMesh to the mesh list
-                Debug.WriteLine(sMesh.Name);
                 // SHOW DEBUG INFO (if set to)
                 if (MeshBoneCreationInfo)
                 {
@@ -331,7 +330,7 @@ namespace TheDivineAdventure.SkinModels
         #region S E T U P   M A T E R I A L S   A N D   T E X T U R E S
         //-------------------------------------------------------------
         /// <summary> Loads textures and sets material values to each model mesh. </summary>
-        private void SetupMaterialsAndTextures(SkinModel model,  Assimp.Scene scene)
+        private void SetupMaterialsAndTextures(SkinModel model, Assimp.Scene scene)
         {
             if (MaterialInfo) Console.WriteLine("\n\n@@@SetUpMeshMaterialsAndTextures \n");
 
@@ -536,7 +535,7 @@ namespace TheDivineAdventure.SkinModels
         // http://sir-kimmi.de/assimp/lib_html/structai_animation.html
         // http://sir-kimmi.de/assimp/lib_html/structai_anim_mesh.html            
         #endregion
-        private void PrepareAnimationsData(SkinModel model,  Assimp.Scene scene)
+        private void PrepareAnimationsData(SkinModel model, Assimp.Scene scene)
         {
             if (AnimationInfo) Console.WriteLine("\n\n@@@AnimationsCreateNodesAndCopy \n");
 
@@ -607,7 +606,7 @@ namespace TheDivineAdventure.SkinModels
         #region C O P Y   V E R T E X   I N D E X   D A T A 
         //-------------------------------------------------
         /// <summary> Copy data from scene to our meshes. </summary> // http://sir-kimmi.de/assimp/lib_html/structai_mesh.html#aa2807c7ba172115203ed16047ad65f9e
-        private void CopyVertexIndexData(SkinModel model,  Assimp.Scene scene)
+        private void CopyVertexIndexData(SkinModel model, Assimp.Scene scene)
         {
             if (ConsoleInfo) Console.WriteLine("\n\n@@@CopyVerticeIndiceData \n");
 

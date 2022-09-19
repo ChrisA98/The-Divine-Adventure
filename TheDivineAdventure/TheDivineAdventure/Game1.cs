@@ -57,7 +57,7 @@ namespace TheDivineAdventure
 
         // 2D Assets
         public SpriteFont BigFont, creditsFont, smallFont;
-        public Texture2D cursor, whiteBox;
+        public Texture2D cursor, cursorPress, whiteBox;
         public Rectangle healthBarRec, secondBarRec;
         public bool showCursor;
 
@@ -198,6 +198,7 @@ namespace TheDivineAdventure
 
             //Cursor texture
             cursor = Content.Load<Texture2D>("TEX_cursor");
+            cursorPress = Content.Load<Texture2D>("TEX_cursorClicked");
         }
 
         protected override void Update(GameTime gameTime)
@@ -306,6 +307,8 @@ namespace TheDivineAdventure
                 GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
                 _spriteBatch.Begin();
                 _spriteBatch.Draw(cursor, new Vector2(mouseState.X, mouseState.Y), null, Color.White, 0, Vector2.Zero, currentScreenScale, SpriteEffects.None, 0);
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    _spriteBatch.Draw(cursorPress, new Vector2(mouseState.X+2, mouseState.Y+2), null, Color.White, 0, Vector2.Zero, currentScreenScale, SpriteEffects.None, 0);
                 _spriteBatch.End();
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;

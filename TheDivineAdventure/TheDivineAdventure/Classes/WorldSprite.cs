@@ -19,7 +19,7 @@ namespace TheDivineAdventure
         private Vector2 spriteRes;
         private Rectangle currentBox;
         //location info
-        private Matrix world;
+        public Matrix world;
 
         //render variables
         private Model frame;
@@ -182,9 +182,9 @@ namespace TheDivineAdventure
 
         }
 
-        public void SetPos(Matrix world)
+        public void SetPos(Matrix world_)
         {
-            this.world = world;
+            world = world_;
         }
     }
 }

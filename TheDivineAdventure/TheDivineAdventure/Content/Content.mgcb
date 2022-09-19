@@ -46,8 +46,32 @@
 /processorParam:DebugMode=Auto
 /build:EFFECT_Skybox.fx
 
+#begin MOD_Cleric/ANIM_Cleric_AttackMain.fbx
+/copy:MOD_Cleric/ANIM_Cleric_AttackMain.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_AttackSecondary.fbx
+/copy:MOD_Cleric/ANIM_Cleric_AttackSecondary.fbx
+
 #begin MOD_Cleric/ANIM_Cleric_Idle.fbx
 /copy:MOD_Cleric/ANIM_Cleric_Idle.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Jump.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Jump.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Run.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Run.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Walk.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Walk.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Walk_Left.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Walk_Left.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Walk_Rev.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Walk_Rev.fbx
+
+#begin MOD_Cleric/ANIM_Cleric_Walk_Right.fbx
+/copy:MOD_Cleric/ANIM_Cleric_Walk_Right.fbx
 
 #begin MOD_Cleric/TEX_Cleric.png
 /importer:TextureImporter
@@ -60,6 +84,171 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MOD_Cleric/TEX_Cleric.png
+
+#begin MOD_Mage/ANIM_Mage_AttackMain.fbx
+/copy:MOD_Mage/ANIM_Mage_AttackMain.fbx
+
+#begin MOD_Mage/ANIM_Mage_AttackSecondary.fbx
+/copy:MOD_Mage/ANIM_Mage_AttackSecondary.fbx
+
+#begin MOD_Mage/ANIM_Mage_Idle.fbx
+/copy:MOD_Mage/ANIM_Mage_Idle.fbx
+
+#begin MOD_Mage/ANIM_Mage_Jump.fbx
+/copy:MOD_Mage/ANIM_Mage_Jump.fbx
+
+#begin MOD_Mage/ANIM_Mage_Run.fbx
+/copy:MOD_Mage/ANIM_Mage_Run.fbx
+
+#begin MOD_Mage/ANIM_Mage_Walk.fbx
+/copy:MOD_Mage/ANIM_Mage_Walk.fbx
+
+#begin MOD_Mage/ANIM_Mage_Walk_Left.fbx
+/copy:MOD_Mage/ANIM_Mage_Walk_Left.fbx
+
+#begin MOD_Mage/ANIM_Mage_Walk_Rev.fbx
+/copy:MOD_Mage/ANIM_Mage_Walk_Rev.fbx
+
+#begin MOD_Mage/ANIM_Mage_Walk_Right.fbx
+/copy:MOD_Mage/ANIM_Mage_Walk_Right.fbx
+
+#begin MOD_Mage/MOD_MageStaff.fbx
+/copy:MOD_Mage/MOD_MageStaff.fbx
+
+#begin MOD_Mage/TEX_Mage.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Mage/TEX_Mage.png
+
+#begin MOD_Mage/TEX_Mage_Staff.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Mage/TEX_Mage_Staff.png
+
+#begin MOD_Rogue/ANIM_Rogue_AttackMain_1.fbx
+/copy:MOD_Rogue/ANIM_Rogue_AttackMain_1.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_AttackMain_2.fbx
+/copy:MOD_Rogue/ANIM_Rogue_AttackMain_2.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_AttackSecondary.fbx
+/copy:MOD_Rogue/ANIM_Rogue_AttackSecondary.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Idle.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Idle.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Jump.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Jump.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Run.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Run.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Walk.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Walk.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Walk_Left.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Walk_Left.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Walk_Rev.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Walk_Rev.fbx
+
+#begin MOD_Rogue/ANIM_Rogue_Walk_Right.fbx
+/copy:MOD_Rogue/ANIM_Rogue_Walk_Right.fbx
+
+#begin MOD_Rogue/MOD_Dagger.fbx
+/copy:MOD_Rogue/MOD_Dagger.fbx
+
+#begin MOD_Rogue/TEX_Dagger.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Rogue/TEX_Dagger.png
+
+#begin MOD_Rogue/TEX_Rogue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Rogue/TEX_Rogue.png
+
+#begin MOD_Warrior/ANIM_Warrior_AttackMain.fbx
+/copy:MOD_Warrior/ANIM_Warrior_AttackMain.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_AttackSecondary.fbx
+/copy:MOD_Warrior/ANIM_Warrior_AttackSecondary.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Idle.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Idle.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Jump.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Jump.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Run.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Run.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Walk.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Walk.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Walk_Left.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Walk_Left.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Walk_Rev.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Walk_Rev.fbx
+
+#begin MOD_Warrior/ANIM_Warrior_Walk_Right.fbx
+/copy:MOD_Warrior/ANIM_Warrior_Walk_Right.fbx
+
+#begin MOD_Warrior/MOD_Axe.fbx
+/copy:MOD_Warrior/MOD_Axe.fbx
+
+#begin MOD_Warrior/TEX_Axe.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Warrior/TEX_Axe.png
+
+#begin MOD_Warrior/TEX_Warrior.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Warrior/TEX_Warrior.png
 
 #begin MODEL_Cleric.fbx
 /importer:FbxImporter
@@ -449,18 +638,6 @@
 /processorParam:TextureFormat=Color
 /build:TEX_CharacterSelect_FrontPlate.png
 
-#begin TEX_Cleric.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:TEX_Cleric.png
-
 #begin TEX_Cleric_Icon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -496,6 +673,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_cursor.png
+
+#begin TEX_cursorClicked.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_cursorClicked.png
 
 #begin TEX_DeathScene.png
 /importer:TextureImporter

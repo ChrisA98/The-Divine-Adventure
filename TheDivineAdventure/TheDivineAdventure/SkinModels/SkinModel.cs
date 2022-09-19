@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 // ASSIMP INSTRUCTIONS:
 // AssimpNET is (cross platform) .NET wrapper for Open Asset Import Library 
@@ -31,14 +32,14 @@ namespace TheDivineAdventure.SkinModels
         public int max_bones = 180;
         public Matrix[] skinShaderMatrices;    // these are the real final bone matrices they end up on the shader
         public SkinMesh[] meshes;
-        public ModelNode rootNodeOfTree;        // actual model root node - base node of the model - from here we can locate any node in the chain        
+        public ModelNode rootNodeOfTree;        // actual model root node - base node of the model - from here we can locate any node in the chain
 
         // animations
         public List<RigAnimation> animations = new List<RigAnimation>();
         int currentAnim;
         public int currentFrame;
         public bool animationRunning;
-        bool loopAnimation = true;
+        public bool loopAnimation = true;
         float timeStart;
         public float currentAnimFrameTime;
         public float overrideAnimFrameTime = -1;  // mainly for testing to step thru each frame
@@ -102,6 +103,14 @@ namespace TheDivineAdventure.SkinModels
             UpdateMeshAnims();                                     // update any regular mesh animations
         }
 
+        public void UpdateBlendAnim(SkinModel[] adds,int id1, int id2, float baseWeight, float[] boneWeights)
+        {
+            int[] ids = {id1, id2};
+            BlendAnimations(adds, ids, baseWeight, boneWeights);  // determine local transforms for animation
+            UpdateNodes(rootNodeOfTree);          // update the skeleton 
+            UpdateMeshAnims();                    // update any regular mesh animations
+        }
+
 
         //----------------------------------------------
         // U P D A T E   M O D E L   A N I M A T I O N S
@@ -114,12 +123,39 @@ namespace TheDivineAdventure.SkinModels
             AnimationTimeLogic(gameTime);                                      // process what to do based on animation time (frames, duration, complete | looping)
 
             int cnt = animations[currentAnim].animatedNodes.Count;             // loop thru animated nodes
-            for (int n = 0; n < cnt - 10; n++)
+            for (int n = 0; n < cnt;  n++)
             {
                 AnimNodes animNode = animations[currentAnim].animatedNodes[n]; // get animation keyframe lists (each animNode)
                 ModelNode node = animNode.nodeRef;                         // get bone associated with this animNode (could be mesh-node) 
                 node.local_mtx = animations[currentAnim].Interpolate(currentAnimFrameTime, animNode); // interpolate keyframes (animate local matrix) for this bone
+                //-------Get node ids for bone mapping
+                //ModelNode test = animNode.nodeRef;
+                //Debug.WriteLine(n + "," + test.name);
+                //Debug.WriteLine(" ");
             }
+        }
+
+        //Blend animations
+        private void BlendAnimations(SkinModel[] adds, int[] animID, float baseWeight, float[] boneWeights)
+        {
+            int cnt = animations[currentAnim].animatedNodes.Count;             // loop thru animated nodes
+
+            //blended matrices
+            for (int n = 0; n < cnt; n++)
+            {
+                AnimNodes base_ = adds[0].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base (each animNode)
+                AnimNodes anim1 = adds[animID[0]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base (each animNode)
+                AnimNodes anim2 = adds[animID[1]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from anim1 (each animNode)
+                ModelNode node0 = base_.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
+                ModelNode node1 = anim1.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
+                ModelNode node2 = anim2.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
+
+                float blendWeight = baseWeight * boneWeights[n];          //Get Total Blend Percent
+
+                //blend animations
+                node0.local_mtx = Matrix.Lerp(node1.local_mtx, node2.local_mtx, blendWeight);
+            }
+
         }
 
         //----------------------------------------
@@ -155,6 +191,8 @@ namespace TheDivineAdventure.SkinModels
             }
         }
 
+        //reverse Animation
+
 
         //------------------------
         // U P D A T E   N O D E S 
@@ -170,12 +208,6 @@ namespace TheDivineAdventure.SkinModels
             for (int i = 0; i < node.uniqueMeshBones.Count; i++)
             {
                 ModelBone bn = node.uniqueMeshBones[i];                // refers to the bone in uniqueMeshBones list (holds mesh#, bone#, etc)
-                #region Attempted Explanation (a drawing with arrows would work better ^-^ ): 
-                // Update the shader matrix (final bone transform) - we combine with the offset matrix to negate the original inverse we used 
-                // to be able to do local vertex transforms correctly (which we did because vertices start out relative to a bind pose which we need to find a 
-                // version where that's not so (for local transforms to work correctly) [ thus we used the inverse bind on the original bind-pose bones ]) 
-                // So by adding the offset_mtx back on, the vertices will be transformed in a bind-relative way and reach the correct destination
-                #endregion
                 meshes[bn.meshIndex].shader_matrices[bn.boneIndex] = bn.offset_mtx * node.combined_mtx; // converts resulting vert transforms back to bind-pose-relative space
             }
             foreach (ModelNode n in node.children) UpdateNodes(n);     // do same for children
@@ -197,6 +229,7 @@ namespace TheDivineAdventure.SkinModels
                 }
             }
         }
+
         #endregion // updates
 
 
@@ -210,6 +243,7 @@ namespace TheDivineAdventure.SkinModels
             {
                 var n = value;
                 if (n >= animations.Count) n = 0;
+                if (n < 0) n += animations.Count;
                 currentAnim = n;
             }
         }
@@ -300,7 +334,7 @@ namespace TheDivineAdventure.SkinModels
             skinFx.fx.Parameters["Bones"].SetValue(m.shader_matrices);     // provide the bone matrices of this mesh
             if (use_mesh_materials)
                 AssignMaterials(m, use_material_spec);
-            skinFx.world = world * m.node_with_anim_trans.combined_mtx;    // set model's world transform
+            skinFx.world = m.node_with_anim_trans.combined_mtx * world;    // set model's world transform
 
             // DO LAST (this will apply the technique with any parameters set before it (or in it)): 
             skinFx.SetDrawParams(cam, m.tex_diffuse, m.tex_normalMap, m.tex_specular);
@@ -327,7 +361,16 @@ namespace TheDivineAdventure.SkinModels
         }
         #endregion // draws
 
-
+        #region ---Getting Socket Info --
+        public Matrix GetBoneTransform(int targetNode)
+        {
+            int cnt = animations[currentAnim].animatedNodes.Count;             // loop thru animated nodes
+            if (targetNode > cnt) throw new ArgumentException("target node is outside target animations range");    //make sure target node is good
+            AnimNodes base_ = animations[currentAnim].animatedNodes[targetNode]; // get animation keyframe lists from base (each animNode)
+            ModelNode node = base_.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
+            return node.combined_mtx;
+        }
+        #endregion
 
 
         #region N E S T E D   C L A S S E S -------------------------------------------------------------------------------------------------------------------------------------
@@ -428,7 +471,6 @@ namespace TheDivineAdventure.SkinModels
             public double DurationInSeconds;      // same in seconds
             public double DurationInSecondsAdded; // added seconds
             public double TicksPerSecond;         // ticks/sec (play speed)
-            //public int    TotalFrames;            // total keyed frames
 
             public bool HasMeshAnims;           // contains mesh transform animations (usually no) 
             public bool HasNodeAnims;           // any node-based animations? 
@@ -442,7 +484,6 @@ namespace TheDivineAdventure.SkinModels
 
                 while (animTime > durationSecs)        // If the requested play-time is past the end of the animation, loop it (ie: time = 20 but duration = 16 so time becomes 4)
                     animTime -= durationSecs;
-
                 Quaternion q1 = nodeAnim.qrot[0], q2 = q1;   // init rot as entry 0 for both keys (init may be needed cuz conditional value assignment can upset compiler)
                 Vector3 p1 = nodeAnim.position[0], p2 = p1;   // " pos
                 Vector3 s1 = nodeAnim.scale[0], s2 = s1;   // " scale
@@ -568,7 +609,7 @@ namespace TheDivineAdventure.SkinModels
             public double GetInterpolateTimePercent(double s, double e, double val)
             {
                 if (val < s || val > e)
-                    throw new Exception("SkinModel.cs RigAnimation GetInterpolateTimePercent :  Value " + val + " passed to the method must be within the start and end time. ");
+                    throw new Exception(this.ToString()+".cs RigAnimation GetInterpolateTimePercent :  Value " + val + " passed to the method must be within the start and end time. ");
                 if (s == e) throw new Exception("SkinModel.cs RigAnimation GetInterpolateTimePercent :  e - s :  " + e + "-" + s + "=0  - Divide by zero error.");
                 return (val - s) / (e - s);
             }

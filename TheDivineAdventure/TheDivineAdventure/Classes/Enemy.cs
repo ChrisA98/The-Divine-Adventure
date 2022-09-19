@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace TheDivineAdventure
 {
-    class Enemy
+    public class Enemy
     {
         ///////////////
         ///VARIABLES///
@@ -28,6 +28,7 @@ namespace TheDivineAdventure
         private double speedFactor;
         private Boolean ranged;
         private bool timeToDestroy;
+        private PlayScene parentScene;
 
         //random spawning
         Random randX = new Random();
@@ -50,13 +51,14 @@ namespace TheDivineAdventure
         /////////////////
         ///CONSTRUCTOR///
         /////////////////
-        public Enemy(List<SoundEffect> s, string r, Vector3 pPos)
+        public Enemy(List<SoundEffect> s, string r, Vector3 pPos, PlayScene parent)
         {
             maxTime = 2.5f;
             soundEffects = s;
             role = r;
             height = HEIGHTS[Array.IndexOf(ROLES, role)];
             pos = new Vector3((float)randX.Next(0, 40), 0 - height, (float)randZ.Next((int)pPos.Z + 200, (int)pPos.Z + 500));
+            parentScene = parent;
 
             //adjust orientation and enemy values for health/speed
             rot = 180f;
@@ -118,9 +120,6 @@ namespace TheDivineAdventure
 
         }
 
-
-
-
         public void facePlayer(Player player)
         {
             //change enemies orientation, face to the player
@@ -171,7 +170,7 @@ namespace TheDivineAdventure
                 enemyDir = Vector3.Transform(Vector3.Backward,
                 Matrix.CreateRotationY(rot));
 
-                AttackPattern.singleProj(this.Pos, enemyDir, 15f, 50, projList);
+                AttackPattern.singleProj(this.Pos, enemyDir, 15f, 50, projList, parentScene.Camera);
                 timer = maxTime;
 
             }

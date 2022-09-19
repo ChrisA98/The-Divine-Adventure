@@ -12,3 +12,6 @@ Warrior: - 500
 Rogue: - 100
 Rogue: - 0
 Rogue: - 0
+Cleric: - 0
+Cleric: - 0
+Warrior: - 0

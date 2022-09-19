@@ -61,7 +61,27 @@ namespace TheDivineAdventure.SkinModels
             if (enableFog) ToggleFog();
         }
 
+        public SkinFx(ContentManager Content, string fx_filename, bool enableFog = false)
+        {
+            lights = new DirectionLight[3];
+            for (int i = 0; i < 3; i++) lights[i] = new DirectionLight();
+            default_tex = Content.Load<Texture2D>("default_tex");
+            fx = Content.Load<Effect>(fx_filename);
+            Matrix[] identityBones = new Matrix[MAX_BONES];
+            for (int i = 0; i < MAX_BONES - 1; i++)
+            {
+                identityBones[i] = Matrix.Identity;
+            }
+            SetBoneTransforms(identityBones);
+            fx.Parameters["TexDiffuse"].SetValue(default_tex);
+            fx.Parameters["DiffuseColor"].SetValue(diffuseCol);
+            fx.Parameters["EmissiveColor"].SetValue(emissiveCol);
+            fx.Parameters["SpecularColor"].SetValue(specularCol);
+            fx.Parameters["SpecularPower"].SetValue(specularPow);
 
+            SetDefaultLighting();
+            if (enableFog) ToggleFog();
+        }
 
         //--------------------------------------
         // S E T   B O N E   T R A N S F O R M S 
@@ -81,7 +101,7 @@ namespace TheDivineAdventure.SkinModels
         //----------------------------------------------
         public void SetDefaultLighting()
         {
-            float u = cam.up.Y;     // I assume up is -Y or +Y
+            float u = Vector3.Up.Y;     // I assume up is -Y or +Y
             ambientCol = new Vector3(0.05333332f, 0.09882354f, 0.1819608f);
             lights[0].direction = new Vector3(-0.5265408f, -0.5735765f * u, -0.6275069f); // Key light.
             lights[0].diffuseColor = new Vector3(1, 0.9607844f, 0.8078432f);
@@ -205,8 +225,7 @@ namespace TheDivineAdventure.SkinModels
         public void SetDiffuseCol(Vector4 diffuse) { diffuseCol = diffuse; }
         public void SetEmissiveCol(Vector3 emissive) { emissiveCol = emissive; }
         public void SetSpecularCol(Vector3 specular) { specularCol = specular; fx.Parameters["SpecularColor"].SetValue(specularCol); }
-        public void SetSpecularPow(float power) { specularPow = power; fx.Parameters["SpecularPower"].SetValue(power); }
-        public void SetShineAmplify(float amp) { fx.Parameters["Shine_Amplify"].SetValue(amp); }        // currently using to make eyes more shiny (triggered by low alpha)    
+        public void SetSpecularPow(float power) { specularPow = power; fx.Parameters["SpecularPower"].SetValue(power); }    
 
     }
 }

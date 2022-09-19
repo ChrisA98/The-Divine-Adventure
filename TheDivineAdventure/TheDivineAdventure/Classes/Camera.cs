@@ -6,7 +6,7 @@ using System;
 
 namespace TheDivineAdventure
 {
-    class Camera
+    public class Camera
     {
         public float CAM_HEIGHT = 12;        // default up-distance from player's root position (depends on character size - 80 up in y direction to look at head)
         public float HEAD_OFFSET = 12;
@@ -18,11 +18,10 @@ namespace TheDivineAdventure
         Vector3 unit_direction;    // direction of camera (normalized to distance of 1 unit)
 
 
-        // C O N S T R U C T 
         public Camera(GraphicsDevice gpu, Vector3 UpDirection)
         {
             up = UpDirection;
-            pos = new Vector3(20, 12, -90);
+            pos = new Vector3(20, CAM_HEIGHT, -90);
             target = Vector3.Zero;
             view = Matrix.CreateLookAt(pos, target, up);
             proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, gpu.Viewport.AspectRatio, 1.0f, FAR_PLANE);
@@ -30,12 +29,24 @@ namespace TheDivineAdventure
             unit_direction = view.Forward; unit_direction.Normalize();
         }
 
-        // U P D A T E    P L A Y E R    C A M 
+        public Camera(GraphicsDevice gpu, Vector3 UpDirection, Player player)
+        {
+            up = UpDirection;
+            if (player.role == "WARRIOR") CAM_HEIGHT = 36;
+            pos = new Vector3(20, CAM_HEIGHT, -90);
+            target = Vector3.Zero;
+            view = Matrix.CreateLookAt(pos, target, up);
+            proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, gpu.Viewport.AspectRatio, 1.0f, FAR_PLANE);
+            view_proj = view * proj;
+            unit_direction = view.Forward; unit_direction.Normalize();
+        }
+
+        //Update Player Cam
         public void Update(Matrix hero_pos)
         {
-            pos = hero_pos.Translation - (hero_pos.Backward * 35) + new Vector3(-4, 18, 0);
+            pos = hero_pos.Translation - (hero_pos.Backward * 35) + new Vector3(0, CAM_HEIGHT, 0)+ (hero_pos.Left * 4);
             target = hero_pos.Translation;
-            view = Matrix.CreateLookAt(pos, target + new Vector3(-4, 9, 0), up);
+            view = Matrix.CreateLookAt(pos, target + new Vector3(0, CAM_HEIGHT*0.65f, 0)+ (hero_pos.Left * 4), up);
             view_proj = view * proj;
         }
 

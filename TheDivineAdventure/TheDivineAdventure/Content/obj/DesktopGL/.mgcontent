@@ -9,6 +9,12 @@
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/default_tex.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/EFFECT_Skybox.fx</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Cleric/TEX_Cleric.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Mage/TEX_Mage.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Mage/TEX_Mage_Staff.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Rogue/TEX_Dagger.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Rogue/TEX_Rogue.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Warrior/TEX_Axe.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Warrior/TEX_Warrior.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MODEL_Cleric.fbx</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MODEL_ClericProjectile.fbx</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MODEL_Demon.fbx</File>
@@ -38,10 +44,10 @@
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_Brimstone.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_CharacterSelect_Backdrop.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_CharacterSelect_FrontPlate.png</File>
-    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_Cleric.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_Cleric_Icon.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_ClericProjectileImpact_Sheet.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_cursor.png</File>
+    <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_cursorClicked.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_DeathScene.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_DemonSpriteSheet.png</File>
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_DivineProjectile01_Base.png</File>
@@ -84,6 +90,12 @@
     <File>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/TEX_Warrior_Icon.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

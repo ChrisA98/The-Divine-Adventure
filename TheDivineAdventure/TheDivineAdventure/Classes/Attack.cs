@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TheDivineAdventure
 {
-    class Attack
+    public class Attack
     {
         ///////////////
         ///VARIABLES///
@@ -14,9 +14,10 @@ namespace TheDivineAdventure
         // Info
         private bool isMelee, timeToDestroy; //destroys object when true
         private float damage;
+        private Camera cam;
 
         // Movement
-        private Matrix cameraLookAt;
+        public Matrix cameraLookAt;
         private Vector3 initPos, pos, rot;
         private Vector3 dest, vel;
         private float distance;
@@ -28,17 +29,19 @@ namespace TheDivineAdventure
 
         // Sound
 
-        /////////////////
-        ///CONSTRUCTOR///
-        /////////////////
-        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt)
+        #region Constructors
+
+        // -- Ranged Attack --
+        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt, Camera cam_)
         {
             // Set the projectiles initial position
             initPos = origin;
             pos = initPos;
 
+            cam = cam_;     //define player camera
 
-            //cameraLookAt = origin;
+
+            cameraLookAt = Matrix.CreateLookAt(pos,cam.pos,Vector3.Up);  //face sprite towards player
 
 
             // Set the projectiles destintation
@@ -53,29 +56,51 @@ namespace TheDivineAdventure
                         + target.Z * target.Z);
 
             // Determine the velocity on each axis using the distance
-            if (pSpeed <= 0)
-            {
-                isMelee = true;
-            }
-            else
-            {
-                isMelee = false;
-                speed = pSpeed * 50;
-                vel.X = (target.X / distance) * speed;
-                vel.Y = (target.Y / distance) * speed;
-                vel.Z = (target.Z / distance) * speed;
-            }
+            
+            isMelee = false;
+            speed = pSpeed * 50;
+            vel.X = (target.X / distance) * speed;
+            vel.Y = (target.Y / distance) * speed;
+            vel.Z = (target.Z / distance) * speed;
 
             // Timer stats
-            if (isMelee)
-                timer = 0.1f;
-            else
-                timer = 1f;
+            timer = 1f;
             timeToDestroy = false;
 
             //define damage amount
             damage = damageAmt;
         }
+
+        // -- Melee Attack
+        public Attack(Vector3 origin, Vector3 target, float damageAmt)
+        {
+            // Set the projectiles initial position
+            initPos = origin;
+            pos = initPos;
+
+            // Set the projectiles destintation
+            dest.X = target.X - pos.X;
+            dest.Y = target.Y - pos.Y;
+            dest.Z = target.Z - pos.Z;
+
+            // Find the distance between them
+            distance = (float)Math.Sqrt(
+                        target.X * target.X
+                        + target.Y * target.Y
+                        + target.Z * target.Z);
+
+            // Determine the velocity on each axis using the distance
+            isMelee = true;
+
+            // Timer stats
+            timer = 0.1f;
+            timeToDestroy = false;
+
+            //define damage amount
+            damage = damageAmt;
+        }
+
+        #endregion
 
         ///////////////
         ///FUNCTIONS///
@@ -84,6 +109,7 @@ namespace TheDivineAdventure
         {
             if (timer > 0f)
             {
+                cameraLookAt = Matrix.CreateLookAt(pos, cam.pos, Vector3.Up);
                 if (CheckCollision(player))
                 {
                     player.Health -= damage;

@@ -3,5 +3,5 @@ Screen Height: - 1080
 Window Mode: - 1
 Antialiasing: - 0
 Master Volume: - 0
-Music Volume: - 0.093333334
-SFX Volume: - 0.22333333
+Music Volume: - 0.16
+SFX Volume: - 0.16
