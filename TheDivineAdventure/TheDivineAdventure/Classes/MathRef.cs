@@ -55,15 +55,4 @@ namespace TheDivineAdventure
         }
     }
 
-
-
-    // M A F   E X T E N S I O N S
-    static class MathRefExtensions
-    {
-        public static float ToAngle(this Vector2 vector)
-        {
-            return (float)Math.Atan2(vector.Y, vector.X);
-        }
-    }
-
 }

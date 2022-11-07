@@ -191,7 +191,7 @@ namespace TheDivineAdventure
         private List<(string Role, int Score)> GetHighScore()
         {
             //define file path
-            string filePath = (Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString() + @"\Level1_HighScores.txt");
+            string filePath = Directory.GetCurrentDirectory() + @"\Level1_HighScores.txt";
             //write file to array
             string[] text = File.ReadAllLines(filePath);
             //creat empty tuple list

@@ -27,12 +27,13 @@ namespace TheDivineAdventure
             parent.showCursor = false; ;
 
             credits = new string[]  {"Game Programmers", "       Christopher Adkins", "       Sean Blankenship", "       Hayden Michael", "       Lucas Reed",
-                " ","Game Artists", "       2D Assets: Christopher Adkins", "       3D Assets: Sean Blankenship",
+                " ","Game Artists", "       2D Assets: Christopher Adkins", "       3D Assets: Sean Blankenship", "       Christopher Adkins",
                 " ","Music Used", "       Janus Turning", "              by Shane Ivers",
-                " ","Game Testers", "       Christopher Adkins", "       Sean Blankenship", "       Hayden Michael", "       Lucas Reed",
-                " ","Created using MonoGame ",
+                " ","Game Testers", "       Christopher Adkins", "       Sean Blankenship", "       Hayden Michael", "       Lucas Reed","       Joseph Park",
+                "Noah Adkins",
+                " ","Created using MonoGame Framework ",
                 " ","Thank you for your time! "};
-            creditsRuntime = 800;
+            creditsRuntime = 820;
         }
 
         public override void LoadContent()

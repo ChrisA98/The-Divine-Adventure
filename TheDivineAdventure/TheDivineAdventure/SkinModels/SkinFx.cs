@@ -5,14 +5,14 @@ using System;
 
 namespace TheDivineAdventure.SkinModels
 {
-    class DirectionLight
+    public class DirectionLight
     {
         public Vector3 direction;
         public Vector3 diffuseColor;
         public Vector3 specularColor;
     }
 
-    class SkinFx
+    public class SkinFx
     {
         public const int MAX_BONES = 180;          // This should match number in custom SkinEffect.fx
         public const int WEIGHTS_PER_VERTEX = 4;
@@ -36,7 +36,7 @@ namespace TheDivineAdventure.SkinModels
 
 
         //------------------
-        // C O N S T R U C T
+        // CONSTRUCT
         //------------------
         public SkinFx(ContentManager Content, Camera Cam, string fx_filename, bool enableFog = false)
         {
@@ -84,7 +84,7 @@ namespace TheDivineAdventure.SkinModels
         }
 
         //--------------------------------------
-        // S E T   B O N E   T R A N S F O R M S 
+        // SET BONE TRANSFORMS 
         //--------------------------------------
         /// <summary> Sets an array of skinning bone transform matrices. </summary>
         public void SetBoneTransforms(Matrix[] boneTransforms)
@@ -97,21 +97,21 @@ namespace TheDivineAdventure.SkinModels
 
 
         //----------------------------------------------
-        // S E T   D E F A U L T   L I G H T I N G
+        // SET DEFAULT LIGHTING
         //----------------------------------------------
         public void SetDefaultLighting()
         {
             float u = Vector3.Up.Y;     // I assume up is -Y or +Y
-            ambientCol = new Vector3(0.05333332f, 0.09882354f, 0.1819608f);
+            ambientCol = new Vector3(.1f, 0.09882354f, 0.1819608f);
             lights[0].direction = new Vector3(-0.5265408f, -0.5735765f * u, -0.6275069f); // Key light.
             lights[0].diffuseColor = new Vector3(1, 0.9607844f, 0.8078432f);
-            lights[0].specularColor = new Vector3(1, 0.9607844f, 0.8078432f);
+            lights[0].specularColor = new Vector3(1, 0f, 0f);
             lights[1].direction = new Vector3(0.7198464f, 0.3420201f * u, 0.6040227f);    // Fill light
             lights[1].diffuseColor = new Vector3(0.9647059f, 0.7607844f, 0.4078432f);
-            lights[1].specularColor = Vector3.Zero;
+            lights[0].specularColor = new Vector3(1, 0f, 0f);
             lights[2].direction = new Vector3(0.4545195f, -0.7660444f * u, 0.4545195f);   // Back light
             lights[2].diffuseColor = new Vector3(0.3231373f, 0.3607844f, 0.3937255f);
-            lights[2].specularColor = new Vector3(0.3231373f, 0.3607844f, 0.3937255f);
+            lights[2].specularColor = new Vector3(1, 0f, 0f);
             fx.Parameters["LightDir1"].SetValue(lights[0].direction);
             fx.Parameters["LightDiffCol1"].SetValue(lights[0].diffuseColor);
             fx.Parameters["LightSpecCol1"].SetValue(lights[0].specularColor);
@@ -125,7 +125,7 @@ namespace TheDivineAdventure.SkinModels
 
 
 
-        // S E T   D I R E C T I O N A L   L I G H T 
+        // SET DIRECTIONAL LIGHT 
         public void SetDirectionalLight(int index, Vector3 direction, Color diffuse_color, Color specular_color)
         {
             if (index >= 3) return;
@@ -149,31 +149,29 @@ namespace TheDivineAdventure.SkinModels
             }
         }
 
-
-
         public void SetFogStart(float fog_start) { fogEnabled = false; fogStart = fog_start; ToggleFog(); }
         public void SetFogEnd(float fog_end) { fogEnabled = false; fogEnd = fog_end; ToggleFog(); }
         public void SetFogColor(Color fog_color) { fx.Parameters["FogColor"].SetValue(fog_color.ToVector3()); }
 
-        // T O G G L E   F O G 
+        // T0GGLE FOG 
         public void ToggleFog()
         {
             if (!fogEnabled)
             {
                 if (fogStart == fogEnd)
                 {
-                    fx.Parameters["FogVector"].SetValue(new Vector4(0, 0, 0, 1));
+                    fx.Parameters["FogVector"].SetValue(new Vector4(0, 0, 0, 1));   //disable fog
                 }
                 else
                 {
-                    // We want to transform vertex positions into view space, take the resulting Z value, then scale and offset according to the fog start/end distances.
-                    // Because we only care about the Z component, the shader can do all this with a single dot product, using only the Z row of the world+view matrix.
-                    float scale = 1f / (fogStart - fogEnd);
-                    Vector4 fogVector = new Vector4();
-                    fogVector.X = worldView.M13 * scale;
-                    fogVector.Y = worldView.M23 * scale;
-                    fogVector.Z = worldView.M33 * scale;
-                    fogVector.W = (worldView.M43 + fogStart) * scale;
+                    float scale = .2f / (fogStart - fogEnd);
+                    Vector4 fogVector = new Vector4
+                    {
+                        X = worldView.M13 * scale,
+                        Y = worldView.M23 * scale,
+                        Z = worldView.M33 * scale,
+                        W = (worldView.M43 + fogStart) * scale
+                    };
                     fx.Parameters["FogVector"].SetValue(fogVector);
                     fogEnabled = true;
                 }
@@ -181,10 +179,13 @@ namespace TheDivineAdventure.SkinModels
             else { fx.Parameters["FogVector"].SetValue(Vector4.Zero); fogEnabled = false; }
         }
 
-
+        public void DisableFog()
+        {
+            fx.Parameters["FogVector"].SetValue(Vector4.Zero); fogEnabled = false;
+        }
 
         //------------------------------
-        // S E T   D R A W   P A R A M S (use just before drawing)
+        // SET DRAW PARAMS(use just before drawing)
         //------------------------------
         public void SetDrawParams(Camera cam, Texture2D texture = null, Texture2D normalMapTex = null, Texture2D specularTex = null)
         {
@@ -206,10 +207,24 @@ namespace TheDivineAdventure.SkinModels
             fx.Parameters["CamPos"].SetValue(cam.pos);
             if (texture != null) fx.Parameters["TexDiffuse"].SetValue(texture);
             else fx.Parameters["TexDiffuse"].SetValue(default_tex);
-            //if (specularTex  != null) fx.Parameters["TexSpecular"].SetValue(specularTex);
             fx.Parameters["WorldInverseTranspose"].SetValue(worldInverseTranspose);
             fx.Parameters["DiffuseColor"].SetValue(diffuse);
             fx.Parameters["EmissiveColor"].SetValue(emissive);
+
+            // Update Fog
+            if (fogEnabled)
+            {
+                float scale = .2f / (fogStart - fogEnd);
+                Vector4 fogVector = new Vector4
+                {
+                    X = worldView.M13 * scale,
+                    Y = worldView.M23 * scale,
+                    Z = worldView.M33 * scale,
+                    W = (worldView.M43 + fogStart) * scale
+                };
+                fx.Parameters["FogVector"].SetValue(fogVector);
+            }
+
             if (normalMapTex == null)
             {
                 fx.CurrentTechnique = fx.Techniques["Skin_Directional_Fog"];
@@ -224,7 +239,7 @@ namespace TheDivineAdventure.SkinModels
 
         public void SetDiffuseCol(Vector4 diffuse) { diffuseCol = diffuse; }
         public void SetEmissiveCol(Vector3 emissive) { emissiveCol = emissive; }
-        public void SetSpecularCol(Vector3 specular) { specularCol = specular; fx.Parameters["SpecularColor"].SetValue(specularCol); }
+        public void SetSpecularCol(Vector3 specular) { this.specularCol = specular; fx.Parameters["SpecularColor"].SetValue(specularCol); }
         public void SetSpecularPow(float power) { specularPow = power; fx.Parameters["SpecularPower"].SetValue(power); }    
 
     }

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<test_level>
+	<room>
+		<room_id> 0 </room_id>
+		<floor>
+			<pos>(0,0,0)</pos>
+			<coll_bounds>(140,1,140)</coll_bounds>
+			<rot>(0,0,0)</rot>
+		</floor>
+		<floor>
+			<model>TestFloor01.fbx</model>
+			<pos>(90,20,90)</pos>
+			<coll_bounds>(140,1,50)</coll_bounds>
+			<rot>(0,45,0)</rot>
+		</floor>
+		<spawner>
+			<pos>(0,0,0)</pos>
+			<range>140</range>
+			<spawn_list>(1,1,1,1)</spawn_list>
+		</spawner>
+		<static_collision_mesh>
+			<model>TestWall01.fbx</model>
+			<pos>(90,50,90)</pos>
+			<coll_bounds>(10,10,1)</coll_bounds>
+			<rot>(0,45,0)</rot>
+		</static_collision_mesh>
+	</room>
+	
+</test_level>

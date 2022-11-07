@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using TheDivineAdventure;
 
 namespace TheDivineAdventure
 {
@@ -14,54 +15,41 @@ namespace TheDivineAdventure
         // Info
         private bool isMelee, timeToDestroy; //destroys object when true
         private float damage;
+        private float force;
         private Camera cam;
+        private Shapes hitbox;
 
         // Movement
         public Matrix cameraLookAt;
-        private Vector3 initPos, pos, rot;
-        private Vector3 dest, vel;
-        private float distance;
+        private Vector3 initPos, pos;
+        private Vector3 vel;
         private float speed;
 
         // Timer
         public float timer;        //how long the projectile stays active
 
-
         // Sound
 
-        #region Constructors
+        #region <<Constructors>>
 
         // -- Ranged Attack --
-        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt, Camera cam_)
+        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt, Camera cam,  float force_ = 1)
         {
             // Set the projectiles initial position
             initPos = origin;
             pos = initPos;
 
-            cam = cam_;     //define player camera
-
-
-            cameraLookAt = Matrix.CreateLookAt(pos,cam.pos,Vector3.Up);  //face sprite towards player
-
-
             // Set the projectiles destintation
-            dest.X = target.X - pos.X;
-            dest.Y = target.Y - pos.Y;
-            dest.Z = target.Z - pos.Z;
+            vel = target - origin;
+            vel.Normalize();
 
-            // Find the distance between them
-            distance = (float)Math.Sqrt(
-                        target.X * target.X
-                        + target.Y * target.Y
-                        + target.Z * target.Z);
+            //define hitbox cube
+            hitbox = new Shapes(cam.gpu, Color.Red, Vector3.Zero, origin + target, this.GetType());
+            hitbox.DefineCuboid(Vector3.One);
 
-            // Determine the velocity on each axis using the distance
-            
             isMelee = false;
             speed = pSpeed * 50;
-            vel.X = (target.X / distance) * speed;
-            vel.Y = (target.Y / distance) * speed;
-            vel.Z = (target.Z / distance) * speed;
+            vel *= speed;
 
             // Timer stats
             timer = 1f;
@@ -69,35 +57,38 @@ namespace TheDivineAdventure
 
             //define damage amount
             damage = damageAmt;
+            force = force_;
         }
 
-        // -- Melee Attack
-        public Attack(Vector3 origin, Vector3 target, float damageAmt)
+        // -- Melee Attack --
+        public Attack(Vector3 origin, Vector3 target, Vector3 rot, float damageAmt, Vector3 attackScale, Camera cam_, float force_ = 1)
         {
             // Set the projectiles initial position
             initPos = origin;
             pos = initPos;
 
+
             // Set the projectiles destintation
-            dest.X = target.X - pos.X;
-            dest.Y = target.Y - pos.Y;
-            dest.Z = target.Z - pos.Z;
+            vel = target - origin;
+            vel = Vector3.Normalize(vel);
 
-            // Find the distance between them
-            distance = (float)Math.Sqrt(
-                        target.X * target.X
-                        + target.Y * target.Y
-                        + target.Z * target.Z);
+            cam = cam_;
 
-            // Determine the velocity on each axis using the distance
-            isMelee = true;
+            //define hitbox cube
+            hitbox = new Shapes(cam.gpu, Color.Red, rot, target+origin, GetType());
+            hitbox.DefineCuboid(attackScale);
+            hitbox.Position = pos;
+            hitbox.Rotation = rot;
+
+
+            isMelee = true;     //set attack type
 
             // Timer stats
             timer = 0.1f;
             timeToDestroy = false;
 
-            //define damage amount
-            damage = damageAmt;
+            damage = damageAmt;     //define damage amount
+            force = force_;
         }
 
         #endregion
@@ -105,66 +96,73 @@ namespace TheDivineAdventure
         ///////////////
         ///FUNCTIONS///
         ///////////////
-        public void Update(float dt, Player player)
+        public void Update(float dt, Player player, PlayScene parent)
         {
-            if (timer > 0f)
+            if (timer <= 0f) { timeToDestroy = true; return; }
+            if (CheckCollision(player))
             {
-                cameraLookAt = Matrix.CreateLookAt(pos, cam.pos, Vector3.Up);
-                if (CheckCollision(player))
-                {
-                    player.Health -= damage;
-                    timeToDestroy = true;
-                }
-                else
-                {
-                    pos.X += vel.X * dt;
-                    pos.Y += vel.Y * dt;
-                    pos.Z += vel.Z * dt;
-                }
-
-                timer = timer - dt;
-            }
-            else
-            {
+                player.Damage(damage,force,vel);
                 timeToDestroy = true;
+                return;
             }
+            foreach(Level.StaticCollisionMesh mesh in parent.thisLevel.StaticCollisionMeshes)
+            {
+                if(CheckCollision(mesh.collider)) { timeToDestroy = true; return; }
+            }
+            foreach (Level.InteractiveDoor mesh in parent.thisLevel.Doors)
+            {
+                if (CheckCollision(mesh.leftCollider)) { timeToDestroy = true; return; }
+                if (CheckCollision(mesh.rightCollider)) { timeToDestroy = true; return; }
+            }
+            hitbox.Position = pos;
+            pos += vel * dt;
+            timer -= dt;
         }
 
-        public void Update(float dt, List<Enemy> enemyList)
+        public void Update(float dt, PlayScene.EnemySpawner[] spawnerList, PlayScene parent)
         {
-            if (timer > 0f)
+            if (timer <= 0f) timeToDestroy = true;
+            foreach (PlayScene.EnemySpawner spawner in spawnerList)
             {
-                foreach (Enemy e in enemyList)
+                if (spawner.isActive == false) continue;
+                foreach (Enemy e in spawner.enemyList)
                 {
                     if (CheckCollision(e))
                     {
-                        e.Health -= damage;
+                        e.Damage(damage, force);
                         timeToDestroy = true;
+                        return;
                     }
                 }
-                pos.X += vel.X * dt;
-                pos.Y += vel.Y * dt;
-                pos.Z += vel.Z * dt;
-
-                timer = timer - dt;
             }
-            else
+            foreach (Level.StaticCollisionMesh mesh in parent.thisLevel.StaticCollisionMeshes)
             {
-                timeToDestroy = true;
+                if (CheckCollision(mesh.collider)) { timeToDestroy = true; return; }
             }
+            foreach (Level.InteractiveDoor mesh in parent.thisLevel.Doors)
+            {
+                if (CheckCollision(mesh.leftCollider)) { timeToDestroy = true; return; }
+                if (CheckCollision(mesh.rightCollider)) { timeToDestroy = true; return; }
+            }
+            hitbox.Position = pos;
+            pos += vel * dt;
+            timer -= dt;
         }
 
+        #region Collision Checks
         private bool CheckCollision(Player player)
         {
             if (isMelee)
             {
+                if (hitbox.Intersects(player.boundingCollider))
+                {
+                    return true;
+                }
                 return false;
             }
             else
             {
-                if (this.boundingSphere.Intersects(new BoundingBox(
-                    new Vector3(player.Pos.X - 5, player.Pos.Y - player.Height, player.Pos.Z - 5),
-                    new Vector3(player.Pos.X + 5, player.Pos.Y + player.Height, player.Pos.Z + 5))))
+                if (player.boundingCollider.Intersects(boundingSphere))
                 {
                     return true;
                 }
@@ -176,9 +174,7 @@ namespace TheDivineAdventure
         {
             if (isMelee)
             {
-                if (this.boundingBox.Intersects(new BoundingBox(
-                    new Vector3(enemy.Pos.X - 5, enemy.Pos.Y - enemy.Height, enemy.Pos.Z - 5),
-                    new Vector3(enemy.Pos.X + 5, enemy.Pos.Y + enemy.Height, enemy.Pos.Z + 5))))
+                if (hitbox.Intersects(enemy.boundingCollider))
                 {
                     return true;
                 }
@@ -186,15 +182,35 @@ namespace TheDivineAdventure
             }
             else
             {
-                if (this.boundingSphere.Intersects(new BoundingBox(
-                    new Vector3(enemy.Pos.X - 5, enemy.Pos.Y - enemy.Height - 5, enemy.Pos.Z - 10),
-                    new Vector3(enemy.Pos.X + 5, enemy.Pos.Y + enemy.Height + 5, enemy.Pos.Z + 10))))
+                if (enemy.boundingCollider.Intersects(boundingSphere))
                 {
                     return true;
                 }
                 return false;
             }
         }
+
+        private bool CheckCollision(Shapes actor)
+        {
+            if (isMelee)
+            {
+                if (hitbox.Intersects(actor))
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                if (actor.Intersects(boundingSphere))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        #endregion
+
         ////////////////////
         ///GETTER/SETTERS///
         ////////////////////
@@ -218,12 +234,11 @@ namespace TheDivineAdventure
 
         private BoundingSphere boundingSphere
         {
-            get { return new BoundingSphere(pos, 0.015f); }
+            get { return new BoundingSphere(pos, 2f); }
         }
-
-        private BoundingBox boundingBox
+        public Shapes HitBox
         {
-            get { return new BoundingBox(pos - new Vector3(30, 500, 5), pos + new Vector3(30, 500, 10)); }
+            get { return hitbox; }
         }
     }
 }

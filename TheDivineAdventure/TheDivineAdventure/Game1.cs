@@ -1,7 +1,7 @@
-﻿///Course:      CSC 316
+﻿///Course:      CSC 495
 ///Project:     Final Project
 ///Creation:    4/14/22
-///Completion:  5/12/22
+///Completion:  
 ///Authors:     Adkins, Christopher 
 ///             Blankenship, Sean A.
 ///             Michael, Hayden T.
@@ -76,6 +76,8 @@ namespace TheDivineAdventure
         //Random class
         public Random rand;
 
+        public string[,] settings;
+
 
 
         public Game1()
@@ -105,7 +107,7 @@ namespace TheDivineAdventure
             if (GameSettings.HasSettings())
             {
                 //get settings
-                string[,] settings = GameSettings.ReadSettings();
+                settings = GameSettings.ReadSettings();
 
                 //set resolution to preferrence
                 _graphics.PreferredBackBufferWidth = Int32.Parse(settings[0,1]);
@@ -132,6 +134,7 @@ namespace TheDivineAdventure
                 MediaPlayer.IsRepeating = true;
                 Player.volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
                 Enemy.volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
+
             }
             
             //// Set initial screen size
@@ -141,11 +144,6 @@ namespace TheDivineAdventure
             //// (Apply the determined size)
             _graphics.PreferredBackBufferWidth = desktop_width;
             _graphics.PreferredBackBufferHeight = desktop_height;
-
-            ////enable antialiasing (currently breaks game)
-            //_graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            //_graphics.PreferMultiSampling = true;
-            //GraphicsDevice.PresentationParameters.MultiSampleCount = 2;
 
             _graphics.ApplyChanges();
 
@@ -161,7 +159,6 @@ namespace TheDivineAdventure
             //create Scenes
             titleScene = new TitleScene(_spriteBatch, _graphics, this, Content);
             characterSelectScene = new CharacterSelectScene(_spriteBatch, _graphics, this, Content);
-            playScene = new PlayScene(_spriteBatch, _graphics, this, Content);
             creditsScene = new CreditsScene(_spriteBatch, _graphics, this, Content);
             pauseScene = new PauseScene(_spriteBatch, _graphics, this, Content);
             settingsScene = new SettingsScene(_spriteBatch, _graphics, this, Content);
@@ -324,6 +321,11 @@ namespace TheDivineAdventure
             LoadContent();
             currentScreenScale = new Vector2(_graphics.PreferredBackBufferWidth / 1920f, _graphics.PreferredBackBufferHeight / 1080f);
 
+        }
+
+        public void LoadPlayScene()
+        {
+            playScene = new PlayScene(_spriteBatch, _graphics, this, Content, level);
         }
     }
 }

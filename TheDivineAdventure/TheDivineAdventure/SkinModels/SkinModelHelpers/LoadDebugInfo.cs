@@ -1,6 +1,7 @@
 ﻿using Assimp;
 using System;
 using System.Linq;
+using System.Diagnostics;
 /// THIS IS BASED ON WORK BY:  WIL MOTIL  (a slightly older modified version)
 /// https://github.com/willmotil/MonoGameUtilityClasses
 
@@ -10,7 +11,7 @@ using System.Linq;
 
 namespace TheDivineAdventure.SkinModels.SkinModelHelpers
 {
-    class LoadDebugInfo
+    public class LoadDebugInfo
     {
         SkinModelLoader ld;
 
@@ -485,26 +486,26 @@ namespace TheDivineAdventure.SkinModels.SkinModelHelpers
         // M I N I M A L   I N F O 
         public void MinimalInfo(SkinModel model, string filePath)
         {
-            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"); Console.WriteLine();
-            Console.WriteLine($"Model");
-            Console.WriteLine($"{ld.GetFileName(filePath, true)}  Loaded"); Console.WriteLine();
-            Console.WriteLine("Model sceneRootNodeOfTree's Node Name:     " + model.rootNodeOfTree.name);
-            Console.WriteLine("Model number of animaton: " + model.animations.Count);
-            Console.WriteLine("Model number of meshes:   " + model.meshes.Length);
+            Debug.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"); Console.WriteLine();
+            Debug.WriteLine($"Model");
+            Debug.WriteLine($"{ld.GetFileName(filePath, true)}  Loaded"); Console.WriteLine();
+            Debug.WriteLine("Model sceneRootNodeOfTree's Node Name:     " + model.rootNodeOfTree.name);
+            Debug.WriteLine("Model number of animaton: " + model.animations.Count);
+            Debug.WriteLine("Model number of meshes:   " + model.meshes.Length);
             for (int mmLoop = 0; mmLoop < model.meshes.Length; mmLoop++)
             {
                 var rmMesh = model.meshes[mmLoop];
-                Console.WriteLine("Model mesh #" + mmLoop + " of  " + model.meshes.Length + "   Name: " + rmMesh.Name + "   MaterialIndex: " + rmMesh.material_index + "  MaterialIndexName: " + rmMesh.material_name + "  Bones.Count " + model.meshes[mmLoop].meshBones.Count() + " ([0] is a generated bone to the mesh)");
+                Debug.WriteLine("Model mesh #" + mmLoop + " of  " + model.meshes.Length + "   Name: " + rmMesh.Name + "   MaterialIndex: " + rmMesh.material_index + "  MaterialIndexName: " + rmMesh.material_name + "  Bones.Count " + model.meshes[mmLoop].meshBones.Count() + " ([0] is a generated bone to the mesh)");
                 if (rmMesh.tex_diffuse != null)
-                    Console.WriteLine("texture: " + rmMesh.tex_name);
+                    Debug.WriteLine("texture: " + rmMesh.tex_name);
                 if (rmMesh.tex_normalMap != null)
-                    Console.WriteLine("textureNormalMap: " + rmMesh.tex_normMap_name);
+                    Debug.WriteLine("textureNormalMap: " + rmMesh.tex_normMap_name);
                 /// May add more texture types later in which case we may want to update this for debugging if needed
                 //if (rmMesh.textureHeightMap != null) Console.WriteLine("textureHeightMap: " + rmMesh.textureHeightMapName);
             }
-            Console.WriteLine(); Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"); Console.WriteLine("\n");
+            Console.WriteLine(); Debug.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Debug.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"); Debug.WriteLine("\n");
         }
 
         #endregion
@@ -525,18 +526,18 @@ namespace TheDivineAdventure.SkinModels.SkinModelHelpers
         {
             // If an imported model uses multiple materials, the import splits up the mesh. Use this value as index into the scene's material list. 
             // http://sir-kimmi.de/assimp/lib_html/structai_mesh.html#aa2807c7ba172115203ed16047ad65f9e                   
-            Console.Write("\n\n Name " + assimpMesh.Name + " scene.Mesh[" + mi + "] ");
-            Console.Write("\n" + " assimpMesh.VertexCount: " + assimpMesh.VertexCount + "  rmMesh.MaterialIndexName: " + sMesh.material_name
+            Debug.WriteLine("\n\n Name " + assimpMesh.Name + " scene.Mesh[" + mi + "] ");
+            Debug.WriteLine("\n" + " assimpMesh.VertexCount: " + assimpMesh.VertexCount + "  rmMesh.MaterialIndexName: " + sMesh.material_name
                         + "   Material index: " + sMesh.material_index + " (material associated to this mesh)  " + " Bones.Count: " + assimpMesh.Bones.Count);
-            Console.Write("\n" + " Note bone 0 doesn't exist in the original assimp bone data structure to facilitate a bone 0 for mesh node transforms so " +
+            Debug.WriteLine("\n" + " Note bone 0 doesn't exist in the original assimp bone data structure to facilitate a bone 0 for mesh node transforms so " +
                           "that aibone[0] is converted to modelBone[1]");
             for (int i = 0; i < sMesh.meshBones.Length; i++)
             {
                 var bone = sMesh.meshBones[i];
-                Console.Write("\n Bone [" + i + "] Name " + bone.name + "  meshIndex: " + bone.meshIndex + " meshBoneIndex: "
+                Debug.WriteLine("\n Bone [" + i + "] Name " + bone.name + "  meshIndex: " + bone.meshIndex + " meshBoneIndex: "
                             + bone.boneIndex + " numberOfAssociatedWeightedVertices: " + bone.numWeightedVerts);
                 if (MatrixInfo)
-                    Console.Write("\n  Offset: " + bone.offset_mtx);
+                    Debug.WriteLine("\n  Offset: " + bone.offset_mtx);
             }
         }
 
@@ -547,20 +548,20 @@ namespace TheDivineAdventure.SkinModels.SkinModelHelpers
             for (int i = 0; i < tabLevel; i++) ntab += "  ";
             string ntab2 = ntab + "    ";
 
-            Console.WriteLine("\n\n@@@CreateModelNodeTreeTransformsRecursively \n \n ");
-            Console.Write("\n " + ntab + "  ModelNode Name: " + modelNode.name + "  curAssimpNode.Name: " + curAssimpNode.Name);
+            Debug.WriteLine("\n\n@@@CreateModelNodeTreeTransformsRecursively \n \n ");
+            Debug.WriteLine("\n " + ntab + "  ModelNode Name: " + modelNode.name + "  curAssimpNode.Name: " + curAssimpNode.Name);
             if (curAssimpNode.MeshIndices.Count > 0)
             {
-                Console.Write("\n " + ntab + "  |_This node has mesh references.  aiMeshCount: " + curAssimpNode.MeshCount + " Listed MeshIndices: ");
+                Debug.WriteLine("\n " + ntab + "  |_This node has mesh references.  aiMeshCount: " + curAssimpNode.MeshCount + " Listed MeshIndices: ");
                 for (int i = 0; i < curAssimpNode.MeshIndices.Count; i++) Console.Write(" , " + curAssimpNode.MeshIndices[i]);
                 for (int i = 0; i < curAssimpNode.MeshIndices.Count; i++)
                 {
                     var nodesmesh = model.meshes[curAssimpNode.MeshIndices[i]];
-                    Console.Write("\n " + ntab + " " + " |_Is a mesh ... Mesh nodeRefContainingAnimatedTransform Set to node: "
+                    Debug.WriteLine("\n " + ntab + " " + " |_Is a mesh ... Mesh nodeRefContainingAnimatedTransform Set to node: "
                                 + nodesmesh.node_with_anim_trans.name + "  mesh: " + nodesmesh.Name);
                 }
             }
-            if (matrixInfo) Console.WriteLine("\n " + ntab2 + "|_curAssimpNode.Transform: " + curAssimpNode.Transform.SrtInfoToString(ntab2));
+            if (matrixInfo) Debug.WriteLine("\n " + ntab2 + "|_curAssimpNode.Transform: " + curAssimpNode.Transform.SrtInfoToString(ntab2));
             for (int mIndex = 0; mIndex < scene.Meshes.Count; mIndex++)
             {
                 SkinModel.ModelBone bone;
@@ -568,10 +569,10 @@ namespace TheDivineAdventure.SkinModels.SkinModelHelpers
                 if (GetBoneForMesh(model.meshes[mIndex], modelNode.name, out bone, out boneIndexInMesh))
                 {
                     var adjustedBoneIndexInMesh = boneIndexInMesh;
-                    Console.Write("\n " + ntab + "  |_The node will be marked as having a real bone node along the bone route.");
+                    Debug.WriteLine("\n " + ntab + "  |_The node will be marked as having a real bone node along the bone route.");
                     if (modelNode.isMeshNode) Console.Write("\n " + ntab + "  |_The node is also a mesh node so this is maybe a node targeting a mesh transform with animations.");
-                    Console.Write("\n " + ntab + "  |_Adding uniqueBone for Node: " + modelNode.name + " of Mesh[" + mIndex + " of " + scene.Meshes.Count + "].Name: " + scene.Meshes[mIndex].Name);
-                    Console.Write("\n " + ntab + "  |_It's a Bone  in mesh #" + mIndex + "  aiBoneIndexInMesh: " + (boneIndexInMesh - 1) + " adjusted BoneIndexInMesh: " + adjustedBoneIndexInMesh);
+                    Debug.WriteLine("\n " + ntab + "  |_Adding uniqueBone for Node: " + modelNode.name + " of Mesh[" + mIndex + " of " + scene.Meshes.Count + "].Name: " + scene.Meshes[mIndex].Name);
+                    Debug.WriteLine("\n " + ntab + "  |_It's a Bone  in mesh #" + mIndex + "  aiBoneIndexInMesh: " + (boneIndexInMesh - 1) + " adjusted BoneIndexInMesh: " + adjustedBoneIndexInMesh);
                 }
             }
         }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/MOD_Warrior/TEX_Warrior.png</SourceFile>
-  <SourceTime>2022-09-01T01:50:50.7571682-04:00</SourceTime>
+  <SourceTime>2022-09-28T19:39:01.2752964-04:00</SourceTime>
   <DestFile>D:/Holder/School/TDA_Repository/The-Divine-Adventure/TheDivineAdventure/TheDivineAdventure/Content/bin/DesktopGL/MOD_Warrior/TEX_Warrior.xnb</DestFile>
-  <DestTime>2022-09-17T01:17:57.3703953-04:00</DestTime>
+  <DestTime>2022-10-28T02:32:15.4023213-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T11:35:54-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

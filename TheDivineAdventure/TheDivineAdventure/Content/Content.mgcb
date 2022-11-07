@@ -46,6 +46,102 @@
 /processorParam:DebugMode=Auto
 /build:EFFECT_Skybox.fx
 
+#begin Level_Data/Level_1/Level_1.xml
+/copy:Level_Data/Level_1/Level_1.xml
+
+#begin Level_Data/Level_1/MOD_L1_BossRoom.fbx
+/copy:Level_Data/Level_1/MOD_L1_BossRoom.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Buttton01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Buttton01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Column1.fbx
+/copy:Level_Data/Level_1/MOD_L1_Column1.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Door01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Door01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Door02.fbx
+/copy:Level_Data/Level_1/MOD_L1_Door02.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Doorway01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Doorway01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Hallway01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Hallway01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Hallway02.fbx
+/copy:Level_Data/Level_1/MOD_L1_Hallway02.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Painting01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Painting01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Pew.fbx
+/copy:Level_Data/Level_1/MOD_L1_Pew.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Platform1.fbx
+/copy:Level_Data/Level_1/MOD_L1_Platform1.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Prison_01.fbx
+/copy:Level_Data/Level_1/MOD_L1_Prison_01.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Prison_02.fbx
+/copy:Level_Data/Level_1/MOD_L1_Prison_02.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Prison_03.fbx
+/copy:Level_Data/Level_1/MOD_L1_Prison_03.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room1.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room1.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room2.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room2.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room2_Lava.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room2_Lava.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room3.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room3.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room3_Stairs.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room3_Stairs.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room3_Stairs_LeftSide.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room3_Stairs_LeftSide.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room3_Stairs_RightSide.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room3_Stairs_RightSide.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Room3_Stairs_Side.fbx
+/copy:Level_Data/Level_1/MOD_L1_Room3_Stairs_Side.fbx
+
+#begin Level_Data/Level_1/MOD_L1_Stairs.fbx
+/copy:Level_Data/Level_1/MOD_L1_Stairs.fbx
+
+#begin Level_Data/Level_1/MOD_Misc_Anthony.fbx
+/copy:Level_Data/Level_1/MOD_Misc_Anthony.fbx
+
+#begin Level_Data/Level_1/MOD_Misc_Femur01.fbx
+/copy:Level_Data/Level_1/MOD_Misc_Femur01.fbx
+
+#begin Level_Data/Level_1/MOD_Misc_Skull01.fbx
+/copy:Level_Data/Level_1/MOD_Misc_Skull01.fbx
+
+#begin Level_Data/Level_1/MOD_Misc_SkullPile01.fbx
+/copy:Level_Data/Level_1/MOD_Misc_SkullPile01.fbx
+
+#begin Level_Data/Test_level/TestFloor01.fbx
+/copy:Level_Data/Test_level/TestFloor01.fbx
+
+#begin Level_Data/Test_level/TestFloor02.fbx
+/copy:Level_Data/Test_level/TestFloor02.fbx
+
+#begin Level_Data/Test_level/TestLevel.xml
+/copy:Level_Data/Test_level/TestLevel.xml
+
+#begin Level_Data/Test_level/TestWall01.fbx
+/copy:Level_Data/Test_level/TestWall01.fbx
+
 #begin MOD_Cleric/ANIM_Cleric_AttackMain.fbx
 /copy:MOD_Cleric/ANIM_Cleric_AttackMain.fbx
 
@@ -84,6 +180,63 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MOD_Cleric/TEX_Cleric.png
+
+#begin MOD_HellHound/ANIM_HellHound_Attack.fbx
+/copy:MOD_HellHound/ANIM_HellHound_Attack.fbx
+
+#begin MOD_HellHound/ANIM_HellHound_Base.fbx
+/copy:MOD_HellHound/ANIM_HellHound_Base.fbx
+
+#begin MOD_HellHound/ANIM_Hellhound_Idle.fbx
+/copy:MOD_HellHound/ANIM_Hellhound_Idle.fbx
+
+#begin MOD_HellHound/ANIM_HellHound_Run.fbx
+/copy:MOD_HellHound/ANIM_HellHound_Run.fbx
+
+#begin MOD_HellHound/ANIM_HellHound_Walk.fbx
+/copy:MOD_HellHound/ANIM_HellHound_Walk.fbx
+
+#begin MOD_HellHound/TEX_HellHound.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_HellHound/TEX_HellHound.png
+
+#begin MOD_Imp/ANIM_Imp_Attack_Melee.fbx
+/copy:MOD_Imp/ANIM_Imp_Attack_Melee.fbx
+
+#begin MOD_Imp/ANIM_Imp_Attack_Ranged.fbx
+/copy:MOD_Imp/ANIM_Imp_Attack_Ranged.fbx
+
+#begin MOD_Imp/ANIM_Imp_Base.fbx
+/copy:MOD_Imp/ANIM_Imp_Base.fbx
+
+#begin MOD_Imp/ANIM_Imp_Idle.fbx
+/copy:MOD_Imp/ANIM_Imp_Idle.fbx
+
+#begin MOD_Imp/ANIM_Imp_Run.fbx
+/copy:MOD_Imp/ANIM_Imp_Run.fbx
+
+#begin MOD_Imp/ANIM_Imp_Walk.fbx
+/copy:MOD_Imp/ANIM_Imp_Walk.fbx
+
+#begin MOD_Imp/TEX_Imp.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Imp/TEX_Imp.png
 
 #begin MOD_Mage/ANIM_Mage_AttackMain.fbx
 /copy:MOD_Mage/ANIM_Mage_AttackMain.fbx
@@ -138,6 +291,66 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MOD_Mage/TEX_Mage_Staff.png
+
+#begin MOD_Minotaur/ANIM_Minotaur_Attack.fbx
+/copy:MOD_Minotaur/ANIM_Minotaur_Attack.fbx
+
+#begin MOD_Minotaur/ANIM_Minotaur_Base.fbx
+/copy:MOD_Minotaur/ANIM_Minotaur_Base.fbx
+
+#begin MOD_Minotaur/ANIM_Minotaur_Idle.fbx
+/copy:MOD_Minotaur/ANIM_Minotaur_Idle.fbx
+
+#begin MOD_Minotaur/ANIM_Minotaur_Run.fbx
+/copy:MOD_Minotaur/ANIM_Minotaur_Run.fbx
+
+#begin MOD_Minotaur/ANIM_Minotaur_Walk.fbx
+/copy:MOD_Minotaur/ANIM_Minotaur_Walk.fbx
+
+#begin MOD_Minotaur/TEX_Glaive.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Minotaur/TEX_Glaive.png
+
+#begin MOD_Minotaur/TEX_Minotaur.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Minotaur/TEX_Minotaur.png
+
+#begin MOD_Revenant/ANIM_Revenant_Base.fbx
+/copy:MOD_Revenant/ANIM_Revenant_Base.fbx
+
+#begin MOD_Revenant/ANIM_Revenant_Idle.fbx
+/copy:MOD_Revenant/ANIM_Revenant_Idle.fbx
+
+#begin MOD_Revenant/ANIM_Revenant_Walk.fbx
+/copy:MOD_Revenant/ANIM_Revenant_Walk.fbx
+
+#begin MOD_Revenant/TEX_Revenant.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MOD_Revenant/TEX_Revenant.png
 
 #begin MOD_Rogue/ANIM_Rogue_AttackMain_1.fbx
 /copy:MOD_Rogue/ANIM_Rogue_AttackMain_1.fbx
@@ -196,6 +409,12 @@
 /processorParam:TextureFormat=Color
 /build:MOD_Rogue/TEX_Rogue.png
 
+#begin MOD_Terrain/TestLevel/TestFloor01.fbx
+/copy:MOD_Terrain/TestLevel/TestFloor01.fbx
+
+#begin MOD_Terrain/TestLevel/TestFloor02.fbx
+/copy:MOD_Terrain/TestLevel/TestFloor02.fbx
+
 #begin MOD_Warrior/ANIM_Warrior_AttackMain.fbx
 /copy:MOD_Warrior/ANIM_Warrior_AttackMain.fbx
 
@@ -250,25 +469,6 @@
 /processorParam:TextureFormat=Color
 /build:MOD_Warrior/TEX_Warrior.png
 
-#begin MODEL_Cleric.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=0.01
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_Cleric.fbx
-
 #begin MODEL_ClericProjectile.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -287,25 +487,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=NoChange
 /build:MODEL_ClericProjectile.fbx
-
-#begin MODEL_Demon.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=0.01
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_Demon.fbx
 
 #begin MODEL_EnemyMelee.fbx
 /importer:FbxImporter
@@ -364,44 +545,6 @@
 /processorParam:TextureFormat=Compressed
 /build:MODEL_level1.fbx
 
-#begin MODEL_Mage.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=0.01
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_Mage.fbx
-
-#begin MODEL_PlayerMelee.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=180
-/processorParam:RotationZ=0
-/processorParam:Scale=0.02
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_PlayerMelee.fbx
-
 #begin MODEL_PlayerProjectile.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -439,25 +582,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:MODEL_Portal.fbx
-
-#begin MODEL_Rogue.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=0.01
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_Rogue.fbx
 
 #begin MODEL_Selection_Stone.fbx
 /importer:FbxImporter
@@ -515,25 +639,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:MODEL_SpriteFrame.fbx
-
-#begin MODEL_Warrior.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=0.01
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_Warrior.fbx
 
 #begin SkinEffect.fx
 /importer:EffectImporter
@@ -602,6 +707,18 @@
 /processorParam:Quality=Best
 /build:SOUND_TradeOff.wav
 
+#begin TEX_BoneBloody01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_BoneBloody01.png
+
 #begin TEX_Brimstone.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -662,6 +779,30 @@
 /processorParam:TextureFormat=Color
 /build:TEX_ClericProjectileImpact_Sheet.png
 
+#begin TEX_Column01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Column01.png
+
+#begin TEX_Column02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Column02.png
+
 #begin TEX_cursor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -685,6 +826,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_cursorClicked.png
+
+#begin TEX_DarkMetal01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_DarkMetal01.png
 
 #begin TEX_DeathScene.png
 /importer:TextureImporter
@@ -734,6 +887,18 @@
 /processorParam:TextureFormat=Color
 /build:TEX_EmberSheet01.png
 
+#begin TEX_Floor01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Floor01.png
+
 #begin TEX_HealthBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -781,6 +946,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_LArrowButton1.png
+
+#begin TEX_Lava.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Lava.png
 
 #begin TEX_Level1Button.png
 /importer:TextureImporter
@@ -889,6 +1066,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_Pause_Menu.png
+
+#begin TEX_Pride_Painting.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Pride_Painting.png
 
 #begin TEX_ProgressionIcon.png
 /importer:TextureImporter
@@ -1046,6 +1235,18 @@
 /processorParam:TextureFormat=Color
 /build:TEX_Slide_Selector.png
 
+#begin TEX_StainGlass01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_StainGlass01.png
+
 #begin TEX_StaminaBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1141,6 +1342,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_TitleScreen_Front.png
+
+#begin TEX_WallBrazier.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_WallBrazier.png
 
 #begin TEX_Warrior.png
 /importer:TextureImporter

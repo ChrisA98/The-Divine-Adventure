@@ -13,7 +13,7 @@ namespace TheDivineAdventure
         private Texture2D textureMain, texturePushed;
         private SpriteFont font;
         private bool active;
-        private String? buttonText;
+        private string? buttonText;
 
         //for invisible butttons
         public Button(Vector2 position, Vector2 size, Vector2 screenScale)
@@ -28,7 +28,7 @@ namespace TheDivineAdventure
         }
 
         //for buttons with a a texture
-        public Button(Texture2D idle, Texture2D pushed,String? Text, SpriteFont font, Vector2 position, Vector2 size, Vector2 screenScale)
+        public Button(Texture2D idle, Texture2D pushed, string? Text, SpriteFont font, Vector2 position, Vector2 size, Vector2 screenScale)
         {
             pos.X = position.X * screenScale.X;
             pos.Y = position.Y * screenScale.Y;

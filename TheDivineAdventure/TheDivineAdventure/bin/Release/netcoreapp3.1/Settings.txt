@@ -1,0 +1,10 @@
+Screen Width: - 1920
+Screen Height: - 1080
+Window Mode: - 1
+Antialiasing: - 0
+Master Volume: - 0.21
+Music Volume: - 0.07666667
+SFX Volume: - 0.23666666
+--Controls--
+Mouse Sensitivty: - 38
+

@@ -17,7 +17,7 @@ namespace TheDivineAdventure
         protected GraphicsDeviceManager _graphics;
         protected ContentManager Content;
         protected SpriteBatch _spriteBatch;
-        protected Game1 parent;
+        public Game1 parent;
         protected Texture2D fade;
         protected MouseState mouseState;
         public Random rand;

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<test_level>
+	<room>
+		<room_id> 0 </room_id>
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(10,0,0)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(10,0,10)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(0,0,10)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(0,0,0)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>		
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(10,0,-10)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>		
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(-10,0,0)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(0,0,-10)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>		
+		<floor>
+			<model>TestFloor02.fbx</model>
+			<pos>(0,0,0)</pos>
+			<dims>(10,1,10)</dims>
+		</floor>
+	</room>
+	
+</test_level>

@@ -1,5 +1,4 @@
-﻿//#define USING_COLORED_VERTICES  // uncomment this in both SkinModel and SkinModelLoader if using
-using Assimp;
+﻿using Assimp;
 using Assimp.Configs;
 using TheDivineAdventure.SkinModels.SkinModelHelpers;
 using Microsoft.Xna.Framework;
@@ -10,13 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-// ASSIMP INSTRUCTIONS:
-// AssimpNET is (cross platform) .NET wrapper for Open Asset Import Library 
-// Add the AssimpNET nuget to your solution:
-// - in the solution explorer, right click on the project
-// - select manage nuget packages
-// - click browse
-// - type in assimpNET and install it to the solution and project via the checkbox on the right.
 
 /// THIS IS BASED ON WORK BY:  WIL MOTIL  (a slightly older modified version)
 /// https://github.com/willmotil/MonoGameUtilityClasses
@@ -25,20 +17,20 @@ namespace TheDivineAdventure.SkinModels
 {
     // C L A S S   L O A D E R   ( for SkinModel )
     // Uses assimpNET 4.1+ nuget,  to load a rigged and or animated model
-    class SkinModelLoader
+    public class SkinModelLoader
     {
         #region DEBUG DISPLAY SETTINGS
-        public bool FilePathDebug = true;
+        public bool FilePathDebug = false;
         public bool LoadedModelInfo = false; //
         public bool AssimpInfo = false;
-        public bool MinimalInfo = true;  // 
+        public bool MinimalInfo = false;  // 
         public bool ConsoleInfo = false; // from here down is mostly run time console info.
         public bool MatrixInfo = false;
-        public bool MeshBoneCreationInfo = true;
+        public bool MeshBoneCreationInfo = false;
         public bool MaterialInfo = false;
         public bool FlatBoneInfo = false;
-        public bool NodeTreeInfo = true;
-        public bool AnimationInfo = true;
+        public bool NodeTreeInfo = false;
+        public bool AnimationInfo = false;
         public bool AnimationKeysInfo = false;
         public string targetNodeName = "";
         #endregion
@@ -121,40 +113,40 @@ namespace TheDivineAdventure.SkinModels
             AltDirectory = altTextureDirectory;
             return Load(filePath_or_fileName, skin_fx, rescale);
         }
-        public SkinModel Load(string filePath_or_fileName, string altTextureDirectory, bool useDebugTexture, int loadingLevelPreset, SkinFx skin_fx, float rescale = 1f)
+        public SkinModel Load(string filePath_or_fileName, string altTextureDirectory, bool useDebugTexture, int loadingLevelPreset, SkinFx skin_fx, float rescale = 1f, float yRotation = 0f)
         {
             LoadingLevelPreset = loadingLevelPreset;
             use_debug_tex = useDebugTexture;
             AltDirectory = altTextureDirectory;
-            return Load(filePath_or_fileName, skin_fx, rescale);
+            return Load(filePath_or_fileName, skin_fx, rescale, yRotation);
         }
         #endregion
 
         //---------
-        // L O A D 
+        // LOAD 
         //---------
-        public SkinModel Load(string filePath_or_fileName, SkinFx skin_fx, float rescale = 1f)
+        public SkinModel Load(string filePath_or_fileName, SkinFx skin_fx, float rescale = 1f, float yRotation = 0f)
         {
             #region ALTER FILE PATH IF NEEDED:
             FilePathName = filePath_or_fileName;
             FilePathNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath_or_fileName);
-            string s = Path.Combine(Path.Combine(Environment.CurrentDirectory, "Content"), filePath_or_fileName); // rem: set FBX to "copy-to" and remove any file processing properties
+            string s = Path.Combine(Path.Combine(Environment.CurrentDirectory, "Content"), filePath_or_fileName);
             if (File.Exists(s) == false)
             {
-                if (FilePathDebug) { Console.WriteLine("(not found) Checked for: " + s); }
+                if (FilePathDebug) { Debug.WriteLine("(not found) Checked for: " + s); }
                 s = Path.Combine(Path.Combine(Environment.CurrentDirectory, "Assets"), filePath_or_fileName); // If file is placed in a project assets folder (with copy-to property set)            
             }
             if (File.Exists(s) == false)
             {
-                if (FilePathDebug) { Console.WriteLine("(not found) Instead tried to find: " + s); }
+                if (FilePathDebug) { Debug.WriteLine("(not found) Instead tried to find: " + s); }
                 s = Path.Combine(Environment.CurrentDirectory, filePath_or_fileName); // maybe in the exe directory
             }
             if (File.Exists(s) == false)
             {
-                if (FilePathDebug) { Console.WriteLine("(not found) Instead tried to find: " + s); }
+                if (FilePathDebug) { Debug.WriteLine("(not found) Instead tried to find: " + s); }
                 s = filePath_or_fileName;                    // maybe the exact complete path is specified
             }
-            if (FilePathDebug) { Console.WriteLine("Final file/path checked for: " + s); }
+            if (FilePathDebug) { Debug.WriteLine("Final file/path checked for: " + s); }
             Debug.Assert(File.Exists(s), "Could not find the file to load: " + s);
             string fullFilePath = s;
             #endregion
@@ -163,8 +155,9 @@ namespace TheDivineAdventure.SkinModels
             var importer = new AssimpContext();
             foreach (var p in configurations) importer.SetConfig(p);
             importer.Scale = rescale;
+            importer.YAxisRotation = yRotation;
 
-            // LOAD FILE INTO "SCENE" (an assimp imported model is in a thing called Scene)
+            // LOAD FILE INTO "Assimp SCENE"
             try
             {
                 switch (LoadingLevelPreset)
@@ -172,7 +165,7 @@ namespace TheDivineAdventure.SkinModels
                     case 0: scene = importer.ImportFile(fullFilePath, PostProcessPreset.TargetRealTimeMaximumQuality); break;
                     case 1: scene = importer.ImportFile(fullFilePath, PostProcessPreset.TargetRealTimeQuality); break;
                     case 2: scene = importer.ImportFile(fullFilePath, PostProcessPreset.TargetRealTimeFast); break;
-                    default:
+                    case 3:
                         scene = importer.ImportFile(fullFilePath,
                                                   PostProcessSteps.FlipUVs                // currently need
                                                 | PostProcessSteps.JoinIdenticalVertices  // optimizes indexed
@@ -181,21 +174,30 @@ namespace TheDivineAdventure.SkinModels
                                                 | PostProcessSteps.GenerateSmoothNormals  // smooths normals after identical verts removed (or bad normals)
                                                 | PostProcessSteps.ImproveCacheLocality   // possible better cache optimization                                        
                                                 | PostProcessSteps.FixInFacingNormals     // doesn't work well with planes - turn off if some faces go dark                                       
-                                                | PostProcessSteps.CalculateTangentSpace  // use if you'll probably be using normal mapping 
-                                                | PostProcessSteps.GenerateUVCoords       // useful for non-uv-map export primitives                                                
+                                                | PostProcessSteps.CalculateTangentSpace  // use if you'll probably be using normal mapping                                     
                                                 | PostProcessSteps.ValidateDataStructure
                                                 | PostProcessSteps.FindInstances
                                                 | PostProcessSteps.GlobalScale            // use with AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY (if need)                                                
-                                                | PostProcessSteps.FlipWindingOrder       // (CCW to CW) Depends on your rasterizing setup (need clockwise to fix inside-out problem?)                                                 
+                                                | PostProcessSteps.FlipWindingOrder       // (CCW to CW) Depends on your rasterizing setup (need clockwise to fix inside-out problem?)
+                                                | PostProcessSteps.OptimizeMeshes         // Improves rendering                                        
+                                                | PostProcessSteps.TransformUVCoords      // maybe useful for keyed uv transforms        
                         #region other_options
                                                 //| PostProcessSteps.RemoveRedundantMaterials // use if not using material names to ID special properties                                                
                                                 //| PostProcessSteps.FindDegenerates      // maybe (if using with AI_CONFIG_PP_SBP_REMOVE to remove points/lines)
-                                                //| PostProcessSteps.SortByPrimitiveType  // maybe not needed (sort points, lines, etc)
-                                                //| PostProcessSteps.OptimizeMeshes       // not suggested for animated stuff
+                                                //| PostProcessSteps.SortByPrimitiveType  // maybe not needed (sort points, lines, etc)      
                                                 //| PostProcessSteps.OptimizeGraph        // not suggested for animated stuff                                        
                                                 //| PostProcessSteps.TransformUVCoords    // maybe useful for keyed uv transforms                                                
                         #endregion
                                                 );
+                        break;
+                    default:
+                        scene = importer.ImportFile(fullFilePath,
+                                                 PostProcessSteps.ImproveCacheLocality   // possible better cache optimization                                         
+                                                | PostProcessSteps.ValidateDataStructure
+                                                | PostProcessSteps.FindInstances
+                                                | PostProcessSteps.GlobalScale            // use with AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY (if need)
+                                                );
+
                         break;
                 }
             }
@@ -211,17 +213,19 @@ namespace TheDivineAdventure.SkinModels
 
 
         //----------------------------
-        #region C R E A T E  M O D E L  (and root)
+        #region CREATE MODEL (and root)
         //----------------------------
         private SkinModel CreateModel(string file_nom, SkinFx skinFx)
         {
-            SkinModel model = new SkinModel(gpu, skinFx); // create model
-            model.debug_tex = debug_tex;
-            model.use_debug_tex = use_debug_tex;
+            SkinModel model = new SkinModel(gpu, skinFx)
+            {
+                debug_tex = debug_tex,
+                use_debug_tex = use_debug_tex
+            }; // create model
 
             CreateRootNode(model, scene);                     // prep to build model's tree (need root node)
 
-            CreateMeshesAndBones(model, scene, 0);            // create the model's meshes and bones
+            CreateMeshesAndBones(model, scene);            // create the model's meshes and bones
 
             SetupMaterialsAndTextures(model, scene);          // setup the materials and textures of each mesh
 
@@ -240,21 +244,23 @@ namespace TheDivineAdventure.SkinModels
 
 
         //--------------------------------
-        // C R E A T E   R O O T   N O D E 
+        // CREATE ROOT NODE
         //--------------------------------
         /// <summary> Create a root node </summary>
         private void CreateRootNode(SkinModel model, Assimp.Scene scene)
         {
-            model.rootNodeOfTree = new SkinModel.ModelNode();
-            model.rootNodeOfTree.name = scene.RootNode.Name;        // set the rootnode
-            // set the rootnode transforms
-            model.rootNodeOfTree.local_mtx = scene.RootNode.Transform.ToMgTransposed();  // ToMg converts to monogame compatible version
+            model.rootNodeOfTree = new SkinModel.ModelNode
+            {
+                name = scene.RootNode.Name,        // set the rootnode
+                                                   // set the rootnode transforms
+                local_mtx = scene.RootNode.Transform.ToMgTransposed()  // ToMg converts to monogame compatible version
+            };
             model.rootNodeOfTree.combined_mtx = model.rootNodeOfTree.local_mtx;
 
             if (MaterialInfo)
             {
                 info.CreatingRootInfo(" Creating root node,  scene.RootNode.Name: " + scene.RootNode.Name + "   scene.RootNode.MeshCount: " + scene.RootNode.MeshCount + "   scene.RootNode.ChildCount: " + scene.RootNode.ChildCount);
-                if (MatrixInfo) Console.WriteLine(" scene.RootNode.Transform.ToMgTransposed() " + scene.RootNode.Transform.ToMgTransposed());
+                if (MatrixInfo) Debug.WriteLine(" scene.RootNode.Transform.ToMgTransposed() " + scene.RootNode.Transform.ToMgTransposed());
             }
         }
         #endregion // create model (and root)
@@ -262,12 +268,12 @@ namespace TheDivineAdventure.SkinModels
 
 
         //---------------------------------------------------
-        #region C R E A T E   M E S H E S   A N D   B O N E S
+        #region CREATE MESHES AND BONES
         //---------------------------------------------------
         /// <summary> We create model mesh instances for each mesh in scene.meshes. This is just set up here - it doesn't load any data. </summary>
-        private void CreateMeshesAndBones(SkinModel model, Assimp.Scene scene, int meshIndex)
+        private void CreateMeshesAndBones(SkinModel model, Assimp.Scene scene)
         {
-            if (MeshBoneCreationInfo) Console.WriteLine("\n\n@@@CreateModelMeshesAndBones \n");
+            if (MeshBoneCreationInfo) Debug.WriteLine("\n\n@@@CreateModelMeshesAndBones \n");
 
             model.meshes = new SkinModel.SkinMesh[scene.Meshes.Count];   // allocate skin meshes array
 
@@ -275,11 +281,13 @@ namespace TheDivineAdventure.SkinModels
             for (int mi = 0; mi < scene.Meshes.Count; mi++)
             {
                 Mesh assimpMesh = scene.Meshes[mi];
-                var sMesh = new SkinModel.SkinMesh();              // make new SkinMesh
-                sMesh.Name = assimpMesh.Name;                       // name
-                sMesh.meshNumber = mi;                                    // index from scene                
-                sMesh.tex_name = "Default";                             // texture name
-                sMesh.material_index = assimpMesh.MaterialIndex;           // index of material used
+                var sMesh = new SkinModel.SkinMesh
+                {
+                    Name = assimpMesh.Name,                       // name
+                    meshNumber = mi,                                    // index from scene                
+                    tex_name = "Default",                             // texture name
+                    material_index = assimpMesh.MaterialIndex           // index of material used
+                };              // make new SkinMesh
                 sMesh.material_name = scene.Materials[sMesh.material_index].Name; // material name
 
                 var assimpMeshBones = assimpMesh.Bones;
@@ -327,18 +335,18 @@ namespace TheDivineAdventure.SkinModels
 
 
         //-------------------------------------------------------------
-        #region S E T U P   M A T E R I A L S   A N D   T E X T U R E S
+        #region SETUP MATERIALS AND TEXTURES
         //-------------------------------------------------------------
         /// <summary> Loads textures and sets material values to each model mesh. </summary>
         private void SetupMaterialsAndTextures(SkinModel model, Assimp.Scene scene)
         {
-            if (MaterialInfo) Console.WriteLine("\n\n@@@SetUpMeshMaterialsAndTextures \n");
+            if (MaterialInfo) Debug.WriteLine("\n\n@@@SetUpMeshMaterialsAndTextures \n");
 
             var savedDir = Content.RootDirectory;                            // store the current Content directory to restore it later
 
             for (int mi = 0; mi < scene.Meshes.Count; mi++)
             {                // loop thru scene meshes
-                var sMesh = model.meshes[mi];                             // ref to model-mesh
+                var sMesh = model.meshes[mi];                                // ref to model-mesh
                 int matIndex = sMesh.material_index;                         // we need the material index (for scene)
                 var assimpMaterial = scene.Materials[matIndex];              // get the scene's material 
 
@@ -365,7 +373,7 @@ namespace TheDivineAdventure.SkinModels
 
                 var assimpMaterialTextures = assimpMaterial.GetAllMaterialTextures();  // get the list of textures
                 #region More Info
-                if (MaterialInfo) { Console.WriteLine("\n Mesh Name " + scene.Meshes[mi].Name); Console.WriteLine(" MaterialIndexName: " + sMesh.material_name + "  Materials[" + matIndex + "]   get material textures"); }
+                if (MaterialInfo) { Debug.WriteLine("\n Mesh Name " + scene.Meshes[mi].Name); Debug.WriteLine(" MaterialIndexName: " + sMesh.material_name + "  Materials[" + matIndex + "]   get material textures"); }
                 // Texture types available via assimp are:
                 // None = 0, Diffuse = 1,Specular = 2, Ambient = 3,Emissive = 4, Height = 5,Normals = 6,Shininess = 7,Opacity = 8, Displacement = 9, Lightmap = 10,AmbientOcclusion = 17,Reflection = 11,
                 // BaseColor = 12 /*PBR*/, NormalCamera = 13/*PBR normal map workflow*/,EmissionColor = 14/*PBR emissive*/,Metalness = 15 /*PBR shininess*/  , Roughness = 16, /*PRB*/
@@ -375,7 +383,7 @@ namespace TheDivineAdventure.SkinModels
                 {              // loop thru textures
                     var tindex = assimpMaterialTextures[t].TextureIndex;           // texture index
                     var toperation = assimpMaterialTextures[t].Operation;
-                    var ttype = assimpMaterialTextures[t].TextureType.ToString(); // texture type
+                    var ttype = assimpMaterialTextures[t].TextureType.ToString();      // texture type
                     var tfilepath = assimpMaterialTextures[t].FilePath;               // original file path I think
                     var tfilename = GetFileName(tfilepath, true);                     // just file's name                    
 
@@ -397,58 +405,58 @@ namespace TheDivineAdventure.SkinModels
                     // debug info if needed: 
                     if (MaterialInfo)
                     {
-                        Console.WriteLine("      Material[" + matIndex + "].Texture[" + t + "] of " + assimpMaterialTextures.Length + "   Index: " + tindex.ToString().PadRight(5) + "   Type: " + ttype.PadRight(15) + "   Operation: " + toperation.ToString().PadRight(15) + " Name: " + tfilename.PadRight(15) + "  ExistsInContent: " + tfileexists); Console.WriteLine("      Filepath: " + tfilepath.PadRight(15));
+                        Debug.WriteLine("      Material[" + matIndex + "].Texture[" + t + "] of " + assimpMaterialTextures.Length + "   Index: " + tindex.ToString().PadRight(5) + "   Type: " + ttype.PadRight(15) + "   Operation: " + toperation.ToString().PadRight(15) + " Name: " + tfilename.PadRight(15) + "  ExistsInContent: " + tfileexists); Debug.WriteLine("      Filepath: " + tfilepath.PadRight(15));
                     }
-                    // L O A D   T E X T U R E S
+                    // LOAD TEXTURES
                     if (ttype == "Diffuse")
                     {
-                        if (MaterialInfo) Console.WriteLine("      ....Type...Diffuse");
+                        if (MaterialInfo) Debug.WriteLine("      ....Type...Diffuse");
                         model.meshes[mi].tex_name = tfilename;   // Get diffuse tex name
                         if (Content != null && tfileexists)
                         {    // If exists, load it: 
-                            model.meshes[mi].tex_diffuse = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Console.WriteLine("      ....Type...Diffuse Texture loaded: ... " + tfilename);
+                            model.meshes[mi].tex_diffuse = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Debug.WriteLine("      ....Type...Diffuse Texture loaded: ... " + tfilename);
                         }
-                        else Console.WriteLine("      DID NOT LOAD....: " + tfilename);
+                        else Debug.WriteLine("      DID NOT LOAD....: " + tfilename);
                     }
                     if (ttype == "Normals")
                     {
-                        if (MaterialInfo) Console.WriteLine("      ....Type...Normals");
+                        if (MaterialInfo) Debug.WriteLine("      ....Type...Normals");
                         model.meshes[mi].tex_normMap_name = tfilename; // Get normalMap tex name
                         if (Content != null && tfileexists)
                         {          // If exists, load it:
-                            model.meshes[mi].tex_normalMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Console.WriteLine("      ....Type...Normal Map Texture loaded: ... " + tfilename);
+                            model.meshes[mi].tex_normalMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Debug.WriteLine("      ....Type...Normal Map Texture loaded: ... " + tfilename);
                         }
-                        else Console.WriteLine("      DID NOT LOAD....: " + tfilename);
+                        else Debug.WriteLine("      DID NOT LOAD....: " + tfilename);
                     }
                     if (ttype == "Specular")
                     {
-                        if (MaterialInfo) Console.WriteLine("      ....Type...Specular");
+                        if (MaterialInfo) Debug.WriteLine("      ....Type...Specular");
                         model.meshes[mi].tex_specular_name = tfilename; // Get specularMap tex name
                         if (Content != null && tfileexists)
                         {           // If exists, load it:
-                            model.meshes[mi].tex_specular = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Console.WriteLine("      ....Type...Specular Map Texture loaded: ... " + tfilename);
+                            model.meshes[mi].tex_specular = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Debug.WriteLine("      ....Type...Specular Map Texture loaded: ... " + tfilename);
                         }
-                        else Console.WriteLine("      DID NOT LOAD....: " + tfilename);
+                        else Debug.WriteLine("      DID NOT LOAD....: " + tfilename);
                     }
                     if (ttype == "Height")
                     {
-                        if (MaterialInfo) Console.WriteLine("      ....Type...Height");
+                        if (MaterialInfo) Debug.WriteLine("      ....Type...Height");
                         model.meshes[mi].tex_heightMap_name = tfilename; // Get height tex name
                         if (Content != null && tfileexists)
                         {            // If exists, load it: 
-                            model.meshes[mi].tex_heightMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Console.WriteLine("      ....Type...Height Texture loaded: ... " + tfilename);
+                            model.meshes[mi].tex_heightMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Debug.WriteLine("      ....Type...Height Texture loaded: ... " + tfilename);
                         }
-                        else Console.WriteLine("      DID NOT LOAD....: " + tfilename);
+                        else Debug.WriteLine("      DID NOT LOAD....: " + tfilename);
                     }
                     if (ttype == "Reflection")
                     {
-                        if (MaterialInfo) Console.WriteLine("      ....Type...Reflection");
+                        if (MaterialInfo) Debug.WriteLine("      ....Type...Reflection");
                         model.meshes[mi].tex_reflectionMap_name = tfilename; // Get reflectionMap tex name
                         if (Content != null && tfileexists)
                         {                // If exists, load it:
-                            model.meshes[mi].tex_reflectionMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Console.WriteLine("      ....Type...Reflection Map Texture loaded: ... " + tfilename);
+                            model.meshes[mi].tex_reflectionMap = Content.Load<Texture2D>(tfilename); if (MaterialInfo) Debug.WriteLine("      ....Type...Reflection Map Texture loaded: ... " + tfilename);
                         }
-                        else Console.WriteLine("      DID NOT LOAD....: " + tfilename);
+                        else Debug.WriteLine("      DID NOT LOAD....: " + tfilename);
                     }
                 }
             }
@@ -460,7 +468,7 @@ namespace TheDivineAdventure.SkinModels
 
 
         //-------------------------------------------------
-        #region C R E A T E   T R E E   T R A N S F O R M S
+        #region CREATE TREE TRANSFORMS
         //-------------------------------------------------
         #region Create Tree Transforms Summary: 
         /// <summary> Recursively get scene nodes stuff into our model nodes
@@ -492,7 +500,7 @@ namespace TheDivineAdventure.SkinModels
             for (int mi = 0; mi < scene.Meshes.Count; mi++)
             {
                 SkinModel.ModelBone bone;
-                int boneIndexInMesh = 0;
+                int boneIndexInMesh;
                 if (GetBoneForMesh(model.meshes[mi], modelNode.name, out bone, out boneIndexInMesh))
                 { // find the bone that goes with this node name
                     // MARK AS BONE: 
@@ -513,9 +521,10 @@ namespace TheDivineAdventure.SkinModels
             for (int i = 0; i < curAssimpNode.Children.Count; i++)
             {
                 var asimpChildNode = curAssimpNode.Children[i];
-                var childNode = new SkinModel.ModelNode();       // made each child node                
-                childNode.parent = modelNode;                       // set parent before passing
-                childNode.name = curAssimpNode.Children[i].Name;  // name the child
+                var childNode = new SkinModel.ModelNode() {       // made each child node                
+                    parent = modelNode,                      // set parent before passing
+                    name = curAssimpNode.Children[i].Name  // name the child
+                };
                 if (childNode.parent.isBoneOnRoute) childNode.isBoneOnRoute = true; // part of actual tree
                 modelNode.children.Add(childNode);                    // add each child to this node's child list
                 CreateTreeTransforms(model, modelNode.children[i], asimpChildNode, tabLevel + 1); // recursively create transforms for each child
@@ -527,7 +536,7 @@ namespace TheDivineAdventure.SkinModels
 
 
         //---------------------------------------------------
-        #region P R E P A R E   A N I M A T I O N S   D A T A
+        #region PREPARE ANIMATIONS DATA
         //---------------------------------------------------
         #region Prep Anim Summary
         /// <summary> Gets the assimp animations into our model </summary>
@@ -537,24 +546,25 @@ namespace TheDivineAdventure.SkinModels
         #endregion
         private void PrepareAnimationsData(SkinModel model, Assimp.Scene scene)
         {
-            if (AnimationInfo) Console.WriteLine("\n\n@@@AnimationsCreateNodesAndCopy \n");
+            if (AnimationInfo) Debug.WriteLine("\n\n@@@AnimationsCreateNodesAndCopy \n");
 
             // Copy animation to ours
             for (int i = 0; i < scene.Animations.Count; i++)
             {
                 var assimAnim = scene.Animations[i];
-                if (AnimationInfo) Console.WriteLine("  " + "assimpAnim.Name: " + assimAnim.Name);
+                if (AnimationInfo) Debug.WriteLine("  " + "assimpAnim.Name: " + assimAnim.Name);
 
                 // Initially, copy data
-                var modelAnim = new SkinModel.RigAnimation();
-                modelAnim.animation_name = assimAnim.Name;
-                modelAnim.TicksPerSecond = assimAnim.TicksPerSecond;
-                modelAnim.DurationInTicks = assimAnim.DurationInTicks;
-                modelAnim.DurationInSeconds = assimAnim.DurationInTicks / assimAnim.TicksPerSecond; // Time for entire animation
-                modelAnim.DurationInSecondsAdded = AddedLoopingDuration;                            // May have added duration for animation-loop-fix                
-                //modelAnim.TotalFrames  = (int)(modelAnim.DurationInSeconds * (double)(modelAnim.TicksPerSecond)); // just a default value
-                modelAnim.HasNodeAnims = assimAnim.HasNodeAnimations;                               // maybe has no animation
-                modelAnim.HasMeshAnims = assimAnim.HasMeshAnimations;                               // maybe has mesh transforms
+                var modelAnim = new SkinModel.RigAnimation()
+                {
+                    animation_name = assimAnim.Name,
+                    TicksPerSecond = assimAnim.TicksPerSecond,
+                    DurationInTicks = assimAnim.DurationInTicks,
+                    DurationInSeconds = assimAnim.DurationInTicks / assimAnim.TicksPerSecond, // Time for entire animation
+                    DurationInSecondsAdded = AddedLoopingDuration,                          // May have added duration for animation-loop-fix    
+                    HasNodeAnims = assimAnim.HasNodeAnimations,                             // maybe has no animation
+                    HasMeshAnims = assimAnim.HasMeshAnimations                              // maybe has mesh transform
+                };
 
                 // Need an animation-node-list for each animation 
                 modelAnim.animatedNodes = new List<SkinModel.AnimNodes>();         // lists of S,R,T keyframes for nodes
@@ -562,13 +572,15 @@ namespace TheDivineAdventure.SkinModels
                 for (int j = 0; j < assimAnim.NodeAnimationChannels.Count; j++)
                 {
                     var anodeAnimLists = assimAnim.NodeAnimationChannels[j];       // refer to assimp node animation lists (keyframes) for this channel
-                    var nodeAnim = new SkinModel.AnimNodes();                // make a new animNode [animation-list (keyframes)]
-                    nodeAnim.nodeName = anodeAnimLists.NodeName;                  // copy the animation name
-                    if (AnimationInfo) Console.WriteLine("  " + " Animated Node Name: " + nodeAnim.nodeName);
+                    var nodeAnim = new SkinModel.AnimNodes()            // make a new animNode [animation-list (keyframes)]        
+                    {               
+                        nodeName = anodeAnimLists.NodeName                // copy the animation name
+                    };
+                    if (AnimationInfo) Debug.WriteLine("  " + " Animated Node Name: " + nodeAnim.nodeName);
 
                     // use name to get the node in our tree to refer to 
                     var modelnoderef = GetRefToNode(anodeAnimLists.NodeName, model.rootNodeOfTree);
-                    if (modelnoderef == null) Console.WriteLine("NODE SHOULD NOT BE NULL: " + anodeAnimLists.NodeName);
+                    if (modelnoderef == null) Debug.WriteLine("NODE SHOULD NOT BE NULL: " + anodeAnimLists.NodeName);
                     nodeAnim.nodeRef = modelnoderef; // set the bone this animation refers to
 
                     // get the rotation, scale, and position keys: 
@@ -608,7 +620,7 @@ namespace TheDivineAdventure.SkinModels
         /// <summary> Copy data from scene to our meshes. </summary> // http://sir-kimmi.de/assimp/lib_html/structai_mesh.html#aa2807c7ba172115203ed16047ad65f9e
         private void CopyVertexIndexData(SkinModel model, Assimp.Scene scene)
         {
-            if (ConsoleInfo) Console.WriteLine("\n\n@@@CopyVerticeIndiceData \n");
+            if (ConsoleInfo) Debug.WriteLine("\n\n@@@CopyVerticeIndiceData \n");
 
             // LOOP SCENE MESHES for VERTEX DATA
             for (int mi = 0; mi < scene.Meshes.Count; mi++)
@@ -628,7 +640,7 @@ namespace TheDivineAdventure.SkinModels
                 {   // loop faces
                     var f = mesh.Faces[k];                     // get face
                     int indCount = f.IndexCount;
-                    if (indCount != 3) Console.WriteLine("\n UNEXPECTED INDEX COUNT \n"); // may need to ensure load settings force triangulation
+                    if (indCount != 3) Debug.WriteLine("\n UNEXPECTED INDEX COUNT \n"); // may need to ensure load settings force triangulation
                     for (int j = 0; j < indCount; j++)
                     {       // loop indices of face
                         var ind = f.Indices[j];                // get each index
@@ -845,7 +857,7 @@ namespace TheDivineAdventure.SkinModels
                     model.meshes[mi].hasBones = mesh.HasBones;
                     model.meshes[mi].hasMeshAnimAttachments = mesh.HasMeshAnimationAttachments;
                     var assimpBones = mesh.Bones;                       // refer to current bone set in this mesh
-                    if (ConsoleInfo) Console.WriteLine("   assimpMeshBones.Count: " + assimpBones.Count);
+                    if (ConsoleInfo) Debug.WriteLine("   assimpMeshBones.Count: " + assimpBones.Count);
                     // LOOP: ASSIMP MESH BONES
                     for (int ambi = 0; ambi < assimpBones.Count; ambi++)
                     {                      // loop the bones of this assimp mesh
@@ -857,7 +869,7 @@ namespace TheDivineAdventure.SkinModels
                         if (ConsoleInfo)
                         {
                             string str = "     mesh[" + mi + "].Name: " + mesh.Name + "  bone[" + ambi + "].Name: " + assimBoneName.PadRight(12) + "  assimpMeshBoneIndex: " + ambi.ToString().PadRight(4) + "  WeightCount: " + assimBone.VertexWeightCount;
-                            if (assimBone.VertexWeightCount > 0) str += "  ex VertexWeights[0].VertexID: " + assimBone.VertexWeights[0].VertexID; Console.WriteLine(str);
+                            if (assimBone.VertexWeightCount > 0) str += "  ex VertexWeights[0].VertexID: " + assimBone.VertexWeights[0].VertexID; Debug.WriteLine(str);
                         }
 
                         // loop thru this bones vertex listings with the weights for it:
@@ -957,11 +969,11 @@ namespace TheDivineAdventure.SkinModels
         {
             var tpathsplit = s.Split(new char[] { '.' });
             string f = tpathsplit[0];
-            if (tpathsplit.Length > 1) f = tpathsplit[tpathsplit.Length - 2];
+            if (tpathsplit.Length > 1) f = tpathsplit[^2];
 
             if (useBothSeperators) tpathsplit = f.Split(new char[] { '/', '\\' });
             else tpathsplit = f.Split(new char[] { '/' });
-            s = tpathsplit[tpathsplit.Length - 1];
+            s = tpathsplit[^1];
             return s;
         }
 

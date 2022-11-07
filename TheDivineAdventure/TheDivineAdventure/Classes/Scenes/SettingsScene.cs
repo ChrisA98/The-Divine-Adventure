@@ -10,11 +10,14 @@ namespace TheDivineAdventure
 {
     public class SettingsScene : Scene
     {
+        //page 1 interactables
         private TextBox resWidth, resHeight;
         private SliderSelector masterVol,musicVol,sfxVol;
         private Texture2D settingsWindow1, settingsWindow2, settingsButton1, settingsButton2, settingsButton3;
         private Button settingsWindowed, settingsBorderless, settingsFullscreen, settingsNoAA, settingsAA2,
             settingsAA4, settingsAA8, settingsCancel, settingsApply, settingsPage1, settingsPage2;
+        //page 2 interactables
+        private SliderSelector sensitivity;
         private string[,] settings;
         private int page;
 
@@ -30,13 +33,14 @@ namespace TheDivineAdventure
             LoadContent();
             //get saved settings
             settings = GameSettings.ReadSettings();
+            parent.settings = settings;
 
             //set page to audio video first
             page = 0;
 
             //show cursor
             parent.showCursor = true;
-
+                        
             //Create Settings Page Button
             settingsPage1 = new Button(settingsButton3, settingsButton3, "Audio/Video", parent.smallFont,
                 new Vector2(1580, 183), new Vector2(242, 110), parent.currentScreenScale);
@@ -44,6 +48,7 @@ namespace TheDivineAdventure
             settingsPage2 = new Button(settingsButton3, settingsButton3, "Controls", parent.smallFont,
                 new Vector2(1580, 293), new Vector2(242, 110), parent.currentScreenScale);
 
+            #region Page 0 info
             //create resolution buttons
             resWidth = new TextBox(settings[0,1], 4,
                 parent.smallFont, new Vector2(492, 325), 30, new Color(Color.Black, 60), parent);
@@ -67,6 +72,7 @@ namespace TheDivineAdventure
 
             settingsFullscreen = new Button(settingsButton1, settingsButton1, "Fullscreen",
                 parent.smallFont, new Vector2(392, 505), new Vector2(180, 29), parent.currentScreenScale);
+
             //set window button based on settings
             switch (Int32.Parse(settings[2, 1]))
             {
@@ -116,6 +122,16 @@ namespace TheDivineAdventure
                     settingsNoAA.IsActive = true;
                     break;
             }
+            #endregion
+
+            #region Page 1 Info
+
+            sensitivity = new SliderSelector(new Vector2(386, 334), new Vector2(300, 9), parent, Content)
+            {
+                Value = (float.Parse(settings[7, 1]) - 15) / 100
+            };
+
+            #endregion
 
             //create back and apply buttons
             settingsCancel = new Button(settingsButton2, settingsButton2, "Cancel",
@@ -140,13 +156,6 @@ namespace TheDivineAdventure
         {
             base.Update(gameTime);
 
-            //set volume slider click states
-            if (!musicVol.IsActive && !sfxVol.IsActive)
-                masterVol.IsPressed();
-            if (!sfxVol.IsActive && !masterVol.IsActive)
-                musicVol.IsPressed();
-            if (!musicVol.IsActive && !masterVol.IsActive)
-                sfxVol.IsPressed();
 
             //escape to exit settings without saving
             if ((Keyboard.GetState().IsKeyDown(Keys.Escape) && parent.lastKeyboard.IsKeyUp(Keys.Escape)))
@@ -154,6 +163,21 @@ namespace TheDivineAdventure
                 settingsCancel.IsActive = true;
                 parent.currentScene = parent.lastScene;
                 return;
+            }
+
+            if (page == 0)
+            {
+                //set volume slider click states
+                if (!musicVol.IsActive && !sfxVol.IsActive)
+                    masterVol.IsPressed();
+                if (!sfxVol.IsActive && !masterVol.IsActive)
+                    musicVol.IsPressed();
+                if (!musicVol.IsActive && !masterVol.IsActive)
+                    sfxVol.IsPressed();
+            }
+            else
+            {
+                sensitivity.IsPressed();
             }
 
             //check what mouse is clicking for page selector
@@ -195,12 +219,14 @@ namespace TheDivineAdventure
                         _graphics.PreferredBackBufferWidth = Int32.Parse(resWidth.Text);
                         resChanged = true;
                         settings[0, 1] = resWidth.Text;
+                        parent.settings[0, 1] = resWidth.Text;
                     }
                     if (_graphics.PreferredBackBufferHeight != Int32.Parse(resHeight.Text))
                     {
                         _graphics.PreferredBackBufferHeight = Int32.Parse(resHeight.Text);
                         resChanged = true;
                         settings[1, 1] = resHeight.Text;
+                        parent.settings[1, 1] = resHeight.Text;
                     }
                     if (resChanged)
                     {
@@ -218,6 +244,7 @@ namespace TheDivineAdventure
                         parent.Window.IsBorderless = false;
                         parent.Window.Position = new Point(parent.Window.Position.X+10, parent.Window.Position.Y+10);
                         settings[2, 1] = "0";
+                        parent.settings[2, 1] = "0";
                     }//switch to borderless window
                     else if (settingsBorderless.IsActive == true)
                     {
@@ -232,6 +259,7 @@ namespace TheDivineAdventure
                             parent.Window.Position = new Point(0, 0);
                         }
                         settings[2, 1] = "1";
+                        parent.settings[2, 1] = "1";
                     }//switch to fullscreen
                     else if (settingsFullscreen.IsActive == true && !_graphics.IsFullScreen) {
                         parent.Window.IsBorderless = true;
@@ -239,6 +267,7 @@ namespace TheDivineAdventure
                         _graphics.ApplyChanges();
 
                         settings[2, 1] = "2";
+                        parent.settings[2, 1] = "2";
                     }
 
                     //set antialiasing preferences
@@ -248,6 +277,7 @@ namespace TheDivineAdventure
                         parent.GraphicsDevice.PresentationParameters.MultiSampleCount = 0;
 
                         settings[3, 1] = "0";
+                        parent.settings[3, 1] = "0";
                     }
                     else if (settingsAA2.IsActive == true)
                     {
@@ -255,6 +285,7 @@ namespace TheDivineAdventure
                         parent.GraphicsDevice.PresentationParameters.MultiSampleCount = 2;
 
                         settings[3, 1] = "1";
+                        parent.settings[3, 1] = "1";
                     }
                     else if (settingsAA4.IsActive == true)
                     {
@@ -262,6 +293,7 @@ namespace TheDivineAdventure
                         parent.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
 
                         settings[3, 1] = "2";
+                        parent.settings[3, 1] = "2";
                     }
                     else if (settingsAA8.IsActive == true)
                     {
@@ -269,13 +301,17 @@ namespace TheDivineAdventure
                         parent.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
 
                         settings[3, 1] = "3";
+                        parent.settings[3, 1] = "3";
                     }
                     parent.currentScreenScale = new Vector2(_graphics.PreferredBackBufferWidth / 1920f, _graphics.PreferredBackBufferHeight / 1080f);
 
                     //set volume preferences
                     settings[4, 1] = (masterVol.Value).ToString();
+                    parent.settings[4, 1] = (masterVol.Value).ToString();
                     settings[5, 1] = (musicVol.Value).ToString();
+                    parent.settings[5, 1] = (musicVol.Value).ToString();
                     settings[6, 1] = (sfxVol.Value).ToString();
+                    parent.settings[6, 1] = (sfxVol.Value).ToString();
 
                     MediaPlayer.Volume = float.Parse(settings[4, 1]) * float.Parse(settings[5, 1]);
                     Player.volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
@@ -362,7 +398,21 @@ namespace TheDivineAdventure
             //check what mouse is clicking on page 2
             if (parent.mouseState.LeftButton == ButtonState.Pressed && page == 1)
             {
+                sensitivity.Update();
+                if (settingsApply.IsPressed())
+                {
+                    settings[7, 1] = (Math.Round((sensitivity.Value+.15)*100,0)).ToString();
+                    parent.settings[7, 1] = settings[7, 1];
+                    if(parent.lastScene == "PAUSE")
+                    {
+                        parent.playScene.player.sensitivity = (int)Math.Round((sensitivity.Value + .15) * 100, 0);
+                    }
 
+                    settingsApply.IsActive = true;
+                    parent.currentScene = parent.lastScene;
+                    GameSettings.WriteSettings(settings);
+                    return;
+                }
             }
             resWidth.Update(gameTime);
             resHeight.Update(gameTime);
@@ -435,6 +485,11 @@ namespace TheDivineAdventure
                 _spriteBatch.Draw(settingsWindow2, Vector2.Zero, null,
                     Color.White, 0, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 0);
 
+                //draw volume options
+                sensitivity.Draw(_spriteBatch, gameTime);
+                _spriteBatch.DrawString(parent.smallFont, Math.Round((sensitivity.Value+.15)*100, 0).ToString(),
+                    new Vector2(700 * parent.currentScreenScale.X, 322 * parent.currentScreenScale.Y),
+                    parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
             }
 
             //draw close and apply buttons

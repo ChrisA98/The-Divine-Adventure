@@ -32,6 +32,10 @@ namespace TheDivineAdventure
         private string currentChar;
         private Matrix worldStone, worldPlayer, proj;
 
+        // Mouse
+        private MouseState currMouseState;
+        private MouseState previousMouseState;
+        private float rot;      //rotate model
 
         private Camera camera;  //scene camera
 
@@ -269,6 +273,9 @@ namespace TheDivineAdventure
             // Declare first character view
             currentChar = "CLERIC";
 
+
+            rot = -180;    //rotating model starts at -180;
+
             //Camera
             camera = new Camera(parent.GraphicsDevice, Vector3.Up);
 
@@ -341,6 +348,7 @@ namespace TheDivineAdventure
 
             // SKIN MODEL LOADER //
             skinFx = new SkinFx(Content, "SkinEffect");
+            skinFx.DisableFog();
             itemFx[0] = new SkinFx(Content, "SkinEffect");
             itemFx[1] = new SkinFx(Content, "SkinEffect");
             itemFx[2] = new SkinFx(Content, "SkinEffect");
@@ -402,9 +410,33 @@ namespace TheDivineAdventure
             {
                 if (an != null) an.Update(gameTime);    //update model animations
             }
+
+            //rotate model
+            // Handle mouse movement
+            float deltaX;
+            float deltaY;
+            currMouseState = Mouse.GetState();
+            if (parent.mouseState.LeftButton == ButtonState.Pressed)
+            {
+                // Only handle mouse movement code if the mouse has moved (the state has changed)
+                if (currMouseState != previousMouseState)
+                {
+                    // Cache mouse location
+                    deltaX = (currMouseState.X - previousMouseState.X) * (parent.currentScreenScale.X);
+
+                    // Applies the rotation (we are only rotating on the X and Y axes)
+                    rot += deltaX;
+
+                    //Clamp roatations
+                    if (rot > 360) rot -= 360;
+                    if (rot < -360) rot += 360;
+                }
+            }
+
             //Camera Updates
             camera.Update(Matrix.Identity);
-            //click detection
+
+            //click detection for model rotating
             if (parent.mouseState.LeftButton == ButtonState.Pressed && parent.lastMouseState.LeftButton != ButtonState.Pressed)
             {
                 if (leftArrow.IsPressed())
@@ -469,6 +501,7 @@ namespace TheDivineAdventure
                 }
             }
 
+            previousMouseState = Mouse.GetState();
             base.Update(gameTime);
         }
 
@@ -521,7 +554,7 @@ namespace TheDivineAdventure
                 case "WARRIOR":
                     hero = playerModels[WARRIOR];
                     characterWorld = Matrix.CreateScale(1f) *
-                                Matrix.CreateRotationY(MathHelper.ToRadians(-180)) *
+                                Matrix.CreateRotationY(MathHelper.ToRadians(rot)) *
                                 Matrix.CreateTranslation(new Vector3(10, -6, 13));
                     for (int i = 0; i < socketedItems[3].meshes.Length; i++)
                     {
@@ -537,7 +570,7 @@ namespace TheDivineAdventure
                 case "ROGUE":
                     hero = playerModels[ROGUE];
                     characterWorld = Matrix.CreateScale(1f) *
-                                Matrix.CreateRotationY(MathHelper.ToRadians(-180)) *
+                                Matrix.CreateRotationY(MathHelper.ToRadians(rot)) *
                                 Matrix.CreateTranslation(new Vector3(10, 6, 13));
                     for (int i = 0; i < socketedItems[3].meshes.Length; i++)
                     {
@@ -563,7 +596,7 @@ namespace TheDivineAdventure
                 case "MAGE":
                     hero = playerModels[MAGE];
                     characterWorld = Matrix.CreateScale(1f) *
-                                Matrix.CreateRotationY(MathHelper.ToRadians(-180)) *
+                                Matrix.CreateRotationY(MathHelper.ToRadians(rot)) *
                                 Matrix.CreateTranslation(new Vector3(10, 6, 13));
                     for (int i = 0; i < socketedItems[0].meshes.Length; i++)
                     {
@@ -579,7 +612,7 @@ namespace TheDivineAdventure
                 default:
                     hero = playerModels[CLERIC];
                     characterWorld = Matrix.CreateScale(1f) *
-                                Matrix.CreateRotationY(MathHelper.ToRadians(-180)) *
+                                Matrix.CreateRotationY(MathHelper.ToRadians(rot)) *
                                 Matrix.CreateTranslation(new Vector3(10, 6, 13));
                     break;
             }
@@ -588,7 +621,7 @@ namespace TheDivineAdventure
             for (int i = 0; i < hero.meshes.Length; i++)
             {
                 skinFx.SetDiffuseCol(Color.White.ToVector4());
-                skinFx.SetSpecularCol(Color.White.ToVector3());
+                skinFx.SetSpecularCol(new Vector3(1f, 0.1f, 0.05f));
                 skinFx.SetSpecularPow(255f);
                 hero.DrawMesh(i, camera, characterWorld, false);
             }

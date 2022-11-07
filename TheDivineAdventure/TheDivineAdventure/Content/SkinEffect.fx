@@ -15,8 +15,8 @@ sampler texSampler : register(s0)
 {
     Texture = <TexDiffuse>;
     Filter = Anisotropic;
-    AddressU = Mirror;
-    AddressV = Mirror;
+    AddressU = Wrap;
+    AddressV = Wrap;
 };
 sampler normalSampler : register(s1)
 {
@@ -24,8 +24,8 @@ sampler normalSampler : register(s1)
     MinFilter = linear;
     MagFilter = linear;
     MipFilter = Anisotropic;
-    AddressU = Mirror;
-    AddressV = Mirror;
+    AddressU = Wrap;
+    AddressV = Wrap;
 };
 sampler specSampler : register(s2)
 {
@@ -33,8 +33,8 @@ sampler specSampler : register(s2)
     MinFilter = linear;
     MagFilter = linear;
     MipFilter = Anisotropic;
-    AddressU = Mirror;
-    AddressV = Mirror;
+    AddressU = Wrap;
+    AddressV = Wrap;
 };
 
 float4x4 World, WorldViewProj;
@@ -46,7 +46,6 @@ float4 DiffuseColor;
 float3 EmissiveColor; // Ambient factored into emissive already
 float3 SpecularColor;
 float  SpecularPower;
-float  Shine_Amplify = 1;
 float3 LightDir1;
 float3 LightDiffCol1;
 float3 LightSpecCol1;
@@ -61,11 +60,10 @@ float4 FogVector;
 
 matrix Bones[MAX_BONES];
 
-// I N P U T S 
-struct VS_In
+// INPUTS 
+struct VS_In //Vertex Shade Input
 {
     float4 pos          : POSITION0;
-    //  float4 color        : COLOR0;      // currently not using (uncomment here and #defines in skinmodel & skin-loader to use color-per-vertex - and add color influence code in shaders)
     float2 uv           : TEXCOORD0;
     float3 normal       : NORMAL0;
     float3 tangent      : TANGENT0;
@@ -74,12 +72,12 @@ struct VS_In
     float4 weights      : BLENDWEIGHT0;
 };
 
-// T R A N S F E R   F R O M   V E R T E X - S H A D E R   T O   P I X E L - S H A D E R 
+// TRANSFER FROM VERTEX-SHADER TO PIXEL-SHADER 
+// 
 // NORMAL_MAPPED__VS__OUTPUT
 struct VS_N_Out                       // normal will be extracted from normalMap during pixel-shading, so no need to pass it
 {
     float4 position   : SV_POSITION;
-    //  float4 color      : COLOR0;       // currently not using (uncomment here and #defines in skinmodel & skin-loader to use color-per-vertex)
     float2 uv         : TEXCOORD0;
     float4 worldPos   : TEXCOORD1;    // position in world space (we'll make the w component into the fog-factor)    
     float3x3 tanSpace : TEXCOORD2;
@@ -88,7 +86,6 @@ struct VS_N_Out                       // normal will be extracted from normalMap
 struct VS_Out
 {
     float4 position : SV_POSITION;
-    //  float4 color      : COLOR0;       // currently not using (uncomment here and #defines in skinmodel & skin-loader to use color-per-vertex)
     float2 uv       : TEXCOORD0;
     float4 worldPos : TEXCOORD1;      // position in world space (we'll make the w component into the fog-factor)    
     float3 normal   : TEXCOORD2;
@@ -97,9 +94,9 @@ struct VS_Out
 
 
 
-// V E R T E X    S H A D E R    T E C H N I Q U E S ----------------------------------------------------------------------------
+// VERTEX SHADER TECHNIQUES----------------------------------------------------------------------------
 
-// S K I N  -  calculates the position and normal from weighted bone matrices
+// SKIN  -  calculates the position and normal from weighted bone matrices
 void Skin(inout VS_In vin) {
     float4x3 skinning = 0;
     [unroll]
@@ -115,7 +112,7 @@ void SkinNorms(inout VS_In vin) {
     vin.pos.xyz = mul(vin.pos, skinning);
     vin.normal = mul(vin.normal, (float3x3) skinning);
     vin.tangent = mul(vin.tangent, (float3x3) skinning);
-    //vin.bitangent    = mul(vin.bitangent,(float3x3) skinning);
+    vin.bitangent    = mul(vin.bitangent,(float3x3) skinning);
 }
 
 
@@ -177,7 +174,7 @@ struct ColorPair
     float3 diffuse;
     float3 specular;
 };
-// C O M P U T E   L I G H T S 
+// COMPUTE LIGHTS 
 ColorPair ComputeLights(float3 eyeVector, float3 normal, uniform int numLights)
 {
     float3x3 lightDirections = 0, lightDiffuse = 0, lightSpecular = 0, halfVectors = 0;
@@ -206,14 +203,14 @@ ColorPair ComputeLights(float3 eyeVector, float3 normal, uniform int numLights)
 // NOTE: this has been modified with the assumption that transparent stuff will be like glass or ice - super shiny (see below)
 float4 PixelShader_3Lights_Skin(VS_Out pin) : SV_Target0
 {
-    float4 color = tex2D(texSampler, pin.uv) * DiffuseColor; // sample from the texture (& multiply by material's diffuse color [optional])    
+    float4 color = tex2D(texSampler, pin.uv); // sample from the texture (& multiply by material's diffuse color [optional])    
     float3 eyeVector = normalize(CamPos - pin.worldPos.xyz);     // this vector points from surface position toward camera
     float3 normal = normalize(pin.normal);
 
     ColorPair lit = ComputeLights(eyeVector, normal, 3);
 
     color.rgb *= lit.diffuse;
-    color.rgb += lit.specular *  ((1 - color.a) * 100);                                 // <-- original version
+    color.rgb += lit.specular *  ((1 - color.a) * 100);   
     if (FogVector.w > 0) color.rgb = lerp(color.rgb, FogColor * color.a, pin.worldPos.w);
     return color;
 }
@@ -232,9 +229,6 @@ float4 PixelShader_3Lights_Skin_Nmap(VS_N_Out pin) : SV_Target0
 
     color.rgb *= lit.diffuse;
 
-    if ((color.a < 0.8) && (lit.specular.r > 0.8)) {                  // ADDED THIS TO MAKE EYES LOOK REALLY SHINY: 
-        color.rgb += lit.specular;   color.a = 1;
-    }
     color.rgb += lit.specular * color.a; // <-- original version
 
     if (FogVector.w > 0) color.rgb = lerp(color.rgb, FogColor * color.a, pin.worldPos.w);
