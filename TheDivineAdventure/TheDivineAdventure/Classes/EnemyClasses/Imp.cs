@@ -78,7 +78,7 @@ namespace TheDivineAdventure
                 if (attDurTimer < attackLength) { attDurTimer += 1; return; }
                 //perform attack
                 soundEffects[0].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                AttackPattern.singleMel(world.Translation + world.Backward * 5, world.Backward * 2, rot, attackDamage, projList, cam);
+                AttackPattern.SingleMel(world.Translation + world.Backward * 5, world.Backward * 2, rot, attackDamage, projList, cam);
 
                 //process projectile
                 foreach (Attack p in projList)

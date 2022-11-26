@@ -18,6 +18,7 @@ namespace TheDivineAdventure
         private float force;
         private Camera cam;
         private Shapes hitbox;
+        public int projScale;
 
         // Movement
         public Matrix cameraLookAt;
@@ -30,10 +31,13 @@ namespace TheDivineAdventure
 
         // Sound
 
+        //Lighting
+        public Color color;
+
         #region <<Constructors>>
 
         // -- Ranged Attack --
-        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt, Camera cam,  float force_ = 1)
+        public Attack(Vector3 origin, Vector3 target, float pSpeed, float damageAmt, Camera cam, Color col,  float force_ = 1, int scale = 1, int duration = 1)
         {
             // Set the projectiles initial position
             initPos = origin;
@@ -47,17 +51,22 @@ namespace TheDivineAdventure
             hitbox = new Shapes(cam.gpu, Color.Red, Vector3.Zero, origin + target, this.GetType());
             hitbox.DefineCuboid(Vector3.One);
 
+            projScale = scale;
+
             isMelee = false;
             speed = pSpeed * 50;
             vel *= speed;
 
             // Timer stats
-            timer = 1f;
+            timer = duration;
             timeToDestroy = false;
 
             //define damage amount
             damage = damageAmt;
             force = force_;
+
+            //set color
+            color = col;
         }
 
         // -- Melee Attack --
@@ -101,7 +110,7 @@ namespace TheDivineAdventure
             if (timer <= 0f) { timeToDestroy = true; return; }
             if (CheckCollision(player))
             {
-                player.Damage(damage,force,vel);
+                player.Damage(damage,force,(player.Pos- initPos));
                 timeToDestroy = true;
                 return;
             }
@@ -119,7 +128,7 @@ namespace TheDivineAdventure
             timer -= dt;
         }
 
-        public void Update(float dt, PlayScene.EnemySpawner[] spawnerList, PlayScene parent)
+        public void Update(float dt, PlayScene.EnemySpawner[] spawnerList, Boss boss, PlayScene parent)
         {
             if (timer <= 0f) timeToDestroy = true;
             foreach (PlayScene.EnemySpawner spawner in spawnerList)
@@ -131,9 +140,21 @@ namespace TheDivineAdventure
                     {
                         e.Damage(damage, force);
                         timeToDestroy = true;
-                        return;
                     }
                 }
+            }
+            foreach (Enemy e in parent.worldEnemyList)
+            {
+                if (CheckCollision(e))
+                {
+                    e.Damage(damage, force);
+                    timeToDestroy = true;
+                }
+            }
+            if (CheckCollision(boss))
+            {
+                boss.Damage(damage);
+                timeToDestroy = true;
             }
             foreach (Level.StaticCollisionMesh mesh in parent.thisLevel.StaticCollisionMeshes)
             {
@@ -189,6 +210,27 @@ namespace TheDivineAdventure
                 return false;
             }
         }
+        
+        private bool CheckCollision(Boss boss)
+        {
+            if (boss == null) return false;
+            if (isMelee)
+            {
+                if (hitbox.Intersects(boss.boundingCollider))
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                if (boss.boundingCollider.Intersects(boundingSphere))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         private bool CheckCollision(Shapes actor)
         {
@@ -210,7 +252,7 @@ namespace TheDivineAdventure
             }
         }
         #endregion
-
+        
         ////////////////////
         ///GETTER/SETTERS///
         ////////////////////
@@ -234,7 +276,7 @@ namespace TheDivineAdventure
 
         private BoundingSphere boundingSphere
         {
-            get { return new BoundingSphere(pos, 2f); }
+            get { return new BoundingSphere(pos, 2.7f*projScale); }
         }
         public Shapes HitBox
         {

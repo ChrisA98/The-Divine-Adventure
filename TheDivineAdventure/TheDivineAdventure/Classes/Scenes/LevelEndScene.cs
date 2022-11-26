@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
 
 
 using System;
@@ -19,6 +21,7 @@ namespace TheDivineAdventure
         public string currentScore;
         private List<(string Role, int Score)> highscores;
         private bool setHigh;
+        private Song closeMusic;
 
         public LevelEndScene(SpriteBatch sb, GraphicsDeviceManager graph, Game1 game, ContentManager cont) : base(sb, graph, game, cont)
         {
@@ -30,7 +33,7 @@ namespace TheDivineAdventure
             base.Initialize();
 
             //create buttons
-            playAgain = new Button(actionButton, actionButton, "Play Again", buttonFont, new Vector2(579, 464),
+            playAgain = new Button(actionButton, actionButton, "Next Level", buttonFont, new Vector2(579, 464),
                 new Vector2(210, 76), parent.currentScreenScale);
             levelSelect = new Button(actionButton, actionButton, "Level Select", buttonFont, new Vector2(579, 564),
                 new Vector2(210, 76), parent.currentScreenScale);
@@ -61,6 +64,9 @@ namespace TheDivineAdventure
 
             setHigh = (Int32.Parse(currentScore) == highscores[0].Score);
 
+            MediaPlayer.Stop();
+            MediaPlayer.Play(closeMusic);
+
             WriteScores();
 
         }
@@ -68,6 +74,10 @@ namespace TheDivineAdventure
         public override void LoadContent()
         {
             base.LoadContent();
+
+            Content.RootDirectory = @"Content\Music";
+            closeMusic = Content.Load<Song>("MUS_CloseScene");
+            Content.RootDirectory = @"Content";
 
             //Load 2D Assets
             backdrop = Content.Load<Texture2D>("TEX_LevelEndScreen_Back");
@@ -86,11 +96,15 @@ namespace TheDivineAdventure
             base.Update(gameTime);
             if (parent.mouseState.LeftButton == ButtonState.Pressed && parent.lastMouseState.LeftButton != ButtonState.Pressed)
             {
+                Game1.gameSounds[0].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
+
                 if (playAgain.IsPressed())
                 {
                     parent.currentScene = "PLAY";
-                    parent.ReloadContent();
+                    parent.level++;
+                    parent.LoadPlayScene();
                     parent.playScene.Initialize();
+                    parent.ReloadContent();
                     return;
                 }
                 if (levelSelect.IsPressed())
@@ -98,11 +112,14 @@ namespace TheDivineAdventure
                     parent.currentScene = "LEVEL_SELECT";
                     parent.ReloadContent();
                     parent.levelSelectScene.Initialize();
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(parent.gameTheme);
                     return;
                 }
                 if (mainMenu.IsPressed())
                 {
                     parent.currentScene = "TITLE_SCREEN";
+                    MediaPlayer.Stop();
                     parent.ReloadContent();
                     parent.titleScene.Initialize();
                     return;
@@ -223,7 +240,7 @@ namespace TheDivineAdventure
                 while (j >= 0 && list[j].Score < key.Score)
                 {
                     list[j + 1] = list[j];
-                    j = j - 1;
+                    j -= 1;
                 }
                 list[j + 1] = key;
             }
@@ -239,7 +256,7 @@ namespace TheDivineAdventure
                 output[i] = highscores[i].Role+": - " + highscores[i].Score;
             }
 
-            string filePath = (Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString() + @"\Level1_HighScores.txt");
+            string filePath = Directory.GetCurrentDirectory() + @"\Level1_HighScores.txt";
 
             File.WriteAllLines(filePath, output);
         }

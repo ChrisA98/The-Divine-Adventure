@@ -34,6 +34,7 @@ namespace TheDivineAdventure
         public List<Attack> projList = new List<Attack>();
         private Game1 parent;
         GraphicsDevice gpu;
+        public int pauseTimer;
 
         // Position
         private Vector3 pos;
@@ -77,7 +78,7 @@ namespace TheDivineAdventure
         public int healthMax, secondaryMax;
         public int attCost, spec1Cost, spec2Cost, spec3Cost;
         private float projSpeed;
-        private bool isExhausted;
+        public bool isExhausted;
         private bool isCaster;  //swaps stamina for mana when true
 
         //attack stats
@@ -209,7 +210,7 @@ namespace TheDivineAdventure
                     walkMax = 1.5f;
                     runMod = 2.0f;
                     jumpSpeed = 2f;
-                    healthMax = 230;
+                    healthMax = 150;
                     health = healthMax;
                     secondaryMax = 200;
                     secondary = secondaryMax;
@@ -238,7 +239,7 @@ namespace TheDivineAdventure
                     walkMax = 0.8f;
                     runMod = 2.5f;
                     jumpSpeed = 2f;
-                    healthMax = 230;
+                    healthMax = 140;
                     health = healthMax;
                     secondaryMax = 200;
                     secondary = secondaryMax;
@@ -267,7 +268,7 @@ namespace TheDivineAdventure
                     walkMax = 1.4f;
                     runMod = 2f;
                     jumpSpeed = 2f;
-                    healthMax = 300;
+                    healthMax = 180;
                     health = healthMax;
                     secondaryMax = 100;
                     secondary = secondaryMax;
@@ -302,6 +303,13 @@ namespace TheDivineAdventure
             // Variables
             currMouseState = Mouse.GetState();
             curKeyboardState = Keyboard.GetState();
+
+            if (pauseTimer < 8)
+            {
+                pauseTimer++;
+                return;
+            }
+
 
             // Regular Gameplay
             Move(dt);
@@ -478,6 +486,7 @@ namespace TheDivineAdventure
             }
             if (walkDir == Vector3.Zero) isWalk = false;    //not walking if player cancels out movement
 
+
             if (Keyboard.GetState().IsKeyDown(Keys.A) && Keyboard.GetState().IsKeyDown(Keys.D))
             {   //don't add side walk anims if mixing directions
                 animWalkDir[LEFT] = false;
@@ -493,7 +502,6 @@ namespace TheDivineAdventure
 
 
             #region <<COLLISION CHECKING>>
-            bool FloorStuck = false;
             bool staticCollision = false;
             //floor collision
             foreach (Level.FloorTile floor in parent.playScene.thisLevel.FloorTiles)
@@ -504,7 +512,6 @@ namespace TheDivineAdventure
                     {
                         if (fallSpeed == 0)
                         {
-                            FloorStuck = true;
                             Pos -= 2f * world.Down;
                         }
                         pos -= fallSpeed * world.Down;
@@ -520,7 +527,8 @@ namespace TheDivineAdventure
                 }
                 onGround = false;
             }
-            //Enemy collision
+
+            #region enemy collison
             foreach (PlayScene.EnemySpawner spawner in parent.playScene.levelSpawnerList)
             {
                 if (spawner.isActive == false) continue;
@@ -534,6 +542,23 @@ namespace TheDivineAdventure
                     }
                 }
             }
+            foreach (Enemy entity in parent.playScene.worldEnemyList)
+            {
+                if (boundingCollider.Intersects(entity.boundingCollider))
+                {
+                    if (Math.Abs(entity.boundingCollider.Position.Y - boundingCollider.Position.Y) > 3) continue;
+                    if (isDrifting) driftDir = Vector3.Zero;
+                    else walkDir = ManageCollision(entity.world, walkDir);
+                }
+            }
+            //Boss Collision
+            if (parent.playScene.boss != null && boundingCollider.Intersects(parent.playScene.boss.boundingCollider))
+            {
+                if (isDrifting) driftDir = Vector3.Zero;
+                walkDir = ManageCollision(parent.playScene.boss.world, walkDir);
+            }
+            #endregion
+
             //static mesh collision
             foreach (Level.StaticCollisionMesh mesh in parent.playScene.thisLevel.StaticCollisionMeshes)
             {
@@ -556,7 +581,11 @@ namespace TheDivineAdventure
             {
                 if (Vector3.Distance(mesh.Position, pos) < 400)
                 {
-                    if (boundingCollider.Intersects(mesh.collider)) health = 0; //kills in death floor
+                    if (boundingCollider.Intersects(mesh.collider))
+                    {
+                        if(parent.level == 1)Game1.gameSounds[3].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
+                        health = 0; //kills in death floor
+                    }
                 }
             }
             #endregion
@@ -642,7 +671,7 @@ namespace TheDivineAdventure
             {
                 secondary += secondaryRegenRate;
             }
-            else if (secondary >= secondaryMax/4)
+            if (secondary >= secondaryMax/4)
             {
                 isExhausted = false;
             }
@@ -743,19 +772,19 @@ namespace TheDivineAdventure
                         {
                             case "WARRIOR":
                                 soundEffects[0].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                                AttackPattern.singleMel(Pos + head.Backward * 15, head.Backward, rot, attDmg1, projList, cam);
+                                AttackPattern.SingleMel(Pos + head.Backward * 15, head.Backward, rot, attDmg1, projList, cam);
                                 break;
                             case "ROGUE":
                                 soundEffects[0].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                                 AttackPattern.RogueMain(Pos + head.Backward * 10, head.Backward, rot, attDmg1, projList, cam);
                                 break;
                             case "MAGE":
-                                soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
+                                soundEffects[7].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                                 AttackPattern.MageMain(world, pos + ((head.Backward + world.Left * 0.05f) * 100), projSpeed, attDmg1, projList, cam);
                                 break;
                             case "CLERIC":
                                 soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                                AttackPattern.singleProj(Pos + (world.Up * 4) + (world.Left * 6), pos+((head.Backward+world.Left*0.05f) * 100), projSpeed, attDmg1, projList, cam);
+                                AttackPattern.SingleProj(Pos + (world.Up * 4) + (world.Left * 6), pos+((head.Backward+world.Left*0.05f) * 100), projSpeed, attDmg1, projList, cam);
                                 break;
                         }
                         isAttacking[0] = false;  //set main attack to false
@@ -809,14 +838,13 @@ namespace TheDivineAdventure
                                 AttackPattern.RogueHeavy(Pos, world.Backward, rot, attDmg2, projList, cam);
                                 break;
                             case "MAGE":
-                                soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                                soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
+                                soundEffects[8].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                                 AttackPattern.MageAlt(world, projSpeed/4, attDmg2, projList, cam);
                                 break;
                             case "CLERIC":
                                 soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                                 soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
-                                AttackPattern.tripleProj(world, pos + (head.Backward * 100), projSpeed, attDmg2, projList, cam);
+                                AttackPattern.TripleProj(world, pos + (head.Backward * 100), projSpeed, attDmg2, projList, cam);
                                 break;
                         }
                         isAttacking[1] = false;  //set main attack to false
@@ -825,7 +853,7 @@ namespace TheDivineAdventure
             }
             if (spec2Timer > 0)
             {
-                spec2Timer = spec2Timer - dt;
+                spec2Timer -= dt;
             }
             else
             {
@@ -885,24 +913,25 @@ namespace TheDivineAdventure
                                         collision = true;
                                 }
                             }
-                            foreach (Level.SpawnerTriggerBox mesh in parent.playScene.thisLevel.Triggers)
-                            {
-                                if (Vector3.Distance(pos, mesh.Position) <= 230)
-                                {
-                                    if (mesh.interactiveBox.Intersects(testForward) != null)
-                                        mesh.Activate(gt);
-                                }
-                            }
-                            foreach (Level.MissionTriggerBox mesh in parent.playScene.thisLevel.MissionTriggers)
-                            {
-                                if (Vector3.Distance(pos, mesh.Position) <= 230)
-                                {
-                                    if (mesh.collider.Intersects(testForward) != null)
-                                        mesh.Activate(parent.playScene.thisLevel,gt);
-                                }
-                            }
+
                             if (!collision)
                             {
+                                foreach (Level.SpawnerTriggerBox mesh in parent.playScene.thisLevel.Triggers)
+                                {
+                                    if (Vector3.Distance(pos, mesh.Position) <= 230)
+                                    {
+                                        if (mesh.interactiveBox.Intersects(testForward) != null)
+                                            mesh.Activate(gt);
+                                    }
+                                }
+                                foreach (Level.MissionTriggerBox mesh in parent.playScene.thisLevel.MissionTriggers)
+                                {
+                                    if (Vector3.Distance(pos, mesh.Position) <= 230)
+                                    {
+                                        if (mesh.interactiveBox.Intersects(testForward) != null)
+                                            mesh.Activate(parent.playScene.thisLevel, gt);
+                                    }
+                                }
                                 soundEffects[4].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                                 pos += head.Backward * 200;
                                 secondary -= spec2Cost;
@@ -968,13 +997,11 @@ namespace TheDivineAdventure
                    
                 }
             }
-
-            foreach (Attack p in projList)
+            for (int i =0; i< projList.Count; i++)
             {
-                if (p.TimeToDestroy)
+                if (projList[i].TimeToDestroy)
                 {
-                    projList.Remove(p);
-                    break;
+                    projList.Remove(projList[i]);
                 }
             }
         }
@@ -1042,13 +1069,13 @@ namespace TheDivineAdventure
         }
 
         //Check movement status
-        public bool isWalking()
+        public bool IsWalking()
         {
             if (vel > 0 && vel <= walkMax) return true;
             if (vel > walkMax) return false;
             return false;
         }
-        public bool isRunning()
+        public bool IsRunning()
         {
             if (vel > walkMax) return true;
             return false;
@@ -1057,9 +1084,13 @@ namespace TheDivineAdventure
         //manage collision with other entities
         public Vector3 ManageCollision(Matrix targetPos, Vector3 currentDir)
         {
-            Vector3 tarDir = targetPos.Translation - pos;
-            if (tarDir == currentDir) return Vector3.Zero;
-            currentDir -= tarDir;
+            float tarRotY = (float)(Math.Atan2(targetPos.Translation.X - Pos.X, targetPos.Translation.Z - Pos.Z));
+            Matrix away = Matrix.CreateScale(1f) *
+                Matrix.CreateRotationY(tarRotY) *
+                Matrix.CreateTranslation(pos);
+
+            if (away.Backward == currentDir) return Vector3.Zero;
+            currentDir -= away.Backward;
             currentDir.Normalize();
             return currentDir;
         }
@@ -1071,8 +1102,13 @@ namespace TheDivineAdventure
                 timeColiding++;
                 if (timeColiding > 5)
                 {
-                    pos = cachedPosition[5];
+                    pos = cachedPosition[6];
                     timeColiding = 0;
+                    if (boundingCollider.Intersects(collisionbox))
+                    {
+                        pos = cachedPosition[0];
+                        return false;
+                    }
                     return true;
                 }
                 Vector3 newDir = boundingCollider.Collisiondirection(collisionbox);

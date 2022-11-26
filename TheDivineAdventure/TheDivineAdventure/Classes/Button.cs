@@ -13,7 +13,7 @@ namespace TheDivineAdventure
         private Texture2D textureMain, texturePushed;
         private SpriteFont font;
         private bool active;
-        private string? buttonText;
+        public string? buttonText;
 
         //for invisible butttons
         public Button(Vector2 position, Vector2 size, Vector2 screenScale)

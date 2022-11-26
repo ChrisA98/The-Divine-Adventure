@@ -8,6 +8,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Nullable>annotations</Nullable>
+    <SignAssembly>false</SignAssembly>
+    <Version>1.0.5</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\MODEL_level1.fbx" />
@@ -16,7 +19,6 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -38,5 +40,11 @@
     <Reference Include="MGSkinnedModel">
       <HintPath>SKINMESH_DLLs\MGSkinnedModel.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <_DeploymentManifestIconFile Remove="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
   </ItemGroup>
 </Project>

@@ -1,20 +1,49 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System;
 
 namespace TheDivineAdventure.SkinModels
 {
     public class DirectionLight
     {
+        public Vector3 position;
         public Vector3 direction;
         public Vector3 diffuseColor;
         public Vector3 specularColor;
+        public float power;
+
+        public DirectionLight()
+        {
+            position = new Vector3(0, 0, 0);
+            direction = new Vector3(0, 0, 0);
+            diffuseColor = new Vector3(0, 0, 0);
+            specularColor = new Vector3(0, 0, 0);
+        }
+        //directional light
+        public DirectionLight(Vector3 pos, Vector3 direction_, Vector3 diffuseColor_, Vector3 specularColor_)
+        {
+            position = pos;
+            direction = direction_;
+            diffuseColor = diffuseColor_;
+            specularColor = specularColor_;
+        }
+        //source point light
+        public DirectionLight(Vector3 pos, float power_, Vector3 diffuseColor_, Vector3 specularColor_)
+        {
+            position      = pos;
+            power         = power_;
+            diffuseColor  = diffuseColor_;
+            specularColor = specularColor_;
+        }
     }
 
     public class SkinFx
     {
         public const int MAX_BONES = 180;          // This should match number in custom SkinEffect.fx
+        public const int MAX_LIGHTS = 21;          // This should match number in custom SkinEffect.fx
         public const int WEIGHTS_PER_VERTEX = 4;
 
         public Camera cam;                        // reference to camera
@@ -26,7 +55,7 @@ namespace TheDivineAdventure.SkinModels
         public float specularPow = 32f;
         public Vector3 ambientCol = Vector3.Zero;
         public bool fogEnabled = false;
-        public DirectionLight[] lights;           // lights: key, fill, back 
+        public List<DirectionLight> lights;           // lights: key, fill, back 
         public float alpha = 1f;
         public float fogStart = 0f;
         public float fogEnd = 1f;
@@ -40,8 +69,8 @@ namespace TheDivineAdventure.SkinModels
         //------------------
         public SkinFx(ContentManager Content, Camera Cam, string fx_filename, bool enableFog = false)
         {
-            lights = new DirectionLight[3];
-            for (int i = 0; i < 3; i++) lights[i] = new DirectionLight();
+            lights = new List<DirectionLight>();
+            for (int i = 0; i < 3; i++) lights.Add(new DirectionLight());
             cam = Cam;
             default_tex = Content.Load<Texture2D>("default_tex");
             fx = Content.Load<Effect>(fx_filename);
@@ -56,6 +85,7 @@ namespace TheDivineAdventure.SkinModels
             fx.Parameters["EmissiveColor"].SetValue(emissiveCol);
             fx.Parameters["SpecularColor"].SetValue(specularCol);
             fx.Parameters["SpecularPower"].SetValue(specularPow);
+            fx.Parameters["LightCount"].SetValue(lights.Count);
 
             SetDefaultLighting();
             if (enableFog) ToggleFog();
@@ -63,8 +93,8 @@ namespace TheDivineAdventure.SkinModels
 
         public SkinFx(ContentManager Content, string fx_filename, bool enableFog = false)
         {
-            lights = new DirectionLight[3];
-            for (int i = 0; i < 3; i++) lights[i] = new DirectionLight();
+            lights = new List<DirectionLight>();
+            for (int i = 0; i < 3; i++) lights.Add(new DirectionLight());
             default_tex = Content.Load<Texture2D>("default_tex");
             fx = Content.Load<Effect>(fx_filename);
             Matrix[] identityBones = new Matrix[MAX_BONES];
@@ -78,6 +108,7 @@ namespace TheDivineAdventure.SkinModels
             fx.Parameters["EmissiveColor"].SetValue(emissiveCol);
             fx.Parameters["SpecularColor"].SetValue(specularCol);
             fx.Parameters["SpecularPower"].SetValue(specularPow);
+            fx.Parameters["LightCount"].SetValue(lights.Count);
 
             SetDefaultLighting();
             if (enableFog) ToggleFog();
@@ -96,31 +127,78 @@ namespace TheDivineAdventure.SkinModels
 
 
 
-        //----------------------------------------------
-        // SET DEFAULT LIGHTING
-        //----------------------------------------------
+        #region Lighting
         public void SetDefaultLighting()
         {
+            lights = new List<DirectionLight>();
+            for (int i = 0; i < 3; i++) lights.Add(new DirectionLight());
             float u = Vector3.Up.Y;     // I assume up is -Y or +Y
             ambientCol = new Vector3(.1f, 0.09882354f, 0.1819608f);
             lights[0].direction = new Vector3(-0.5265408f, -0.5735765f * u, -0.6275069f); // Key light.
             lights[0].diffuseColor = new Vector3(1, 0.9607844f, 0.8078432f);
             lights[0].specularColor = new Vector3(1, 0f, 0f);
             lights[1].direction = new Vector3(0.7198464f, 0.3420201f * u, 0.6040227f);    // Fill light
-            lights[1].diffuseColor = new Vector3(0.9647059f, 0.7607844f, 0.4078432f);
-            lights[0].specularColor = new Vector3(1, 0f, 0f);
+            lights[1].diffuseColor = new Vector3(0.9647059f, 0.5607844f, 0.3078432f);
+            lights[1].specularColor = new Vector3(1, 0f, 0f);
             lights[2].direction = new Vector3(0.4545195f, -0.7660444f * u, 0.4545195f);   // Back light
             lights[2].diffuseColor = new Vector3(0.3231373f, 0.3607844f, 0.3937255f);
             lights[2].specularColor = new Vector3(1, 0f, 0f);
-            fx.Parameters["LightDir1"].SetValue(lights[0].direction);
-            fx.Parameters["LightDiffCol1"].SetValue(lights[0].diffuseColor);
-            fx.Parameters["LightSpecCol1"].SetValue(lights[0].specularColor);
-            fx.Parameters["LightDir2"].SetValue(lights[1].direction);
-            fx.Parameters["LightDiffCol2"].SetValue(lights[1].diffuseColor);
-            fx.Parameters["LightSpecCol2"].SetValue(lights[1].specularColor);
-            fx.Parameters["LightDir3"].SetValue(lights[2].direction);
-            fx.Parameters["LightDiffCol3"].SetValue(lights[2].diffuseColor);
-            fx.Parameters["LightSpecCol3"].SetValue(lights[2].specularColor);
+
+            UpdateLights();
+        }
+
+
+        public void UpdateLights()
+        {
+            fx.Parameters["LightCount"].SetValue(lights.Count);
+            int lightCount = lights.Count;
+
+            while (lights.Count % 3 > 0) lights.Add(new DirectionLight(Vector3.Zero, 0, Vector3.Zero, Vector3.Zero));
+
+            for (int i = 0; i < lights.Count / 3; i++)
+            {
+                //Debug.WriteLine("i: "+i.ToString());
+                //Debug.WriteLine(lights.Count);
+                //Debug.WriteLine(lights.Count/3);
+                if (i == 0)
+                {
+                    Matrix direction = new Matrix(
+                        new Vector4(lights[(i * 3)].direction, 0),
+                        new Vector4(lights[(i * 3) + 1].direction, 0),
+                        new Vector4(lights[(i * 3) + 2].direction, 0),
+                        Vector4.Zero);
+                    fx.Parameters["LightDir_" + i].SetValue(direction);
+                }
+                if (i != 0)
+                {
+                    Matrix position = new Matrix(
+                        new Vector4(lights[(i * 3)].position, 0),
+                        new Vector4(lights[(i * 3) + 1].position, 0),
+                        new Vector4(lights[(i * 3) + 2].position, 0),
+                        Vector4.Zero);
+                    Vector3 power = new Vector3(
+                        lights[(i * 3)].power,
+                        lights[(i * 3)+1].power,
+                        lights[(i * 3)+2].power);
+                    fx.Parameters["LightPos_" + i].SetValue(position);
+                    fx.Parameters["LightPow_" + i].SetValue(power);
+                }
+                Matrix diffuseColor = new Matrix(
+                    new Vector4(lights[(i * 3)].diffuseColor, 0),
+                    new Vector4(lights[(i * 3) + 1].diffuseColor, 0),
+                    new Vector4(lights[(i * 3) + 2].diffuseColor, 0),
+                    Vector4.Zero);
+                Matrix specularColor = new Matrix(
+                    new Vector4(lights[(i * 3)].specularColor, 0),
+                    new Vector4(lights[(i * 3) + 1].specularColor, 0),
+                    new Vector4(lights[(i * 3) + 2].specularColor, 0),
+                    Vector4.Zero);
+                fx.Parameters["LightDiffCol_" + i].SetValue(diffuseColor);
+                fx.Parameters["LightSpecCol_" + i].SetValue(specularColor);
+            }
+
+
+            while (lights.Count > lightCount) lights.RemoveAt(lights.Count - 1);
         }
 
 
@@ -128,26 +206,38 @@ namespace TheDivineAdventure.SkinModels
         // SET DIRECTIONAL LIGHT 
         public void SetDirectionalLight(int index, Vector3 direction, Color diffuse_color, Color specular_color)
         {
-            if (index >= 3) return;
+            if (index > MAX_LIGHTS) return;
             lights[index].direction = direction;
             lights[index].diffuseColor = diffuse_color.ToVector3();
             lights[index].specularColor = specular_color.ToVector3();
-            switch (index)
-            {
-                case 0:
-                    fx.Parameters["LightDir1"].SetValue(lights[0].direction);
-                    fx.Parameters["LightDiffCol1"].SetValue(lights[0].diffuseColor);
-                    fx.Parameters["LightSpecCol1"].SetValue(lights[0].specularColor); break;
-                case 1:
-                    fx.Parameters["LightDir2"].SetValue(lights[1].direction);
-                    fx.Parameters["LightDiffCol2"].SetValue(lights[1].diffuseColor);
-                    fx.Parameters["LightSpecCol2"].SetValue(lights[1].specularColor); break;
-                case 2:
-                    fx.Parameters["LightDir3"].SetValue(lights[2].direction);
-                    fx.Parameters["LightDiffCol3"].SetValue(lights[2].diffuseColor);
-                    fx.Parameters["LightSpecCol3"].SetValue(lights[2].specularColor); break;
-            }
         }
+
+        // ADD DIRECTIONAL LIGHT 
+        public void AddDirectionalLight(Vector3 direction, Color diffuse_color, Vector3 pos)
+        {
+            if (lights.Count >= MAX_LIGHTS) return;
+            lights.Add(new DirectionLight(pos, direction, diffuse_color.ToVector3(), diffuse_color.ToVector3()));
+        }
+
+        // ADD Source Point LIGHT 
+        public void AddDirectionalLight(float power, Color diffuse_color, Vector3 pos)
+        {
+            if (lights.Count >= MAX_LIGHTS) return;
+            lights.Add(new DirectionLight(pos, power, diffuse_color.ToVector3(), diffuse_color.ToVector3()));
+        }
+        //reset lights to base
+        public void ClearSourceLights(int baseLights = 3)
+        {
+            lights = new List<DirectionLight>();
+            for (int i = 0; i < 3; i++) lights.Add(new DirectionLight());
+            Color fogColor = new Color(fx.Parameters["FogColor"].GetValueVector3());
+            SetDirectionalLight(0, new Vector3(-0.5265408f, -0.5735765f, -0.6275069f), Color.Lerp(fogColor, Color.White, .7f), new Color(1, 0f, 0f));
+            SetDirectionalLight(1, new Vector3(0.7198464f, 0.3420201f, 0.6040227f), Color.Lerp(fogColor, Color.White, .4f), new Color(1, 0f, 0f));
+            SetDirectionalLight(2, new Vector3(0.4545195f, -0.7660444f, 0.4545195f), Color.Lerp(fogColor, Color.Black, .7f), new Color(1, 0f, 0f));
+            UpdateLights();
+        }
+
+        #endregion
 
         public void SetFogStart(float fog_start) { fogEnabled = false; fogStart = fog_start; ToggleFog(); }
         public void SetFogEnd(float fog_end) { fogEnabled = false; fogEnd = fog_end; ToggleFog(); }

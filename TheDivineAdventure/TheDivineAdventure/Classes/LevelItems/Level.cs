@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,8 @@ namespace TheDivineAdventure
 {
     public class Level
     {
+        private ContentManager Content;
+
         private SkinFx levelFx;
         private SkinModelLoader model_loader;   //loader for meshes
         private List<SkinModel> meshes;         //meshes for level
@@ -28,15 +30,19 @@ namespace TheDivineAdventure
         private List<Activator> activators;
         private List<SpawnerTriggerBox> spawnTriggers;
         private List<MissionTriggerBox> missionTriggers;
+        public List<SourceLight> levelLights;
+        public List<SourceLight> worldLights;
 
 
         //Level data
         public int levelId;
-        public Color fogColor;
         public int fogDistance;
+        public int maxScore;
+        public Color fogColor;
         public Vector3 playerSpawn;
+        public PlayScene parent;
 
-        public Level(ContentManager cont, GraphicsDevice gpu_, Camera cam)
+        public Level(ContentManager cont, GraphicsDevice gpu_, Camera cam, PlayScene Parent)
         {
             levelFx = new SkinFx(cont, cam, "SkinEffect");
             fogColor = Color.White;
@@ -46,6 +52,8 @@ namespace TheDivineAdventure
             model_loader.SetDefaultOptions(0.1f, "default_tex");
             meshes = new List<SkinModel>();
             existingFiles = new List<string>();
+            parent = Parent;
+            Content = cont;
 
             //make component lists
             floorPieces           = new List<FloorTile>();
@@ -57,17 +65,23 @@ namespace TheDivineAdventure
             activators            = new List<Activator>();
             spawnTriggers         = new List<SpawnerTriggerBox>();
             missionTriggers       = new List<MissionTriggerBox>();
+            levelLights           = new List<SourceLight>();
+            worldLights           = parent.projLights;  //link lights to projectile lights
 
             missionProgress = new List<int>(new int[15]);
         }
 
         #region Set Level Data
-        public void SetData(int id, Vector4 FogColor, int FogDistance, Vector3 pSpawn)
+        public void SetData(int id, Vector4 FogColor, int FogDistance, Vector3 pSpawn, int score)
         {
             levelId = id;
             fogColor = new Color(FogColor.X, FogColor.Y, FogColor.Z, FogColor.W);
             fogDistance = FogDistance;
             playerSpawn = pSpawn;
+            maxScore = score;
+            levelFx.SetDirectionalLight(0, new Vector3(-0.5265408f, -0.5735765f, -0.6275069f), Color.Lerp(fogColor, Color.White, .3f), new Color(1, 0f, 0f));
+            levelFx.SetDirectionalLight(1, new Vector3(0.7198464f, 0.3420201f, 0.6040227f), Color.Lerp(fogColor, Color.White, .7f), new Color(1, 0f, 0f));
+            levelFx.SetDirectionalLight(2, new Vector3(0.4545195f, -0.7660444f, 0.4545195f), Color.Lerp(fogColor, Color.White, .1f), new Color(1, 0f, 0f));
         }
 
         //set fog color by color
@@ -90,7 +104,7 @@ namespace TheDivineAdventure
 
 
         //load meshes into items
-        public void Load()
+        public void Load(ContentManager content)
         {
             UpdateSkinFX();
             if (staticCollisionMeshes.Count != 0)
@@ -112,7 +126,7 @@ namespace TheDivineAdventure
             {
                 foreach (StaticMesh mesh in staticMeshes)
                 {
-                    mesh.Load(model_loader, meshes, existingFiles, levelFx);
+                    mesh.Load(model_loader, meshes, existingFiles, levelFx, content);
                 }
             }
             if (doors.Count != 0)
@@ -126,7 +140,7 @@ namespace TheDivineAdventure
             {
                 foreach (Activator activator in activators)
                 {
-                    activator.Load(model_loader, meshes, existingFiles, levelFx, this);
+                    activator.Load(model_loader, meshes, existingFiles, levelFx);
                 }
             }
             if (spawnTriggers.Count != 0)
@@ -135,6 +149,15 @@ namespace TheDivineAdventure
                 {
                     trigger.Load(this);
                 }
+            }
+            //extra loading
+            switch (levelId)
+            {
+                case 1:
+                    SkinModel statueModel = model_loader.Load("MOD_Pride/MOD_PrideStatue.fbx", "MOD_Pride", true, 3, parent.skinFx, rescale: 5f);
+                    parent.worldEnemyList.Add(new PrideStatue(parent.enemySounds, new Vector3(100, -1, -1050) * 2.2f, parent, statueModel, Content));
+                    parent.worldEnemyList.Add(new PrideStatue(parent.enemySounds, new Vector3(-100, -1, -1050) * 2.2f, parent, statueModel, Content));
+                    break;
             }
 
         }
@@ -177,6 +200,10 @@ namespace TheDivineAdventure
         {
             missionTriggers.AddRange(toAdd);
         }
+        public void Add(List<SourceLight> toAdd)
+        {
+            levelLights.AddRange(toAdd);
+        }
         #endregion
 
         #region Mission Progress Functions
@@ -193,10 +220,13 @@ namespace TheDivineAdventure
                 case 2:
                     Mission02(gameTime);
                     break;
+                case 3:
+                    Mission03(gameTime);
+                    break;
             }
         }
 
-        #region Level 01 Missions
+        #region Level 1 Missions
         //-------------
         // Mission to activate each pedastal to open the boss door
         //-------------
@@ -220,22 +250,40 @@ namespace TheDivineAdventure
             missionProgress[1]++;
             if (missionProgress[1] >= 1)
             {
-                doors[doors.Count-1].Open(gameTime);
-                doors[doors.Count-1].isLocked = true;
+                doors[^1].Open(gameTime);
+                doors[^1].isLocked = true;
+                parent.boss.isActive = true;
+                foreach (Enemy e in parent.worldEnemyList)
+                {
+                    e.isActive = true;
+                }
+                foreach (PlayScene.EnemySpawner spawner in parent.levelSpawnerList)
+                {
+                    foreach(Enemy e in spawner.enemyList)
+                    {
+                        e.isActive = false;
+                    }
+                }
             }
+        }
+
+        //-------------
+        //Start boss music
+        //-------------
+        private void Mission02(GameTime gameTime)
+        {
+            MediaPlayer.Stop();
+            MediaPlayer.Play(parent.bossTheme);
         }
 
         //-------------
         //End level when boss is beaten
         //-------------
-        private void Mission02(GameTime gameTime)
+        private void Mission03(GameTime gameTime)
         {
-            missionProgress[1]++;
-            if (missionProgress[1] >= 1)
-            {
-                doors[doors.Count - 1].Open(gameTime);
-                doors[doors.Count - 1].isLocked = true;
-            }
+            parent.parent.currentScene = "LEVEL_END";
+            parent.parent.levelEnd1.currentScore = PlayScene.score.ToString();
+            parent.parent.levelEnd1.Initialize();
         }
         #endregion
 
@@ -290,12 +338,16 @@ namespace TheDivineAdventure
             foreach (StaticCollisionMesh sMesh in staticCollisionMeshes)
             {
                 UpdateSkinFX();
+                UpdateLight(sMesh.Position);
                 sMesh.Draw(gameTime, cam, debug);
+                levelFx.ClearSourceLights();
             }
             foreach (StaticMesh sMesh in staticMeshes)
             {
                 UpdateSkinFX();
+                UpdateLight(sMesh.Position);
                 sMesh.Draw(gameTime, cam);
+                levelFx.ClearSourceLights();
             }
             foreach (DeathBox deathBoxes in deathBoxes)
             {
@@ -305,20 +357,64 @@ namespace TheDivineAdventure
             foreach (InteractiveDoor door in doors)
             {
                 UpdateSkinFX();
+                UpdateLight(door.Position);
                 door.Draw(gameTime, cam, false);
+                levelFx.ClearSourceLights();
             }
             foreach (Activator activator in activators)
             {
                 UpdateSkinFX();
+                UpdateLight(activator.Position);
                 activator.Draw(gameTime, cam, false);
+                levelFx.ClearSourceLights();
             }
+        }
+
+        private void UpdateLight(Vector3 pos)
+        {
+            for (int i = 0; i < levelLights.Count; i++)
+            {
+                SourceLight lit = levelLights[i];
+                float? pow = lit.IsLighting(pos);
+                if (pow == null) continue;
+                levelFx.AddDirectionalLight(lit.LightArea, new Color(lit.LightColor), lit.Position);
+            }
+            for (int i = 0; i < worldLights.Count; i++)
+            {
+                SourceLight lit = worldLights[i];
+                float? pow = lit.IsLighting(pos);
+                if (pow == null) continue;
+                levelFx.AddDirectionalLight(lit.LightArea, new Color(lit.LightColor), lit.Position);
+            }
+            levelFx.UpdateLights();
+        }
+
+        public void UpdateLight(Vector3 pos, SkinFx fx)
+        {
+            for (int i = 0; i < levelLights.Count; i++)
+            {
+                SourceLight lit = levelLights[i];
+                float? pow = lit.IsLighting(pos);
+                if (pow == null) continue;
+                fx.AddDirectionalLight(lit.LightArea, new Color(lit.LightColor), lit.Position);
+            }
+            for (int i = 0; i < worldLights.Count; i++)
+            {
+                SourceLight lit = worldLights[i];
+                float? pow = lit.IsLighting(pos);
+                if (pow == null) continue;
+                fx.AddDirectionalLight(lit.LightArea, new Color(lit.LightColor), lit.Position);
+            }
+            fx.UpdateLights();
+        }
+
+        public void SetLightsSource()
+        {
+
         }
 
         public void UpdateSkinFX()
         {
-            levelFx.SetEmissiveCol(Color.White.ToVector3());
-            levelFx.SetSpecularCol(Color.Red.ToVector3());
-            levelFx.SetSpecularPow(1f);
             levelFx.SetFogColor(fogColor);
             levelFx.SetFogStart(-4 * fogDistance);
             levelFx.SetFogEnd(fogDistance*-1f);
@@ -330,6 +426,10 @@ namespace TheDivineAdventure
         public List<FloorTile> FloorTiles
         {
             get { return floorPieces; }
+        }
+        public List<StaticMesh> StaticMeshes
+        {
+            get { return staticMeshes; }
         }
         public List<StaticCollisionMesh> StaticCollisionMeshes
         {
@@ -565,18 +665,21 @@ namespace TheDivineAdventure
             private Vector3 rotation;
             private Matrix world;
             public Shapes collider;
+            private Texture2D[] animatedTex;
+            private string[] animatedTexNames;
 
-
-            public StaticMesh(string Path, string Filename, Vector3 Position, Vector3 Rotation, GraphicsDevice gpu_, Vector3 scale)
+            public StaticMesh(string Path, string Filename, Vector3 Position, Vector3 Rotation, GraphicsDevice gpu_, Vector3 scale, List<string> texNames)
             {
                 path = Path;
                 filename = Filename;
                 position = Position*2.2f;
                 rotation = Rotation;
 
+                animatedTexNames = texNames.ToArray();
+                if(animatedTexNames.Length>0) animatedTex = new Texture2D[animatedTexNames.Length-1];
+
                 collider = new Shapes(gpu_, Color.BlueViolet, Rotation, position, isStatic_: true);
                 collider.DefineCuboid((int)scale.X, (int)scale.X, (int)scale.Y, (int)scale.Y, (int)scale.Z, (int)scale.Z);
-
 
                 world = Matrix.CreateScale(2.2f) *
                 Matrix.CreateRotationX(MathHelper.ToRadians(rotation.X)) *
@@ -585,15 +688,25 @@ namespace TheDivineAdventure
                 Matrix.CreateTranslation(position);
             }
 
-            public void Load(SkinModelLoader loader, List<SkinModel> meshes, List<string> alreadyLoaded, SkinFx levelFx)
+            public void Load(SkinModelLoader loader, List<SkinModel> meshes, List<string> alreadyLoaded, SkinFx levelFx, ContentManager content)
             {
                 if (!alreadyLoaded.Contains(filename))
                 {
                     meshes.Add(loader.Load(path + @"\" + filename, path, false, 3, levelFx, rescale: 1f));
                     alreadyLoaded.Add(filename);
                 }
-
                 mesh = meshes[alreadyLoaded.IndexOf(filename)];
+
+                if (animatedTex == null) return; //break if not animated texture
+                for (int i = 1; i < animatedTexNames.Length; i++)
+                {
+                    string t = content.RootDirectory; 
+                    content.RootDirectory = path + @"\" + animatedTexNames[0];
+                    animatedTex[i - 1] = content.Load<Texture2D>(animatedTexNames[i]);
+                    content.RootDirectory = t;
+                }
+                mesh.animated_tex = animatedTex;
+                mesh.BeginTexAnimation(0);
             }
 
             public void Draw(GameTime gameTime, Camera cam)
@@ -604,7 +717,8 @@ namespace TheDivineAdventure
                 {
                     mesh.DrawMesh(i, cam, world);
                 }
-
+                if (animatedTex == null) return; //break if not animated texture
+                mesh.Update(gameTime);
             }
 
             #region Getters / Setters
@@ -712,7 +826,7 @@ namespace TheDivineAdventure
                     rightCollider.Draw(cam);
                     interactBox.Draw(cam);
                 }
-                if (filename == "") return;                                 //break if no model to draw
+                if (filename == "") return;                             //break if no model to draw
                 if (mesh == null) return;                               //dont draw if just a collision box
 
                 if (!isOpen)    mesh.BeginAnimation(0, gameTime);   //reset local animation
@@ -743,6 +857,7 @@ namespace TheDivineAdventure
                 if (isOpen)
                 {
                     if (!closeable) return;
+                    Game1.gameSounds[4].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                     leftCollider.Rotation = rotation;
                     rightCollider.Rotation = rotation;
                     isOpen = false;
@@ -751,6 +866,7 @@ namespace TheDivineAdventure
                     mesh.Update(gameTime);
                     return;
                 }
+                Game1.gameSounds[4].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
 
                 leftCollider.Rotation += new Vector3(0, leftOpenRot, 0);
                 rightCollider.Rotation += new Vector3(0, rightOpenRot, 0);
@@ -818,7 +934,7 @@ namespace TheDivineAdventure
 
             }
 
-            public void Load(SkinModelLoader loader, List<SkinModel> meshes, List<string> alreadyLoaded, SkinFx levelFx, Level parent)
+            public void Load(SkinModelLoader loader, List<SkinModel> meshes, List<string> alreadyLoaded, SkinFx levelFx)
             {
                 if (!alreadyLoaded.Contains(filename))
                 {
@@ -827,7 +943,6 @@ namespace TheDivineAdventure
                 }
 
                 mesh = meshes[alreadyLoaded.IndexOf(filename)];
-
             }
 
             public void Draw(GameTime gameTime, Camera cam, bool debug = false)
@@ -849,6 +964,7 @@ namespace TheDivineAdventure
             public void Activate(Level parent, GameTime gameTime)
             {
                 if (uses <= 0) return;
+                Game1.gameSounds[7].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 parent.MissionUpdate(progressID, gameTime);
                 uses--;
                 if (uses <= 0) active = false;
@@ -865,7 +981,6 @@ namespace TheDivineAdventure
 
         public class SpawnerTriggerBox
         {
-
             //location info
             private Vector3 position;
 
@@ -902,13 +1017,11 @@ namespace TheDivineAdventure
                 {
                     interactiveBox.Draw(cam);
                 }
-
             }
 
             public void Activate(GameTime gameTime)
             {
                 if (uses <= 0) return;
-                targetSpawner.isActive = true;
                 targetSpawner.ActivateSpawner(gameTime);
                 uses--;
             }
@@ -970,6 +1083,64 @@ namespace TheDivineAdventure
 
         }
 
+        public class PuzzleBeam
+        {
+            private static string path;
+            private static string filename;
+            private Vector3 position;
+            private Vector3 rotation;
+            private Matrix world;
+            public  Shapes collider;
+            public  Vector3 lightColor;
+            private static List<SkinModel> meshes = new List<SkinModel>();
+
+            public PuzzleBeam(string Path, string Filename, Vector3 Position, Vector3 Rotation, GraphicsDevice gpu_, Vector3 scale)
+            {
+                path     = Path;
+                filename = Filename;
+                position = Position * 2.2f;
+                rotation = Rotation;
+
+                collider = new Shapes(gpu_, Color.BlueViolet, Rotation, position, isStatic_: true);
+                collider.DefineCuboid((int)scale.X, (int)scale.X, (int)scale.Y, (int)scale.Y, (int)scale.Z, (int)scale.Z);
+
+                world = Matrix.CreateScale(2.2f) *
+                Matrix.CreateRotationX(MathHelper.ToRadians(rotation.X)) *
+                Matrix.CreateRotationY(MathHelper.ToRadians(rotation.Y)) *
+                Matrix.CreateRotationZ(MathHelper.ToRadians(rotation.Z)) *
+                Matrix.CreateTranslation(position);
+            }
+
+            public static void Load(SkinModelLoader loader, SkinFx levelFx)
+            {
+                meshes.Add(loader.Load(path + @"\" + "MOD_L2_Beam.fbx",      path, false, 3, levelFx, rescale: 1f));
+                meshes.Add(loader.Load(path + @"\" + "MOD_L2_Crystal01.fbx", path, false, 3, levelFx, rescale: 1f));
+                meshes.Add(loader.Load(path + @"\" + "MOD_L2_Crystal02.fbx", path, false, 3, levelFx, rescale: 1f));
+                meshes.Add(loader.Load(path + @"\" + "MOD_L2_Crystal03.fbx", path, false, 3, levelFx, rescale: 1f));
+                meshes.Add(loader.Load(path + @"\" + "MOD_L2_Crystal04.fbx", path, false, 3, levelFx, rescale: 1f));
+            }
+
+            public void Draw(GameTime gameTime, Camera cam, SkinFx sfx)
+            {
+
+            }
+
+            public void AddLights(List<SourceLight> lights)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    lights.Add(new SourceLight(position + (new Vector3(50 * i, 0, 0)), 15, lightColor));
+                }
+            }
+
+            #region Getters / Setters
+            public Vector3 Position
+            {
+                get { return position; }
+            }
+            #endregion
+
+        }
         #endregion
     }
 

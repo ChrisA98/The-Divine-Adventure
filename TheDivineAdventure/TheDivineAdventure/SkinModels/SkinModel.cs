@@ -18,16 +18,18 @@ using System.Diagnostics;
 
 namespace TheDivineAdventure.SkinModels
 {
-    // C L A S S   S K I N M O D E L 
+    // CLASS SKINMODEL 
     public class SkinModel
     {
-        // S E T T I N G S
+        // SETTINGS
         public const bool WARN_MISSING_DIFFUSE_TEX = false;
 
         #region MEMBERS     
         GraphicsDevice gpu;
         SkinFx skinFx;                // using to control SkinEffect             
         public Texture2D debug_tex;
+        public Texture2D[] animated_tex;
+        public int animated_tex_frame = -1;
         public bool use_debug_tex;
         public int max_bones = 180;
         public Matrix[] skinShaderMatrices;    // these are the real final bone matrices they end up on the shader
@@ -48,20 +50,20 @@ namespace TheDivineAdventure.SkinModels
         #endregion
 
 
-
-        #region CONSTRUCTOR AND METHODS (set effect stuff)      
+        #region CONSTRUCTOR AND METHODS      
         //----------------------
-        // C O N S T R U C T O R
+        // CONSTRUCTOR
         //----------------------
         public SkinModel(GraphicsDevice GPU, SkinFx skin_effect)
         {
             gpu = GPU;
             skinFx = skin_effect;
             skinShaderMatrices = new Matrix[max_bones];
+            animated_tex = new Texture2D[1];
             ResetShaderMatrices();
         }
         //------------------------------------------
-        // R E S E T   S H A D E R   M A T R I C E S 
+        // RESET SHADER MATRICES 
         //------------------------------------------
         public void ResetShaderMatrices()
         {
@@ -81,7 +83,6 @@ namespace TheDivineAdventure.SkinModels
         #endregion // constructor & methods
 
 
-
         #region UPDATES (animating)
         //------------
         // UPDATE
@@ -89,6 +90,7 @@ namespace TheDivineAdventure.SkinModels
         public void Update(GameTime gameTime)
         {
             if (animationRunning) UpdateModelAnimations(gameTime); // determine local transforms for animation
+            UpdateTexAnims();                                      // update testure animations if they exist
             UpdateNodes(rootNodeOfTree);                           // update the skeleton 
             UpdateMeshAnims();                                     // update any regular mesh animations
         }
@@ -158,20 +160,21 @@ namespace TheDivineAdventure.SkinModels
         //Blend animations
         private void BlendAnimations(SkinModel[] adds, int[] animID, float baseWeight, float[] boneWeights)
         {
+            if (animations.Count <= 0) return;
             int cnt = animations[currentAnim].animatedNodes.Count;             // loop thru animated nodes
 
             //blended matrices
             for (int n = 0; n < cnt; n++)
             {
-                AnimNodes base_ = adds[0].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base (each animNode)
-                AnimNodes anim1 = adds[animID[0]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base (each animNode)
-                AnimNodes anim2 = adds[animID[1]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from anim1 (each animNode)
-                ModelNode node0 = base_.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
-                ModelNode node1 = anim1.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
-                ModelNode node2 = anim2.nodeRef;                         // get bone associated with this animNode (could be mesh-node)
+                AnimNodes base_ = adds[0].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base
+                AnimNodes anim1 = adds[animID[0]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from base
+                AnimNodes anim2 = adds[animID[1]].animations[currentAnim].animatedNodes[n]; // get animation keyframe lists from anim1
+                ModelNode node0 = base_.nodeRef;                         // get bone associated with this animNode
+                ModelNode node1 = anim1.nodeRef;                         // get bone associated with this animNode
+                ModelNode node2 = anim2.nodeRef;                         // get bone associated with this animNode
 
                 float blendWeight = baseWeight * boneWeights[n];          //Get Total Blend Percent
-
+                if (blendWeight > 1) blendWeight = 1;                     //cap blendweights at 1 to not over animate
                 //blend animations
                 node0.local_mtx = Matrix.Lerp(node1.local_mtx, node2.local_mtx, blendWeight);
             }
@@ -180,7 +183,6 @@ namespace TheDivineAdventure.SkinModels
         //----------------------------------------
         // ANIMATION TIME LOGIC 
         //----------------------------------------
-        /// <summary> What to do at a certain animation time. </summary>
         public void AnimationTimeLogic(GameTime gameTime)
         {
 
@@ -197,12 +199,12 @@ namespace TheDivineAdventure.SkinModels
             if (currentAnimFrameTime > animTotalDuration)
             {
                 if (loopAnimation)
-                {   // LOOP ANIMATION                
+                { // LOOP ANIMATION                
                     currentAnimFrameTime = currentAnimFrameTime - animTotalDuration; // loop back to start
                     timeStart = (float)(gameTime.TotalGameTime.TotalSeconds);        // reset startTime
                 }
                 else
-                {               // ANIMATION COMPLETE                
+                {// ANIMATION COMPLETE                
                     currentFrame = 0;  // assuming we might want to restart the animation later (from 0) 
                     timeStart = 0;
                     animationRunning = false;
@@ -246,8 +248,18 @@ namespace TheDivineAdventure.SkinModels
                 }
             }
         }
-        #endregion // updates
 
+        //----------------------------------
+        // UPDATE TEX ANIMS
+        //----------------------------------
+        /// In draw, this should enable us to call on this in relation to the world transform.
+        private void UpdateTexAnims()
+        {
+            if (animated_tex.Length <= 0 || animated_tex_frame ==-1) return;
+            animated_tex_frame++;
+            if (animated_tex_frame >= animated_tex.Length) animated_tex_frame = 0;
+        }
+        #endregion // updates
 
 
         #region ANIMATION CONTROLS
@@ -278,34 +290,22 @@ namespace TheDivineAdventure.SkinModels
         {
             animationRunning = false;
         }
+
+        // BEGIN TEXTURE ANIMATION
+        public void BeginTexAnimation(int animationIndex)
+        {
+            animated_tex_frame = animationIndex;
+        }
+
+        // STOP TEXTURE ANIMATION
+        public void StopTexAnimation()
+        {
+            animated_tex_frame = -1;
+        }
         #endregion // Animation Stuff
 
 
-
         #region DRAWS
-        //---------
-        // DRAW 
-        //---------
-        ///<summary> Sets final bone matrices to shader and draws - this Draw method, assumes entire character follows 1 world matrix and uses 1 shader/style
-        /// Use a mesh loop (like example) to make distinct treatments of different character parts(meshes) and use DrawMesh overload that works for you. </summary>
-        /// Note: use_mesh_materials = false - means default material setting on everything, otherwise it'll try to use loaded material values
-        ///       use_material_spec  = true  - would allow each material to receive its own material-specified lighting color
-        public void Draw(Camera cam, Matrix world, bool use_mesh_materials = true, bool use_material_spec = false)
-        {
-            foreach (SkinMesh m in meshes)
-            {
-                skinFx.fx.Parameters["Bones"].SetValue(m.shader_matrices);   // provide the bone matrices of this mesh
-                if (use_mesh_materials)
-                    AssignMaterials(m, use_material_spec);
-                skinFx.world = world * m.node_with_anim_trans.combined_mtx;  // set model's world transform
-
-                // DO LAST (this will apply the technique with any parameters set before it (or in it)): 
-                skinFx.SetDrawParams(cam, m.tex_diffuse, m.tex_normalMap, m.tex_specular);
-                gpu.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, m.vertices, 0, m.vertices.Length, m.indices, 0, m.indices.Length / 3, VertexNormMapSkin.VertexDeclaration);
-            }
-        }
-
-
         //--------------------------------
         // ASSIGN MATERIALS
         //--------------------------------
@@ -322,25 +322,6 @@ namespace TheDivineAdventure.SkinModels
         }
 
 
-        // DRAW MESH (by name)
-        /// <summary> For a special case were a person may wish to manipulate each mesh by name. Could be optimized by dictionary/hash. </summary>
-        public void DrawMeshByName(string meshNodeName, Camera cam, Matrix world, bool use_mesh_materials = true, bool use_material_spec = false)
-        {
-            int index = -1;
-            for (int i = 0; i < meshes.Length; i++)
-            {
-                if (meshes[i].node_with_anim_trans.name == meshNodeName)
-                {
-                    index = i;
-                    i = meshes.Length;
-                }
-            }
-            if (index > -1) DrawMesh(index, cam, world, use_mesh_materials, use_material_spec);
-        }
-
-
-        /// We might use this one a lot - great for looping thru meshes in game and specifying unique parameters for each mesh based on what it is
-        /// Note: It would be possible to send in a transform in the above to add a temporary offset to a bone (like to aim the head in another direction) 
         //---------------------------------------------------
         // DRAW MESH (by index)
         //---------------------------------------------------
@@ -354,7 +335,8 @@ namespace TheDivineAdventure.SkinModels
             skinFx.world = m.node_with_anim_trans.combined_mtx * world;    // set model's world transform
 
             // DO LAST (this will apply the technique with any parameters set before it (or in it)): 
-            skinFx.SetDrawParams(cam, m.tex_diffuse, m.tex_normalMap, m.tex_specular);
+            if(animated_tex[0] != null) skinFx.SetDrawParams(cam, animated_tex[animated_tex_frame], m.tex_normalMap, m.tex_specular);
+            else skinFx.SetDrawParams(cam, m.tex_diffuse, m.tex_normalMap, m.tex_specular);
             gpu.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, m.vertices, 0, m.vertices.Length, m.indices, 0, m.indices.Length / 3, VertexNormMapSkin.VertexDeclaration);
         }
 
@@ -376,7 +358,9 @@ namespace TheDivineAdventure.SkinModels
                 }
             }
         }
+        
         #endregion // draws
+
 
         #region ---Getting Socket Info --
         public Matrix GetBoneTransform(int targetNode)
@@ -390,9 +374,9 @@ namespace TheDivineAdventure.SkinModels
         #endregion
 
 
-        #region N E S T E D   C L A S S E S -------------------------------------------------------------------------------------------------------------------------------------
+        #region NESTED CLASSES -------------------------------------------------------------------------------------------------------------------------------------
 
-        // C L A S S   M O D E L   B O N E 
+        // CLASS MODEL BONE 
         public class ModelBone
         {
             public string name;                  // bone name
@@ -424,8 +408,7 @@ namespace TheDivineAdventure.SkinModels
 
 
 
-        // C L A S S   S K I N   M E S H 
-        /// <summary> Models are composed of meshes each with their own textures and sets of vertices associated to them. </summary>
+        // CLASS SKIN MESH 
         public class SkinMesh
         {
             public ModelNode node_with_anim_trans;  // reference of node containing animated transform
@@ -454,7 +437,7 @@ namespace TheDivineAdventure.SkinModels
             public Matrix CombinedFinalTransform { get { return node_with_anim_trans.combined_mtx; } }  // Final world position of mesh itself
             public Vector3 min, max, mid;
 
-            // MESH MATERIAL (add more as needed - like if you want pbr):
+            // MESH MATERIAL:
             public Vector4 ambient = Vector4.One;   // minimum light color
             public Vector4 diffuse = Vector4.One;   // regular material colorization
             public Vector4 specular = Vector4.One;   // specular highlight color 
@@ -465,22 +448,11 @@ namespace TheDivineAdventure.SkinModels
             public float shineStrength = 1.0f;     // probably specular power (can use to narrow & intensifies highlights - ie: more wet or metallic looking)
             public float bumpScale = 0.0f;     // amplify or reduce normal-map effect  
             public bool isTwoSided = false;    // useful for glass and ice
-            #region [Region: Not Used Right Now]
-            //public Vector4 colorTransparent = Vector4.One;  
-            //public Vector4 reflective = Vector4.One;
-            //public float transparency = 0.0f;
-            //public bool isPbrMaterial = false;
-            //public string blendMode   = "Default";
-            //public string shadingMode = "Default";
-            //public bool hasShaders    = false;
-            //public bool isWireFrameEnabled = false;
-            #endregion
         } // Skin Mesh Class
 
 
 
-        // C L A S S   R I G   A N I M A T I O N 
-        /// <summary> All the 'animNodes' are in RigAnimation & the nodes have lists of frames of animations.</summary>
+        // CLASS RIG ANIMATION 
         public class RigAnimation
         {
             public string animation_name = "";
@@ -654,8 +626,6 @@ namespace TheDivineAdventure.SkinModels
         #endregion
 
     } // Skin Model Class
-
-
 
     //--------------------------------------
     #region VERTEX  STRUCTURE 

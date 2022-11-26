@@ -15,13 +15,13 @@ namespace TheDivineAdventure
 {
     public class LevelLoader
     {
-        PlayScene parent;
-        GraphicsDevice gpu;
-        ContentManager content;                    //content manager
-        Camera cam;
-        string path;                               //path to load data from
-        XmlDocument level;                         //level datafile
-        public SkinFx          levelFX;            //fx for the level (need to look closer at editing)
+        readonly PlayScene      parent;
+        readonly GraphicsDevice gpu;
+        readonly ContentManager content;
+        readonly Camera         cam;
+        readonly string         path;        //path to load data from
+        readonly XmlDocument    level;       //level datafile
+        public   SkinFx         levelFX;     //fx for the level (need to look closer at editing)
 
 
         public LevelLoader(string levelsFolder, ContentManager cont, PlayScene Parent)
@@ -37,10 +37,11 @@ namespace TheDivineAdventure
         public Level Load(string levelFile)
         {
             levelFile += ".xml";
-            Level outLevel = new Level(content, gpu, cam);  //create output loaded level
+            Level outLevel = new Level(content, gpu, cam, parent);  //create output loaded level
 
             string file = Path.Combine(Path.Combine(Environment.CurrentDirectory, path), levelFile);   //file location for level file
             //string file = Path.Combine(@"D:\Holder\School\TDA_Repository\The-Divine-Adventure\TheDivineAdventure\TheDivineAdventure\Content\Level_Data\Level_1", levelFile);   //file location for level file
+            //string file = Path.Combine(@"D:\Holder\School\TDA_Repository\The-Divine-Adventure\TheDivineAdventure\TheDivineAdventure\Content\Level_Data\Level_2", levelFile);   //file location for level file
 
             if (File.Exists(file))
             {
@@ -57,6 +58,7 @@ namespace TheDivineAdventure
             List<Level.SpawnerTriggerBox> spawntriggersToAdd = new List<Level.SpawnerTriggerBox>();
             List<Level.MissionTriggerBox> missionTriggersToAdd = new List<Level.MissionTriggerBox>();
             List<PlayScene.EnemySpawner> spawnersToAdd = new List<PlayScene.EnemySpawner>();
+            List<SourceLight> lightsToAdd = new List<SourceLight>();
 
             //Get each rooom contents
             foreach (XmlNode room in level.DocumentElement?.ChildNodes)
@@ -102,6 +104,7 @@ namespace TheDivineAdventure
                             foreach (XmlNode child in prefab.ChildNodes)
                             {
                                 string filename = "";
+                                List<string> animTex = new List<string>();
                                 Vector3 position = Vector3.Zero;
                                 Vector3 rotation = Vector3.Zero;
                                 Vector3 dims = Vector3.Zero;
@@ -119,27 +122,26 @@ namespace TheDivineAdventure
                                             {
                                                 filename = floor.FirstChild.InnerText;
                                             }
-                                            if (floor.Name == "pos")
+                                            else if (floor.Name == "pos")
                                             {
                                                 position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-
                                         }
                                         if (filename == "") floorsToAdd.Add(new Level.FloorTile(position, rotation, gpu, dims));
                                         else floorsToAdd.Add(new Level.FloorTile(path, filename, position, rotation, gpu, dims));
@@ -153,21 +155,21 @@ namespace TheDivineAdventure
                                             {
                                                 filename = floor.FirstChild.InnerText;
                                             }
-                                            if (floor.Name == "pos")
+                                            else if (floor.Name == "pos")
                                             {
                                                 position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
@@ -189,20 +191,19 @@ namespace TheDivineAdventure
                                                 position.Z = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (deathBox.Name == "rot")
+                                            else if (deathBox.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (deathBox.Name == "coll_bounds")
+                                            else if (deathBox.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(deathBox.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-
                                         }
                                         deathboxToAdd.Add(new Level.DeathBox(position, rotation, gpu, dims));
                                         continue;
@@ -220,22 +221,22 @@ namespace TheDivineAdventure
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "range")
+                                            else if (floor.Name == "range")
                                             {
                                                 range = int.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "activate_range")
+                                            else if (floor.Name == "activate_range")
                                             {
                                                 activateRange = int.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "spawn_list")
+                                            else if (floor.Name == "spawn_list")
                                             {
                                                 spawnList[0] = int.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 spawnList[1] = int.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 spawnList[2] = int.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 spawnList[3] = int.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[3]);
                                             }
-                                            if (floor.Name == "starts_active")
+                                            else if (floor.Name == "starts_active")
                                             {
                                                 if (floor.FirstChild.InnerText == "true") startActive = true;
                                                 else startActive = false;
@@ -253,28 +254,32 @@ namespace TheDivineAdventure
                                             {
                                                 filename = floor.FirstChild.InnerText;
                                             }
-                                            if (floor.Name == "pos")
+                                            else if (floor.Name == "pos")
                                             {
                                                 position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
+                                            else if (floor.Name == "animated_tex")
+                                            {
+                                                animTex.Add(floor.FirstChild.InnerText);
+                                            }
                                         }
-                                        staticMeshToAdd.Add(new Level.StaticMesh(path, filename, position, rotation, gpu, dims));
+                                        staticMeshToAdd.Add(new Level.StaticMesh(path, filename, position, rotation, gpu, dims, animTex));
                                         continue;
                                     #endregion
                                     case "door":
@@ -291,46 +296,46 @@ namespace TheDivineAdventure
                                             {
                                                 filename = floor.FirstChild.InnerText;
                                             }
-                                            if (floor.Name == "pos")
+                                            else if (floor.Name == "pos")
                                             {
                                                 position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "left_door_bounds")
+                                            else if (floor.Name == "left_door_bounds")
                                             {
                                                 lBounds.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 lBounds.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 lBounds.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-                                            if (floor.Name == "right_door_bounds")
+                                            else if (floor.Name == "right_door_bounds")
                                             {
                                                 rBounds.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rBounds.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rBounds.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-                                            if (floor.Name == "left_door_rot")
+                                            else if (floor.Name == "left_door_rot")
                                             {
                                                 lRot = float.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "right_door_rot")
+                                            else if (floor.Name == "right_door_rot")
                                             {
                                                 rRot = float.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "is_locked")
+                                            else if (floor.Name == "is_locked")
                                             {
                                                 if (floor.FirstChild.InnerText == "true") isLocked = true;
                                                 else isLocked = false;
                                             }
-                                            if (floor.Name == "closeable")
+                                            else if (floor.Name == "closeable")
                                             {
                                                 if (floor.FirstChild.InnerText == "true") closeable = true;
                                                 else closeable = false;
@@ -347,31 +352,31 @@ namespace TheDivineAdventure
                                             {
                                                 filename = floor.FirstChild.InnerText;
                                             }
-                                            if (floor.Name == "pos")
+                                            else if (floor.Name == "pos")
                                             {
                                                 position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-                                            if (floor.Name == "uses")
+                                            else if (floor.Name == "uses")
                                             {
                                                 uses = int.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "target_id")
+                                            else if (floor.Name == "target_id")
                                             {
                                                 targetID = int.Parse(floor.FirstChild.InnerText);
                                             }
@@ -390,24 +395,24 @@ namespace TheDivineAdventure
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-                                            if (floor.Name == "uses")
+                                            else if (floor.Name == "uses")
                                             {
                                                 uses = int.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "target_id")
+                                            else if (floor.Name == "target_id")
                                             {
                                                 targetID = int.Parse(floor.FirstChild.InnerText);
                                             }
@@ -426,29 +431,55 @@ namespace TheDivineAdventure
                                                 position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 position = Vector3.Transform(position, prefabWorld);
                                             }
-                                            if (floor.Name == "rot")
+                                            else if (floor.Name == "rot")
                                             {
                                                 rotation.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 rotation.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 rotation.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                                 rotation += prefRot;
                                             }
-                                            if (floor.Name == "coll_bounds")
+                                            else if (floor.Name == "coll_bounds")
                                             {
                                                 dims.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
                                                 dims.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
                                                 dims.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
                                             }
-                                            if (floor.Name == "uses")
+                                            else if (floor.Name == "uses")
                                             {
                                                 uses = int.Parse(floor.FirstChild.InnerText);
                                             }
-                                            if (floor.Name == "target_id")
+                                            else if (floor.Name == "target_id")
                                             {
                                                 targetID = int.Parse(floor.FirstChild.InnerText);
                                             }
                                         }
                                         missionTriggersToAdd.Add(new Level.MissionTriggerBox(position, rotation, gpu, dims, targetID, uses));
+                                        continue;
+                                    #endregion
+                                    case "source_light":
+                                        #region Load source lights
+                                        Vector3 color = Vector3.Zero;
+                                        foreach (XmlNode floor in child.ChildNodes)
+                                        {
+                                            if (floor.Name == "pos")
+                                            {
+                                                position.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0]);
+                                                position.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1]);
+                                                position.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2]);
+                                                position = Vector3.Transform(position, prefabWorld);
+                                            }
+                                            else if (floor.Name == "color")
+                                            {
+                                                color.X = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[0])/255;
+                                                color.Y = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[1])/255;
+                                                color.Z = float.Parse(floor.FirstChild.InnerText.Trim('(').Trim(')').Split(',')[2])/255;
+                                            }
+                                            else if (floor.Name == "strength")
+                                            {
+                                                range = int.Parse(floor.FirstChild.InnerText);
+                                            }
+                                        }
+                                        lightsToAdd.Add(new SourceLight(position, range, color));
                                         continue;
                                         #endregion
                                 }
@@ -457,8 +488,9 @@ namespace TheDivineAdventure
                         break;
                     case "level_data":
                         int levId = 0;
-                        Vector4 fogCol = Vector4.Zero;
                         int fogDis = 0;
+                        int maxScore = 0;
+                        Vector4 fogCol = Vector4.Zero;
                         Vector3 pSpawn = Vector3.Zero;
                         foreach (XmlNode data in room.ChildNodes)
                         {
@@ -483,7 +515,7 @@ namespace TheDivineAdventure
                                     break;
                             }
                         }
-                        outLevel.SetData(levId, fogCol, fogDis, pSpawn);
+                        outLevel.SetData(levId, fogCol, fogDis, pSpawn, maxScore);
                         break;
                 }
             }
@@ -497,6 +529,7 @@ namespace TheDivineAdventure
             if (activatorToAdd.Count != 0)       outLevel.Add(activatorToAdd);
             if (spawntriggersToAdd.Count != 0)   outLevel.Add(spawntriggersToAdd);
             if (missionTriggersToAdd.Count != 0) outLevel.Add(missionTriggersToAdd);
+            if (lightsToAdd.Count != 0)          outLevel.Add(lightsToAdd);
 
             return outLevel;
         }

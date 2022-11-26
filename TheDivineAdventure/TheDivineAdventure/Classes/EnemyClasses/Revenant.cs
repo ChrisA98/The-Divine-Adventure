@@ -110,9 +110,9 @@ namespace TheDivineAdventure
                 {
                     if (floor.collider.Intersects(floorCheck) != null)
                     {
-                        flyHeight += GetHighestSurface();
+                        flyHeight += GetClosestSurface();
                         if (flyHeight > pos.Y) pos.Y += world.Up.Y*.4f;
-                        else pos.Y -= world.Up.Y * 0.2f;
+                        else pos.Y -= world.Up.Y * 0.4f;
                         fallSpeed = 0;
                         onGround = true;
                         break;
@@ -131,11 +131,15 @@ namespace TheDivineAdventure
             }
         }
 
-        private float GetHighestSurface()
+        private float GetClosestSurface()
         {
             float height = 0;
             Ray floorCheck = new Ray(boundingCollider.Position, world.Down);
-            if(Vector3.Distance(pos,player.Pos)<= attackRange)
+            Vector3 playT = player.Pos; //temp player pos
+            playT.Y = 0; //remove y value
+            Vector3 temp = player.Pos; //temp  pos
+            temp.Y = 0; //remove y value
+            if (Vector3.Distance(temp, playT) <= attackRange)
             {
                 return player.Pos.Y + 30;
             }
@@ -143,7 +147,7 @@ namespace TheDivineAdventure
             {
                 if (floor.collider.Intersects(floorCheck) != null)
                 {
-                    if (floor.Position.Y+30 > height) height = floor.Position.Y + 30;
+                    if (Vector3.Distance(temp,floor.Position + new Vector3(0,30,0)) > height) height = floor.Position.Y + 30;
                 }
             }
             foreach (Level.DeathBox floor in parentScene.thisLevel.DeathBoxes)
@@ -151,12 +155,11 @@ namespace TheDivineAdventure
                 if (Vector3.Distance(floor.Position, pos) < 400) continue;
                 if (floor.collider.Intersects(floorCheck) != null)
                 {
-                    if (floor.Position.Y+ 130 > height) height = floor.Position.Y + 130;
+                    if (Vector3.Distance(temp, floor.Position + new Vector3(0, 130, 0)) > height) height = floor.Position.Y + 130;
                 }
             }
             return height;
         }
-
 
         private void FlyBob()
         {

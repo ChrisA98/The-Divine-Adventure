@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace TheDivineAdventure
 {
@@ -60,6 +61,7 @@ namespace TheDivineAdventure
             base.Update(gameTime);
             if (Keyboard.GetState().IsKeyDown(Keys.Escape) && parent.lastKeyboard.IsKeyUp(Keys.Escape))
             {
+                Game1.gameSounds[2].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 parent.showCursor = false;
                 Mouse.SetPosition(parent.GraphicsDevice.Viewport.Width / 2, parent.GraphicsDevice.Viewport.Height / 2);
                 parent.currentScene = "PLAY";
@@ -69,6 +71,9 @@ namespace TheDivineAdventure
             //get mouse clocks and check buttons
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
+                if (parent.lastMouseState.LeftButton != ButtonState.Pressed)
+                    Game1.gameSounds[1].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
+
                 if (pauseResume.IsPressed())
                 {
                     parent.showCursor = false;
@@ -120,6 +125,8 @@ namespace TheDivineAdventure
                             case 2:
                                 parent.currentScene = "TITLE";
                                 parent.titleScene.Initialize();
+                                MediaPlayer.Stop();
+                                MediaPlayer.Play(parent.gameTheme);
                                 break;
                             case 3:
                                 parent.Exit();

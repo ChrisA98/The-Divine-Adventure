@@ -1,0 +1,1117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<level_2>
+	<level_data>
+		<level_id>2</level_id>
+		<max_score>10000</max_score>
+		<fog_color>(.29,.33,.38,1)</fog_color>
+		<fog_range>80</fog_range>
+		<player_spawn>(0,200,0)</player_spawn>
+	</level_data>	
+	
+	<room>
+		<room_id> 0 </room_id>
+		<!--room 1 macro-->
+		<prefab>
+			<prefab_name>room 1 macro</prefab_name>
+			<pos>(0,0,0)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Room1.fbx</model>
+				<pos>(0,-.4,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+
+			<floor>
+				<pos>(0,0,-10)</pos>
+				<coll_bounds>(270,2,80)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(100,0,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+
+			<!--Right Pit floors-->
+			<static_collision_mesh>
+				<pos>(-100,-70.9,0)</pos>
+				<coll_bounds>(40,100,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-100,-14,0)</pos>
+				<coll_bounds>(40,18,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+
+			<static_collision_mesh>
+				<pos>(-43,-70.9,0)</pos>
+				<coll_bounds>(5,100,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-43,-14,0)</pos>
+				<coll_bounds>(5,18,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-66,-11.75,95)</pos>
+				<coll_bounds>(50,18,10)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+
+
+			<!--left Pit Floors-->
+			<static_collision_mesh>
+				<pos>(100,-70.9,0)</pos>
+				<coll_bounds>(40,100,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(100,-14,0)</pos>
+				<coll_bounds>(40,18,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(43,-70.9,0)</pos>
+				<coll_bounds>(5,100,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(43,-14,0)</pos>
+				<coll_bounds>(5,18,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+
+			<death_box>
+				<pos>(0,-40,0)</pos>
+				<coll_bounds>(250,1,250)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</death_box>
+			
+			
+			<spawner>
+				<pos>(0,34,0)</pos>
+				<range>140</range>
+				<spawn_list>(0,0,0,0)</spawn_list>
+				<starts_active>false</starts_active>
+			</spawner>
+
+
+
+			<!--Back Wall-->
+			<static_collision_mesh>
+				<pos>(0,100,-25)</pos>
+				<coll_bounds>(280,250,4)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+
+
+			<!--Over Door Wall-->
+			<static_collision_mesh>
+				<pos>(0,110,103)</pos>
+				<coll_bounds>(30,200,4)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			
+			<!--Side Walls-->
+			<static_collision_mesh>
+				<pos>(119,100,0)</pos>
+				<coll_bounds>(4,250,50)</coll_bounds>
+				<rot>(0,5,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(95,100,60)</pos>
+				<coll_bounds>(3,250,120)</coll_bounds>
+				<rot>(0,-35,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(45,100,100)</pos>
+				<coll_bounds>(80,250,5)</coll_bounds>
+				<rot>(0,6,0)</rot>
+			</static_collision_mesh>
+			
+			<static_collision_mesh>
+				<pos>(-119,100,0)</pos>
+				<coll_bounds>(4,250,50)</coll_bounds>
+				<rot>(0,-5,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-95,100,60)</pos>
+				<coll_bounds>(3,250,120)</coll_bounds>
+				<rot>(0,35,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-45,100,100)</pos>
+				<coll_bounds>(80,250,5)</coll_bounds>
+				<rot>(0,-6,0)</rot>
+			</static_collision_mesh>
+		</prefab>
+
+	</room>
+	
+	<!--Hallway01-->
+	<room>
+		<room_id> 1 </room_id>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(0,0,120)</pos>
+			<rot>(0,0,0)</rot>
+			
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,151)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,182)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,213)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,244)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,275)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway2</prefab_name>
+			<pos>(0,0,306)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-3.4)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(-0.1,0,35)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Intersect01-->
+	<room>
+		<room_id> 2 </room_id>
+
+		<prefab>
+			<prefab_name>intersect</prefab_name>
+			<pos>(0,0,342)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Intersection.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Back_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Back_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,23,0)</pos>
+				<coll_bounds>(45,3,45)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(43,1,43)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Hallway02-->
+	<room>
+		<room_id> 3 </room_id>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(35,0,342)</pos>
+			<rot>(0,90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,5)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<static_mesh>
+				<model>MOD_L2_Crystal01.fbx</model>
+				<pos>(0,0,-4.5)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,180,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(66,0,342)</pos>
+			<rot>(0,90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(97,0,342)</pos>
+			<rot>(0,90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(128,0,342)</pos>
+			<rot>(0,90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Hallway03-->
+	<room>
+		<room_id> 4 </room_id>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(-35,0,342)</pos>
+			<rot>(0,-90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(-66,0,342)</pos>
+			<rot>(0,-90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(-97,0,342)</pos>
+			<rot>(0,-90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(-128,0,342)</pos>
+			<rot>(0,-90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Hallway04-->
+	<room>
+		<room_id> 5 </room_id>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(0,0,377)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(0,0,408)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(0,0,439)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+		<prefab>
+			<prefab_name>Hallway1</prefab_name>
+			<pos>(0,0,470)</pos>
+			<rot>(0,0,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Hallway1.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(250,300,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Right Wall-->
+			<static_collision_mesh>
+				<pos>(-8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--left Wall-->
+			<static_collision_mesh>
+				<pos>(8,15,0)</pos>
+				<coll_bounds>(2,40,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,18,0)</pos>
+				<coll_bounds>(30,3,38)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(30,1,40)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Intersect02-->
+	<room>
+		<room_id> 6 </room_id>
+
+		<prefab>
+			<prefab_name>intersect</prefab_name>
+			<pos>(164,0,342)</pos>
+			<rot>(0,90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Intersection.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Back_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Back_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,23,0)</pos>
+				<coll_bounds>(45,3,45)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(43,1,43)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+	<!--Intersect03-->
+	<room>
+		<room_id> 7 </room_id>
+
+		<prefab>
+			<prefab_name>intersect</prefab_name>
+			<pos>(-164,0,342)</pos>
+			<rot>(0,-90,0)</rot>
+
+			<static_mesh>
+				<model>MOD_L2_Intersection.fbx</model>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(100,100,100)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+			<!--Back_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Back_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,-15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Left Wall-->
+			<static_collision_mesh>
+				<pos>(15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,-45,0)</rot>
+			</static_collision_mesh>
+			<!--Front_Right Wall-->
+			<static_collision_mesh>
+				<pos>(-15,0,15)</pos>
+				<coll_bounds>(2,40,20)</coll_bounds>
+				<rot>(0,45,0)</rot>
+			</static_collision_mesh>
+			<!--Ceiling-->
+			<static_collision_mesh>
+				<pos>(0,23,0)</pos>
+				<coll_bounds>(45,3,45)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<!--Floors-->
+			<floor>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(43,1,43)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</floor>
+		</prefab>
+	</room>
+</level_2>

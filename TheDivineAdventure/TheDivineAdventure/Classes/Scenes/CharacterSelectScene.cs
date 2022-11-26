@@ -4,8 +4,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 
+using System.Diagnostics;
 using System.Collections.Generic;
 using TheDivineAdventure.SkinModels;
+using System.IO;
 
 
 namespace TheDivineAdventure
@@ -439,6 +441,7 @@ namespace TheDivineAdventure
             //click detection for model rotating
             if (parent.mouseState.LeftButton == ButtonState.Pressed && parent.lastMouseState.LeftButton != ButtonState.Pressed)
             {
+                Game1.gameSounds[0].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 if (leftArrow.IsPressed())
                 {
                     switch (currentChar)
@@ -546,9 +549,11 @@ namespace TheDivineAdventure
                         Matrix.CreateRotationY(MathHelper.ToRadians(characters.Rot.Y)) *
                         Matrix.CreateTranslation(characters.Pos);
 
-            SkinModel hero;
 
-            
+
+            #region Draw Character
+
+            SkinModel hero;
             switch (currentChar)
             {
                 case "WARRIOR":
@@ -626,6 +631,8 @@ namespace TheDivineAdventure
                 hero.DrawMesh(i, camera, characterWorld, false);
             }
 
+            #endregion
+
             _spriteBatch.Begin();
 
             //draw embers
@@ -642,9 +649,11 @@ namespace TheDivineAdventure
             _spriteBatch.Draw(frontplate, Vector2.Zero, null, Color.White, 0, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 0);
 
             //Draw character title on front plate
-            _spriteBatch.DrawString(bigFont, currentChar, new Vector2(1052, 143) * parent.currentScreenScale, new Color(Color.Black,90), 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+            _spriteBatch.DrawString(bigFont, currentChar, new Vector2(1052, 143) * parent.currentScreenScale,
+                new Color(Color.Black,90), 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
             _spriteBatch.DrawString(bigFont, currentChar, new Vector2(1055,140) * parent.currentScreenScale,
                 parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+            #region Draw Stats
             //Draw character info on front plate
             _spriteBatch.DrawString(font, "Health: "+characters.healthMax, new Vector2(1064, 273) * parent.currentScreenScale,
                 parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
@@ -654,20 +663,181 @@ namespace TheDivineAdventure
             else
                 _spriteBatch.DrawString(font, "Stamina: " + characters.secondary, new Vector2(1064, 303) * parent.currentScreenScale,
                     parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+
             _spriteBatch.DrawString(font, "Speed: " + characters.walkMax, new Vector2(1064, 333) * parent.currentScreenScale,
                 parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
-            _spriteBatch.DrawString(font, "Stamina: " + characters.secondary, new Vector2(1064, 363) * parent.currentScreenScale,
+            _spriteBatch.DrawString(font, "Jump Speed: " + characters.jumpSpeed, new Vector2(1064, 363) * parent.currentScreenScale,
                 parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
-            _spriteBatch.DrawString(font, "Jump Speed: " + characters.jumpSpeed, new Vector2(1064, 393) * parent.currentScreenScale,
-                parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
-            _spriteBatch.DrawString(font, "Stamina: " + characters.secondary, new Vector2(1064, 423) * parent.currentScreenScale,
-                parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+
             if (characters.IsCaster)
-                _spriteBatch.DrawString(font, "Mana Regen: " + characters.secondaryRegenRate*60+"/per second", new Vector2(1064, 453) * parent.currentScreenScale,
+                _spriteBatch.DrawString(font, "Mana Regen: " + characters.secondaryRegenRate*60+"/per second", new Vector2(1064, 393) * parent.currentScreenScale,
                     parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
             else
-                _spriteBatch.DrawString(font, "Stamina Regen: " + characters.secondaryRegenRate * 60 + "/per second", new Vector2(1064, 453) * parent.currentScreenScale,
+                _spriteBatch.DrawString(font, "Stamina Regen: " + characters.secondaryRegenRate * 60 + "/per second", new Vector2(1064, 393) * parent.currentScreenScale,
                     parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+            #endregion
+
+            #region Draw Controls
+            switch (currentChar)
+            {
+                case "CLERIC":
+                    #region Cleric Controls
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1066, 574) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1064, 573) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Single projectile.", new Vector2(1066, 604) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Single projectile.", new Vector2(1064, 603) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1066, 624) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1064, 623) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Three forward projectiles.", new Vector2(1066, 654) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale*.8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Three forward projectiles.", new Vector2(1064, 653) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Teleport: Q Key - ", new Vector2(1066, 674) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Teleport: Q Key - ", new Vector2(1064, 673) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Teleport forward.", new Vector2(1066, 704) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Teleport forward.", new Vector2(1064, 703) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regen: E Key - ", new Vector2(1066, 724) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regen: E Key - ", new Vector2(1064, 723) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate a small portion of health.", new Vector2(1066, 754) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate a small portion of health.", new Vector2(1064, 753) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    #endregion
+                    break;
+                case "WARRIOR":
+                    #region Warrior Controls
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1066, 574) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1064, 573) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Forward Strike.", new Vector2(1066, 604) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Forward Strike.", new Vector2(1064, 603) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1066, 624) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1064, 623) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Heavy Forward Slash.", new Vector2(1066, 654) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Heavy Forward Slash.", new Vector2(1064, 653) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regnerate Stamina: Q Key - ", new Vector2(1066, 674) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regnerate Stamina: Q Key - ", new Vector2(1064, 673) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some Stamina.", new Vector2(1066, 704) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some Stamina.", new Vector2(1064, 703) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1066, 724) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1064, 723) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate all of health.", new Vector2(1066, 754) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate all of health.", new Vector2(1064, 753) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    #endregion
+                    break;
+                case "MAGE":
+                    #region Mage Controls
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1066, 574) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1064, 573) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Several forward projectiles.", new Vector2(1066, 604) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Several forward projectiles.", new Vector2(1064, 603) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1066, 624) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1064, 623) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Short range redial attack.", new Vector2(1066, 654) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Short range redial attack.", new Vector2(1064, 653) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Teleport: Q Key - ", new Vector2(1066, 674) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Teleport: Q Key - ", new Vector2(1064, 673) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Teleport forward.", new Vector2(1066, 704) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Teleport forward.", new Vector2(1064, 703) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1066, 724) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1064, 723) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some health.", new Vector2(1066, 754) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some health.", new Vector2(1064, 753) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    #endregion
+                    break;
+                case "ROGUE":
+                    #region Rogue Controls
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1066, 574) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Main Attack: Left Mouse Button - ", new Vector2(1064, 573) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Quick forward stab.", new Vector2(1066, 604) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Quick forward stab.", new Vector2(1064, 603) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1066, 624) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Secondary Attack: Right Mouse Button - ", new Vector2(1064, 623) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Radial swing attack.", new Vector2(1066, 654) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Radial swing attack.", new Vector2(1064, 653) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regen Stamina: Q Key - ", new Vector2(1066, 674) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regen Stamina: Q Key - ", new Vector2(1064, 673) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some stamina.", new Vector2(1066, 704) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some stamina.", new Vector2(1064, 703) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1066, 724) * parent.currentScreenScale,
+                         Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "Regen Heath: E Key - ", new Vector2(1064, 723) * parent.currentScreenScale,
+                         parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some health.", new Vector2(1066, 754) * parent.currentScreenScale,
+                        Color.Gray, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, "        Regenerate some health.", new Vector2(1064, 753) * parent.currentScreenScale,
+                        parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale * .8f, SpriteEffects.None, 1);
+                    #endregion
+                    break;
+            }
+            #endregion
 
 
             //draw buttons

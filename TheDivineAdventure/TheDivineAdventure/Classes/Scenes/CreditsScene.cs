@@ -27,15 +27,24 @@ namespace TheDivineAdventure
             parent.showCursor = false; ;
 
             credits = new string[]  {"Game Programmers", "       Christopher Adkins", "       Sean Blankenship", "       Hayden Michael", "       Lucas Reed",
-                " ","Game Artists", "       2D Assets: Christopher Adkins", "       3D Assets: Sean Blankenship", "       Christopher Adkins",
-                " ","Music Used", "       Janus Turning", "              by Shane Ivers",
+                " ","Game Artists", "       2D Assets: Christopher Adkins", "       3D Assets:", "              Christopher Adkins","              Sean Blankenship",
+                " ","Music", "       Janus Turning - Title Music", "              by Shane Ivers",
+                "       Night of Chaos - Level 2 Music", "              by Kevin MacLeod",
+                "       Interloper - Level 1 music", "              by Kevin MacLeod",
+                "       Agnus Sei X - Pride Boss music", "              by Kevin MacLeod",
+                ////////////////Sound Effects
+                " ","Additional Sound Credits",
+                "       Little Robot Sound Factory", "              jsfxr",
+                "       OpenGameArt", "              Varkalandar", "              Michel Baradari",
+                "       freesound", "              ScreamStudio", "              LucasDuff", "              Jofae", "              AudioPapkin",
+                ///////////////Testers
                 " ","Game Testers", "       Christopher Adkins", "       Sean Blankenship", "       Hayden Michael", "       Lucas Reed","       Joseph Park",
-                "Noah Adkins",
+                "       Noah Adkins", "       Samuel Isabel", "       Kira Lowe",
+                " ","Rubber Duck", "       Samuel Isabel",
                 " ","Created using MonoGame Framework ",
                 " ","Thank you for your time! "};
-            creditsRuntime = 820;
+            creditsRuntime = 910;
         }
-
         public override void LoadContent()
         {
             base.LoadContent();
@@ -47,8 +56,9 @@ namespace TheDivineAdventure
         {
             base.Update(gameTime);
             //return to title screen
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().GetPressedKeys().Length > 0)
             {
+                Game1.gameSounds[2].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 parent.currentScene = "TITLE";
                 parent.titleScene.Initialize();
             }

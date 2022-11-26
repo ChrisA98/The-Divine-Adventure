@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace TheDivineAdventure
 {
@@ -55,8 +56,11 @@ namespace TheDivineAdventure
         {
             base.Update(gameTime);
             fadeIn += 0.02f;
+            if (fadeIn < 1) return;
             if(mouseState.LeftButton == ButtonState.Pressed)
             {
+                if (parent.lastMouseState.LeftButton != ButtonState.Pressed)
+                    Game1.gameSounds[1].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 if (restart.IsPressed())
                 {
                     fadeIn = 0;
@@ -68,6 +72,8 @@ namespace TheDivineAdventure
                 {
                     fadeIn = 0;
                     parent.currentScene = "LEVEL_SELECT";
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(parent.gameTheme);
                     parent.levelSelectScene.Initialize();
                     return;
                 }
@@ -75,6 +81,8 @@ namespace TheDivineAdventure
                 {
                     fadeIn = 0;
                     parent.currentScene = "TITLE_SCREEN";
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(parent.gameTheme);
                     parent.titleScene.Initialize();
                     return;
                 }

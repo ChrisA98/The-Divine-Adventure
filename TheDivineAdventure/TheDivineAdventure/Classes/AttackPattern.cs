@@ -17,34 +17,34 @@ namespace TheDivineAdventure
         ///FUNCTIONS///
         ///////////////
         ///PROJECTILES///
-        public static void singleProj(Vector3 origin, Vector3 target, float speed, float damage,  List<Attack> projList, Camera cam_)
+        public static void SingleProj(Vector3 origin, Vector3 target, float speed, float damage,  List<Attack> projList, Camera cam_)
         {
-            projList.Add(new Attack(origin, target, speed, damage, cam_));
+            projList.Add(new Attack(origin, target, speed, damage, cam_, Color.Gold));
         }
 
-        public static void tripleProj(Matrix origin, Vector3 target, float speed, float damage, List<Attack> projList, Camera cam_)
+        public static void TripleProj(Matrix origin, Vector3 target, float speed, float damage, List<Attack> projList, Camera cam_)
         {
-            projList.Add(new Attack(origin.Translation + origin.Left * 5, target + origin.Left * 5, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation, target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Right * 5, target - origin.Left * 5, speed, damage, cam_));
+            projList.Add(new Attack(origin.Translation + origin.Left * 5, target + origin.Left * 5, speed, damage, cam_, Color.Gold));
+            projList.Add(new Attack(origin.Translation, target, speed, damage, cam_, Color.Gold));
+            projList.Add(new Attack(origin.Translation + origin.Right * 5, target - origin.Left * 5, speed, damage, cam_, Color.Gold));
         }
 
         public static void quinProj(Matrix origin, Vector3 target, float speed, float damage, List<Attack> projList, Camera cam_)
         {
-            projList.Add(new Attack(origin.Translation + origin.Left*10, target + new Vector3(30, 0, 0), speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Left*5, target + new Vector3(12, 0, 0), speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation, target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Right * 5, target - new Vector3(12, 0, 0), speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Right * 10, target - new Vector3(30, 0, 0), speed, damage, cam_));
+            projList.Add(new Attack(origin.Translation + origin.Left*10, target + new Vector3(30, 0, 0), speed, damage, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + origin.Left*5, target + new Vector3(12, 0, 0), speed, damage, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation, target, speed, damage, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + origin.Right * 5, target - new Vector3(12, 0, 0), speed, damage, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + origin.Right * 10, target - new Vector3(30, 0, 0), speed, damage, cam_, Color.Blue));
         }
         public static void MageMain(Matrix origin, Vector3 target, float speed, float damage, List<Attack> projList, Camera cam_)
         {
             origin.Translation += origin.Up * 10 + origin.Left * 8;
-            projList.Add(new Attack(origin.Translation, target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Right * 5, target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + origin.Left*5, target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + new Vector3(0, 5, 0), target, speed, damage, cam_));
-            projList.Add(new Attack(origin.Translation + new Vector3(0, -5, 0), target, speed, damage, cam_));
+            projList.Add(new Attack(origin.Translation, target, speed, damage/2, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + origin.Right * 5, target, speed, damage/4, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + origin.Left*5, target, speed, damage/4, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + new Vector3(0, 5, 0), target, speed, damage/4, cam_, Color.Blue));
+            projList.Add(new Attack(origin.Translation + new Vector3(0, -5, 0), target, speed, damage/4, cam_, Color.Blue));
         }
         public static void MageAlt(Matrix origin, float speed, float damage, List<Attack> projList, Camera cam_)
         {
@@ -68,7 +68,7 @@ namespace TheDivineAdventure
 
             foreach (Vector3 point in targetPoints)
             {
-                projList.Add(new Attack(origin.Translation+point, origin.Translation+(origin.Down*point), speed, damage, cam_));
+                projList.Add(new Attack(origin.Translation+point, origin.Translation+(origin.Down*point), speed, damage, cam_, Color.Blue));
             }
 
             targetPoints[0] = new Vector3(50, 40, 0);
@@ -90,7 +90,7 @@ namespace TheDivineAdventure
 
             foreach (Vector3 point in targetPoints)
             {
-                projList.Add(new Attack(origin.Translation + point, origin.Translation + (origin.Down * point), speed, damage, cam_));
+                projList.Add(new Attack(origin.Translation + point, origin.Translation + (origin.Down * point), speed, damage, cam_, Color.Blue));
             }
 
             targetPoints[0] = new Vector3(50, 40, 0);
@@ -112,24 +112,32 @@ namespace TheDivineAdventure
 
             foreach (Vector3 point in targetPoints)
             {
-                projList.Add(new Attack(origin.Translation + point, origin.Translation + (origin.Down * point), speed, damage, cam_));
+                projList.Add(new Attack(origin.Translation + point, origin.Translation + (origin.Down * point), speed, damage, cam_, Color.Blue));
             }
         }
         public static void ImpProj(Vector3 origin, Vector3 target, float damage, List<Attack> projList, Camera cam_)
         {
-            projList.Add(new Attack(origin, target, 15f, damage, cam_));
+            projList.Add(new Attack(origin, target, 15f, damage, cam_, Color.Red));
         }
         public static void RevenantProj(Vector3 origin, Vector3 target, float damage, List<Attack> projList, Camera cam_)
         {
-            projList.Add(new Attack(origin, target, 4, damage, cam_));
+            projList.Add(new Attack(origin, target, 4, damage, cam_, Color.Red));
+        }
+        public static void PrideProjBarrage(Vector3 origin, Vector3 target, float damage, List<Attack> projList, Camera cam_)
+        {
+            projList.Add(new Attack(origin, target, 6.5f, damage, cam_, Color.Red, 0, duration:1));
+        }
+        public static void PrideStatBig(Vector3 origin, Vector3 target, float damage, List<Attack> projList, Camera cam_)
+        {
+            projList.Add(new Attack(origin, target, 11f, damage, cam_, Color.Red, 0 , 5, 15));
         }
 
         ///MELEE///
-        public static void singleMel(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
+        public static void SingleMel(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
         {
             projList.Add(new Attack(origin + target, target, rotation, damage, new Vector3(15,75,15), cam_));
         }
-        public static void tripleMel(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
+        public static void TripleMel(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
         {
             projList.Add(new Attack(origin + target, target, rotation, damage, new Vector3(90, 75, 15), cam_));
         }
@@ -156,6 +164,10 @@ namespace TheDivineAdventure
         public static void MinotaurMain(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
         {
             projList.Add(new Attack(origin + target, target, rotation, damage, new Vector3(100, 75, 15), cam_));
+        }
+        public static void PrideRage(Vector3 origin, Vector3 target, Vector3 rotation, float damage, List<Attack> projList, Camera cam_)
+        {
+            projList.Add(new Attack(origin + target, target, rotation, damage, new Vector3(100, 200, 300), cam_, 3));
         }
     }
 }

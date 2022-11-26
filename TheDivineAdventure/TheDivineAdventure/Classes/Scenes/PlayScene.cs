@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,19 @@ namespace TheDivineAdventure
         //Display
         public GraphicsDevice gpu;
         //2d Textures
-        private Texture2D hudL1, hudL2, progIcon, healthBar, staminaBar, manaBar, clericIcon, clericProjectileTex, clericProjImpact,
-            rogueIcon, warriorIcon, mageIcon;
-        private Texture2D[] clericImpactAnim;
+        private Texture2D hudL1, hudL2, bossBarFrame, bossBarFrameUnder;
+        private Texture2D healthBar, staminaBar, manaBar;
+        private Texture2D clericIcon, rogueIcon, warriorIcon, mageIcon;
+        private Texture2D clericProjectileTex, mageProjectileTex, clericProjImpact;
+        private Texture2D[] clericImpactAnim, mageProjectileSheet;
         private Skybox sky;
         private Color hudFade;
+        public Rectangle healthBarRec, bossHealthBarRec, secondBarRec;
 
         //Projectile Sprites
-        private WorldSprite clericProjectile;
+        private WorldSprite clericProjectile, mageProjectile;
         private List<WorldSprite> projectileImpacts;
+        public List<SourceLight> projLights;
 
         //Enemy Healthbars
         private List<WorldSprite> healthBars;
@@ -41,14 +46,15 @@ namespace TheDivineAdventure
         LevelLoader levelLoader;
         public Level thisLevel;
         private int levelID;
+        public Song levelTheme;
+        public Song bossTheme;
 
         // --Animated Models--
         SkinModelLoader skinModel_loader;           //Loads characters
-        SkinFx skinFx;                     //Player for SkinEffect
+        public SkinFx skinFx;                     //Player for SkinEffect
         SkinFx[] itemFx;                     //Items for SkinEffect
         SkinModel[] playerModel;                //main character model
         SkinModel[] socketedItems;              //items to be kept in sockets by player
-        SkinModel terrainPiece;
         const int BASE = 0, WALK = 1, RUN = 2, JUMP = 3, WALKBACK = 4, ATTACK1 = 5, ATTACK2 = 6, WALKLEFT = 7, WALKRIGHT = 8, ATTACK1_2 = 9; // (could use enum but easier to index without casting)
         float[] playerAnimWeights;                  //Player animation weights
 
@@ -271,19 +277,16 @@ namespace TheDivineAdventure
             Spine2Rot,
             Spine2Scale
         }
+        
         const int LHAND = 0, RHAND = 1, HEAD = 2;
         int[] socketIDs;        //ids for sockets
         Matrix[] socketTrans;
-
-        //Capture travel distance
-        float travel;
 
         bool init; // indicate loading into level
 
 
         //Camera
         private Camera camera;
-        public Vector3 playerPos;
         public bool debugMode;
 
         // Player
@@ -296,6 +299,7 @@ namespace TheDivineAdventure
         public List<Enemy> worldEnemyList;
         public List<SoundEffect> enemySounds = new List<SoundEffect>();
         public EnemySpawner[] levelSpawnerList;
+        public Boss boss;
 
         // Matrices
         private Matrix worldProj;
@@ -327,15 +331,7 @@ namespace TheDivineAdventure
             camera = new Camera(parent.GraphicsDevice, Vector3.Up, player);
 
             //Level Loading
-            switch (levelID)
-            {
-                case 1:
-                    levelLoader = new LevelLoader(@"Content\Level_Data\Level_1", Content, this);
-                    break;
-                default:
-                    levelLoader = new LevelLoader(@"Content\Level_Data\Level_1", Content, this);
-                    break;
-            }
+            levelLoader = new LevelLoader(@"Content\Level_Data\Level_"+levelID.ToString(), Content, this);
 
             //player models
             if (player.role == "ROGUE") playerModel = new SkinModel[10];    //adds extra anim slot for rogues second attack anim
@@ -355,22 +351,24 @@ namespace TheDivineAdventure
 
             //Projectiles
             projectileImpacts = new List<WorldSprite>();
+            projLights = new List<SourceLight>();
 
             // Generate resource Bars rectangles
-            parent.healthBarRec = new Rectangle(
+            healthBarRec = new Rectangle(
                 (int)Math.Round(_graphics.PreferredBackBufferWidth * 0.099f / parent.currentScreenScale.X),
                 (int)Math.Round(_graphics.PreferredBackBufferHeight * 0.044f / parent.currentScreenScale.Y),
                 (int)Math.Round(.201f * _graphics.PreferredBackBufferWidth / parent.currentScreenScale.X),
                 (int)Math.Round(.05f * _graphics.PreferredBackBufferHeight / parent.currentScreenScale.Y));
-            parent.secondBarRec = new Rectangle(
+            secondBarRec = new Rectangle(
                 (int)Math.Round(_graphics.PreferredBackBufferWidth * 0.088f / parent.currentScreenScale.X),
                 (int)Math.Round(_graphics.PreferredBackBufferHeight * 0.099f / parent.currentScreenScale.Y),
                 (int)Math.Round(.201f * _graphics.PreferredBackBufferWidth / parent.currentScreenScale.X),
                 (int)Math.Round(.05f * _graphics.PreferredBackBufferHeight / parent.currentScreenScale.Y));
-
-            // Initialize Distance to Boss(kept as a variable in case we have multiple level length)
-            parent.levelLength = 3500;
-            travel = 0;
+            bossHealthBarRec = new Rectangle(
+                (int)Math.Round(_graphics.PreferredBackBufferWidth * .9f / parent.currentScreenScale.X),
+                (int)Math.Round(_graphics.PreferredBackBufferHeight * .695f / parent.currentScreenScale.Y),
+                (int)Math.Round(.227f * _graphics.PreferredBackBufferWidth / parent.currentScreenScale.X),
+                (int)Math.Round(.04f * _graphics.PreferredBackBufferHeight / parent.currentScreenScale.Y));
 
             //set score to 0
             score = 0;
@@ -395,7 +393,8 @@ namespace TheDivineAdventure
             //load 2d textures
             hudL1 = Content.Load<Texture2D>("TEX_HolyHUD_L1");
             hudL2 = Content.Load<Texture2D>("TEX_HolyHUD_L2");
-            progIcon = Content.Load<Texture2D>("TEX_ProgressionIcon");
+            bossBarFrame = Content.Load<Texture2D>("TEX_BossBar");
+            bossBarFrameUnder = Content.Load<Texture2D>("TEX_BossBar_Under");
             healthBar = Content.Load<Texture2D>("TEX_HealthBar");
             manaBar = Content.Load<Texture2D>("TEX_ManaBar");
             staminaBar = Content.Load<Texture2D>("TEX_StaminaBar");
@@ -409,11 +408,13 @@ namespace TheDivineAdventure
             rogueIcon = Content.Load<Texture2D>("TEX_Rogue_Icon");
             //WarriorItems
             warriorIcon = Content.Load<Texture2D>("TEX_Warrior_Icon");
-            //rogueItems
+            //mageeItems
             mageIcon = Content.Load<Texture2D>("TEX_Mage_Icon");
+            mageProjectileTex = Content.Load<Texture2D>("TEX_Arcane_Projectile_Lightning_Sheet");
+            mageProjectileSheet = WorldSprite.GenerateAnim(mageProjectileTex, 500, parent);
+            mageProjectile = new WorldSprite(mageProjectileSheet, true, 1, parent, Content);
 
             //load skybox
-            sky = new Skybox("TEX_SkyboxLevel1", Content);
 
             #region LOAD PLAYER 3D MODELS AND ANIMATIONS-------------
 
@@ -599,49 +600,92 @@ namespace TheDivineAdventure
             enemyModels[REVENANT] = skinModel_loader.Load("MOD_Revenant/ANIM_Revenant_Base.fbx", "MOD_Revenant", true, 3, skinFx, rescale: 1.5f);
             enemyModels[REVENANT].loopAnimation = false;
 
+
+
             //enemy Animations
 
             #endregion
 
-            #region LEVEL LOADING
-
-            switch (levelID)
-            {
-                case 1:
-                    thisLevel = levelLoader.Load("Level_1");
-                    break;
-                default:
-                    //This shouldn't happen
-                    thisLevel = levelLoader.Load("Level_1");
-                    break;
-            }
-            Content.RootDirectory = "Content";
-
-            // Levels
-            thisLevel.Load();
-            levelSpawnerList = thisLevel.Spawners;  //Create Spawners
-            player.Pos = thisLevel.playerSpawn; //set player spawn location
-
-            #endregion
+           
 
             // Attacks
             playerProjModel = Content.Load<Model>("MODEL_PlayerProjectile");
             enemyProjModel = Content.Load<Model>("MODEL_EnemyProjectile");
-            enemyMelModel = Content.Load<Model>("MODEL_EnemyMelee");
             portalModel = Content.Load<Model>("MODEL_Portal");
 
             // Load sounds
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_swordSlash"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_DivineSpell"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_SwordSpecial"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_Heal"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_Teleport"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_TradeOff"));
-            playerSounds.Add(Content.Load<SoundEffect>("SOUND_HealingPotion"));
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_swordSlash"));     //0
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_DivineSpell"));    //1
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_SwordSpecial"));   //2
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_Heal"));           //3
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_Teleport"));       //4
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_TradeOff"));       //5
+            playerSounds.Add(Content.Load<SoundEffect>("SOUND_HealingPotion"));  //6
+            Content.RootDirectory = @"Content\SoundFX";                          //
+            playerSounds.Add(Content.Load<SoundEffect>("SND_MagePrimary"));       //7
+            playerSounds.Add(Content.Load<SoundEffect>("SND_MageSecondary"));     //8
+            Content.RootDirectory = "Content";
 
+            enemySounds.Add(Content.Load<SoundEffect>("SOUND_FireSpell"));  //imp / Revenant
+            enemySounds.Add(Content.Load<SoundEffect>("SOUND_SwordSpecial"));//Minotaur
+            Content.RootDirectory = @"Content\SoundFX";
+            enemySounds.Add(Content.Load<SoundEffect>("SND_HoundAttack"));
+            enemySounds.Add(Content.Load<SoundEffect>("SND_MinotaurCharge"));
+            Content.RootDirectory = "Content";
 
-            enemySounds.Add(Content.Load<SoundEffect>("SOUND_FireSpell"));
+            Content.RootDirectory = @"Content\Music";
+            try
+            {
+                levelTheme = Content.Load<Song>("MUS_LevelMusic_L" + levelID.ToString());
+            }
+            catch
+            {
+                Debug.WriteLine("Missing Music File for level " + levelID.ToString());
+            }
+            try
+            {
+                bossTheme = Content.Load<Song>("MUS_BossMusic_L" + levelID.ToString());
+            }
+            catch
+            {
+                Debug.WriteLine("Missing Music File for level " + levelID.ToString());
+            }
+            Content.RootDirectory = @"Content";
 
+            #region LEVEL LOADING
+
+            thisLevel = levelLoader.Load("Level_"+levelID.ToString());
+
+            //boss spawning
+            switch (levelID)
+            {
+                case 1:
+                    sky = new Skybox("TEX_SkyboxLevel1", Content);
+                    boss = new PrideBoss(enemySounds, new Vector3(0, 22, -1070), this, Content);
+                    break;
+                case 2:
+                    break;
+            }
+
+            Content.RootDirectory = "Content";
+
+            // Levels
+            thisLevel.Load(Content);
+            levelSpawnerList = thisLevel.Spawners;  //Create Spawners
+
+            //load enemys
+            foreach (EnemySpawner spawner in levelSpawnerList)
+            {
+                if (spawner != null) spawner.Load();
+            }
+
+            player.Pos = thisLevel.playerSpawn; //set player spawn location
+
+            //Set level Lighting
+            skinFx.SetDirectionalLight(0, new Vector3(-0.5265408f, -0.5735765f, -0.6275069f), Color.Lerp(thisLevel.fogColor, Color.White, .3f), new Color(1, 0f, 0f));
+            skinFx.SetDirectionalLight(1, new Vector3(0.7198464f, 0.3420201f, 0.6040227f), Color.Lerp(thisLevel.fogColor, Color.White, .7f), new Color(1, 0f, 0f));
+            skinFx.SetDirectionalLight(2, new Vector3(0.4545195f, -0.7660444f, 0.4545195f), Color.Lerp(thisLevel.fogColor, Color.White, .1f), new Color(1, 0f, 0f));
+            #endregion
         }
         #endregion
 
@@ -668,6 +712,8 @@ namespace TheDivineAdventure
                 {
                     door.StartAnimation(gameTime);
                 }
+                MediaPlayer.Stop();
+                MediaPlayer.Play(levelTheme);
                 init = false;
                 
             }
@@ -677,26 +723,35 @@ namespace TheDivineAdventure
                 levelSpawnerList[0].ActivateSpawner(temp, gameTime);
             }
 
-            if (isDead) return;    //stop update if paused
-            //pause game if window is tabbed out of
-            if (parent.IsActive)
+            if (isDead) return;    //stop update if dead            
+            if (!parent.IsActive) return; //pause game if window is tabbed out of
+
+            projLights = new List<SourceLight>();
+            thisLevel.worldLights = projLights;
+
+            if(player.role == "MAGE")
             {
-                foreach (SkinModel an in playerModel)
-                {
-                    if (an != null) an.Update(gameTime);
-                }
-                foreach (SkinModel an in socketedItems)
-                {
-                    if (an != null) an.Update(gameTime);
-                }
-                player.Update(deltaTime, camera, gameTime);
-                camera.Update(player.head, thisLevel);
-                BlendPlayerAnims(gameTime);
+                projLights.Add(new SourceLight((player.Pos + player.world.Up * 15 + player.world.Left * 8) / 2.2f, 3, Color.BlueViolet.ToVector3()));
             }
+
+            foreach (SkinModel an in playerModel)
+            {
+                if (an != null) an.Update(gameTime);
+            }
+            foreach (SkinModel an in socketedItems)
+            {
+                if (an != null) an.Update(gameTime);
+            }
+            player.Update(deltaTime, camera, gameTime);
+            camera.Update(player.head, thisLevel);
+            BlendPlayerAnims(gameTime);
+
             //pause game on pressing esc
             if (Keyboard.GetState().IsKeyDown(Keys.Escape) && parent.lastKeyboard.IsKeyUp(Keys.Escape))
             {
+                player.pauseTimer = 0;
                 parent.currentScene = "PAUSE";
+                Game1.gameSounds[2].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 parent.pauseScene.Initialize();
                 return;
             }
@@ -704,34 +759,39 @@ namespace TheDivineAdventure
             //turn on debug
             if (Keyboard.GetState().IsKeyDown(Keys.F3) && parent.lastKeyboard.IsKeyUp(Keys.F3))
             {
-                if (!debugMode) debugMode = true;
-                else debugMode = false;
+                debugMode = !debugMode;
             }
 
             //reload level
             if (Keyboard.GetState().IsKeyDown(Keys.F4) && parent.lastKeyboard.IsKeyUp(Keys.F4))
             {
-                levelModel = Content.Load<Model>("MODEL_Level1");
-                thisLevel = levelLoader.Load("Level_1" + ".xml");
-                thisLevel.Load();
+                thisLevel = levelLoader.Load("Level_" +levelID);
+                thisLevel.Load(Content);
                 levelSpawnerList = thisLevel.Spawners;
 
                 foreach (Level.InteractiveDoor door in thisLevel.Doors)
                 {
                     door.StartAnimation(gameTime);
                 }
+                skinFx.SetDirectionalLight(0, new Vector3(-0.5265408f, -0.5735765f, -0.6275069f), Color.Lerp(thisLevel.fogColor, Color.White, .7f), new Color(1, 0f, 0f));
+                skinFx.SetDirectionalLight(1, new Vector3(0.7198464f, 0.3420201f, 0.6040227f), Color.Lerp(thisLevel.fogColor, Color.White, .4f), new Color(1, 0f, 0f));
+                skinFx.SetDirectionalLight(2, new Vector3(0.4545195f, -0.7660444f, 0.4545195f), Color.Lerp(thisLevel.fogColor, Color.Black, .7f), new Color(1, 0f, 0f));
             }
 
             foreach (EnemySpawner spawner in levelSpawnerList)
             {
                 if (spawner.isActive == false) continue;
-                spawner.Update(gameTime, player);
+                spawner.Update(player);
                 foreach (Enemy e in spawner.enemyList)
                 {
                     e.Update(deltaTime, gameTime, camera);
                     foreach (Attack p in e.projList)
                     {
                         p.Update(deltaTime, player,this);
+                        if(p.color != null)
+                        {
+                            projLights.Add(new SourceLight(p.Pos/2.2f, p.projScale * 5, p.color.ToVector3()));
+                        }
                     }
                     if (e.TimeToDestroy)
                     {
@@ -740,14 +800,45 @@ namespace TheDivineAdventure
                     }
                 }
             }
+            foreach (Enemy e in worldEnemyList)
+            {
+                e.Update(deltaTime, gameTime, camera);
+                foreach (Attack p in e.projList)
+                {
+                    p.Update(deltaTime, player, this);
+                    if (p.color != null)
+                    {
+                        projLights.Add(new SourceLight(p.Pos / 2.2f, p.projScale * 5, p.color.ToVector3()));
+                    }
+                }
+                if (e.TimeToDestroy)
+                {
+                    worldEnemyList.Remove(e);
+                    break;
+                }
+            }
+
+            //Update Boss
+            if (boss != null)
+            {
+                boss.Update(deltaTime, gameTime, camera);
+
+                foreach (Attack p in boss.projList)
+                {
+                    p.Update(deltaTime, player, this);
+                    if (p.color != null)
+                    {
+                        projLights.Add(new SourceLight(p.Pos / 2.2f, p.projScale * 5, p.color.ToVector3()));
+                    }
+                }
+            }
 
             //update projectile impacts
-            foreach (WorldSprite imp in projectileImpacts)
+            for (int i =0; i < projectileImpacts.Count; i++)
             {
-                if (imp.finished)
+                if (projectileImpacts[i].finished)
                 {
-                    projectileImpacts.Remove(imp);
-                    break;
+                    projectileImpacts.Remove(projectileImpacts[i]);
                 }
             }
 
@@ -755,33 +846,38 @@ namespace TheDivineAdventure
             foreach (Attack p in player.projList)
             {
 
-                p.Update(deltaTime, levelSpawnerList, this);
+                p.Update(deltaTime, levelSpawnerList, boss, this);
+
+                //update lights
+                if (p.color != null)
+                {
+                    projLights.Add(new SourceLight(p.Pos/2.2f, p.projScale*5, p.color.ToVector3()));
+                }
+
                 //initialize projectile impacts
                 if (p.TimeToDestroy == true)
                 {
+                    //Set 2D sprite world matrix
+                    Matrix secondaryProj = Matrix.CreateScale(0.2f) *
+                        Matrix.CreateRotationY(MathHelper.ToRadians(90 + player.Rot.Y)) *
+                        Matrix.CreateRotationZ(MathHelper.ToRadians(rand.Next(1, 180))) *
+                        Matrix.CreateTranslation(p.Pos);
                     switch (player.role)
                     {
                         case "WARRIOR":
                         case "ROGUE":
                             break;
                         case "MAGE":
+                            projectileImpacts.Add(new WorldSprite(mageProjectileSheet, false, 1f, parent, Content));
+                            projectileImpacts[^1].SetPos(secondaryProj);
                             break;
                         case "CLERIC":
                             projectileImpacts.Add(new WorldSprite(clericImpactAnim, false, 0.2f, parent, Content));
-                            //Set 2D sprite world matrix
-                            Matrix secondaryProj = Matrix.CreateScale(0.2f) *
-                                Matrix.CreateRotationY(MathHelper.ToRadians(90 + player.Rot.Y)) *
-                                Matrix.CreateRotationZ(MathHelper.ToRadians(rand.Next(1, 180))) *
-                                Matrix.CreateTranslation(p.Pos);
-                            projectileImpacts[projectileImpacts.Count - 1].SetPos(secondaryProj);
+                            projectileImpacts[^1].SetPos(secondaryProj);
                             break;
                     }
                 }
             }
-
-            //update distance to boss
-            if (player.Pos.Z > 0 && player.Pos.Z < parent.levelLength)
-                travel = (player.Pos.Z * 434 * parent.currentScreenScale.X) / Math.Abs(parent.levelLength);
 
             //fade hud out color generator
             if (isDead)
@@ -789,22 +885,16 @@ namespace TheDivineAdventure
                 hudFade = new Color(Color.DarkSalmon, 1 - parent.lostScene.fadeIn);
                 return;
             }
-            // Basic kill player
+
+            // kill player
             if (player.Health <= 0)
             {
                 isDead = true;
                 parent.currentScene = "IS_DEAD";
+                Game1.gameSounds[6].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 parent.lostScene.Initialize();
             }
 
-            //Finish Level
-            if (player.Pos.Z >= parent.levelLength)
-            {
-                parent.currentScene = "LEVEL_END";
-                parent.levelEnd1.currentScore = score.ToString();
-                parent.levelEnd1.Initialize();
-                return;
-            }
 
             base.Update(gameTime);
         }
@@ -825,11 +915,13 @@ namespace TheDivineAdventure
         //function to do draw when player is playing in level.
         public override void Draw(GameTime gameTime)
         {
+            gpu.Clear(thisLevel.fogColor);
             base.Draw(gameTime);
             bool debugDraw = debugMode;
 
+
             //draw Skybox
-            sky.Draw(camera.view, camera.proj, player.Pos, gameTime);
+            if (sky!=null) sky.Draw(camera.view, camera.proj, player.Pos, gameTime);
             parent.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             parent.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             Set3dStates();
@@ -841,7 +933,6 @@ namespace TheDivineAdventure
             rasterizerStateWire.FillMode = FillMode.WireFrame;
             gpu.RasterizerState = rasterizerState;
 
-            thisLevel.Draw(gameTime, camera, debugDraw);
 
             #region >>Debug Draw Level Components<<
             if (debugDraw)
@@ -874,24 +965,18 @@ namespace TheDivineAdventure
                 if (socketedItems[socketLoop] == null) continue;
                 for (int i = 0; i < socketedItems[socketLoop].meshes.Length; i++)
                 {
-                    itemFx[socketLoop].SetDiffuseCol(Color.White.ToVector4());
-                    itemFx[socketLoop].SetSpecularCol(new Vector3(1f, 0.1f, 0.05f));
-                    itemFx[socketLoop].SetSpecularPow(256f);
                     itemFx[socketLoop].world = socketTrans[socketLoop] *
                         hero.GetBoneTransform(socketIDs[socketLoop])
                         * player.world;
+                    thisLevel.UpdateLight(itemFx[socketLoop].world.Translation, itemFx[socketLoop]);
                     socketedItems[socketLoop].DrawMesh(i, camera, itemFx[socketLoop].world);
+                    itemFx[socketLoop].ClearSourceLights();
                 }
             }
 
-
-            for (int i = 0; i < hero.meshes.Length; i++)
-            {
-                skinFx.SetDiffuseCol(Color.Red.ToVector4());
-                skinFx.SetSpecularCol(new Vector3(1f, 0.1f, 0.05f));
-                skinFx.SetSpecularPow(0.5f);
-                hero.DrawMesh(i, camera, player.world);
-            }
+            thisLevel.UpdateLight(player.Pos, skinFx);
+            for (int i = 0; i < hero.meshes.Length; i++) hero.DrawMesh(i, camera, player.world);
+            skinFx.ClearSourceLights();
 
             #endregion
 
@@ -914,12 +999,15 @@ namespace TheDivineAdventure
             }
             #endregion
 
-            skinFx.ToggleFog(); //RESET FOG
-
-            // Render enemies
+            #region <<Draw Enemies>>
+            skinFx.DisableFog();
             foreach (EnemySpawner spawner in levelSpawnerList)
             {
                 if (!spawner.isActive) continue;
+
+                skinFx.SetFogColor(thisLevel.fogColor);
+                skinFx.SetFogEnd(thisLevel.fogDistance);
+                skinFx.SetFogStart(thisLevel.fogDistance * -1);
                 foreach (Enemy e in spawner.enemyList)
                 {
                     #region <<Debug Enemy Hitboxes>>
@@ -938,28 +1026,109 @@ namespace TheDivineAdventure
                     #endregion
                     //draw enemy model
 
-                    skinFx.DisableFog();
-                    skinFx.SetFogColor(new Color(.2f, .0f, .0f, 1f));
-                    skinFx.SetFogEnd(thisLevel.fogDistance);
-                    skinFx.SetFogStart(thisLevel.fogDistance*-1);
-
+                    thisLevel.UpdateLight(e.world.Translation, skinFx);
                     e.Draw(gameTime, camera);
+                    skinFx.ClearSourceLights();
+                    skinFx.ClearSourceLights();
 
                     // Render enemy bullets
                     foreach (Attack p in e.projList)
                     {
-                        worldProj = Matrix.CreateScale(1f) *
+                        worldProj = Matrix.CreateScale(p.projScale) *
                             Matrix.CreateTranslation(p.Pos);
-                        if (p.IsMelee)
-                        {
-                        }
-                        else
+                        if (!p.IsMelee)
                         {
                             enemyProjModel.Draw(worldProj, camera.view, camera.proj);
                         }
                     }
                 }
             }
+            skinFx.DisableFog();
+            foreach (Enemy e in worldEnemyList)
+            {
+                #region <<Debug Enemy Hitboxes>>
+                if (debugDraw == true)
+                {
+                    //Uncomment to display attack hitboxes 
+                    gpu.RasterizerState = rasterizerStateWire;
+                    //draw hitboxes
+                    e.boundingCollider.DrawCubeDepict(camera);
+                    if (e.projList.Count > 0)
+                    {   //draw hitboxes
+                        e.projList[0].HitBox.Draw(camera);
+                    }
+                    gpu.RasterizerState = rasterizerState;
+                }
+                #endregion
+                //draw enemy model
+
+                skinFx.SetFogColor(thisLevel.fogColor);
+                skinFx.SetFogEnd(thisLevel.fogDistance);
+                skinFx.SetFogStart(thisLevel.fogDistance * -1);
+
+                thisLevel.UpdateLight(e.world.Translation, skinFx);
+                e.Draw(gameTime, camera);
+                skinFx.ClearSourceLights();
+
+                // Render enemy bullets
+                foreach (Attack p in e.projList)
+                {
+                    worldProj = Matrix.CreateScale(p.projScale) *
+                        Matrix.CreateTranslation(p.Pos);
+                    if (!p.IsMelee)
+                    {
+                        enemyProjModel.Draw(worldProj, camera.view, camera.proj);
+                    }
+                }
+            }
+            #endregion
+
+            #region Draw Boss
+            skinFx.DisableFog();
+            skinFx.SetFogColor(new Color(.2f, .0f, .0f, 1f));
+            skinFx.SetFogStart(-4 * thisLevel.fogDistance);
+            skinFx.SetFogEnd(thisLevel.fogDistance * -1f);
+
+
+
+            if (debugDraw && boss!=null)
+            {
+                gpu.RasterizerState = rasterizerStateWire;
+                boss.boundingCollider.DrawCubeDepict(camera);
+                gpu.RasterizerState = rasterizerState;
+            }
+            //draw boss if they exist
+            if (boss != null)
+            {
+                thisLevel.UpdateLight(boss.Pos, skinFx);
+                boss.Draw(gameTime, camera);
+                skinFx.ClearSourceLights();
+                #region <<Debug Boss Proj Hitboxes>>
+                if (debugDraw == true)
+                {
+                    //Uncomment to display attack hitboxes 
+                    gpu.RasterizerState = rasterizerStateWire;
+                    if (boss.projList.Count > 0)
+                    {   //draw hitboxes
+                        boss.projList[0].HitBox.Draw(camera);
+                    }
+                    gpu.RasterizerState = rasterizerState;
+                }
+                #endregion
+                foreach (Attack p in boss.projList)
+                {
+                    worldProj = Matrix.CreateScale(p.projScale) *
+                        Matrix.CreateTranslation(p.Pos);
+                    if (!p.IsMelee)
+                    {
+                        enemyProjModel.Draw(worldProj, camera.view, camera.proj);
+                    }
+                }
+            }
+            #endregion
+
+            thisLevel.Draw(gameTime, camera, debugDraw);
+            skinFx.ClearSourceLights();
 
             if (parent.lostScene.fadeIn > 1)    return;
 
@@ -967,7 +1136,7 @@ namespace TheDivineAdventure
             // Render player bullets
             foreach (Attack p in player.projList)
             {
-                worldProj = Matrix.CreateScale(1f) *
+                worldProj = Matrix.CreateScale(p.projScale) *
                         Matrix.CreateRotationZ(MathHelper.ToRadians(90)) *
                         Matrix.CreateTranslation(p.Pos + new Vector3(0, 5, 0));
 
@@ -978,12 +1147,11 @@ namespace TheDivineAdventure
 
                 if (!p.IsMelee)
                 {
-
                     switch (player.role)
                     {
                         case "MAGE":
                             //draw 3d model for projectile
-                            playerProjModel.Draw(worldProj, camera.view, camera.proj);
+                            mageProjectile.Draw(secondaryProj, camera.view, camera.proj);
                             break;
                         case "CLERIC":
                             //draw a 2d sprite for the projectile
@@ -1006,7 +1174,6 @@ namespace TheDivineAdventure
                     case "ROGUE":
                         break;
                     case "MAGE":
-                        break;
                     case "CLERIC":
                         imp.Draw(camera.view, camera.proj);
                         break;
@@ -1026,23 +1193,40 @@ namespace TheDivineAdventure
                 parent.textGold, 0f, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
             //Resource bars
             _spriteBatch.Draw(healthBar,
-                player.resourceBarUpdate(true, parent.healthBarRec,
+                player.resourceBarUpdate(true, healthBarRec,
                 new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
                 parent.currentScreenScale), hudFade);
 
             if (player.IsCaster)
                 _spriteBatch.Draw(manaBar,
-                    player.resourceBarUpdate(false, parent.secondBarRec,
+                    player.resourceBarUpdate(false, secondBarRec,
                     new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
                     parent.currentScreenScale), hudFade);
             else
                 _spriteBatch.Draw(staminaBar,
-                    player.resourceBarUpdate(false, parent.secondBarRec,
+                    player.resourceBarUpdate(false, secondBarRec,
                     new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight)
                     , parent.currentScreenScale), hudFade);
 
             //topHUD layer
             _spriteBatch.Draw(hudL2, Vector2.Zero, null, hudFade, 0, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+
+            //Boss Health Bar
+            if (boss != null && boss.isActive)
+            {
+                _spriteBatch.Draw(bossBarFrameUnder, Vector2.Zero, null, hudFade, 0, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+
+                _spriteBatch.Draw(healthBar,
+                    boss.resourceBarUpdate(bossHealthBarRec,
+                    new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
+                    parent.currentScreenScale), hudFade);
+
+                _spriteBatch.DrawString(parent.smallFont, boss.name,
+                new Vector2((_graphics.PreferredBackBufferWidth * 0.5f) - (parent.smallFont.MeasureString(boss.name) * .5f * parent.currentScreenScale).X*1.2f,
+                _graphics.PreferredBackBufferHeight * .895f), Color.White, 0f, Vector2.Zero, parent.currentScreenScale * 1.2f, SpriteEffects.None, 1);
+
+                _spriteBatch.Draw(bossBarFrame, Vector2.Zero, null, hudFade, 0, Vector2.Zero, parent.currentScreenScale, SpriteEffects.None, 1);
+            }
 
             //Interact notification
             if (player.nearInteractable)
@@ -1074,24 +1258,29 @@ namespace TheDivineAdventure
                 new Vector2(_graphics.PreferredBackBufferWidth * 0.05f, _graphics.PreferredBackBufferHeight * .27f),
                 Color.White, 0f, Vector2.Zero, parent.currentScreenScale * 0.8f, SpriteEffects.None, 1);
             }
+            
             //draw player Icon
-            switch (player.role)
+            Color icon;
+            if (player.isExhausted) icon = new Color(220,150,150);
+            else icon = Color.White;
+            if (isDead) icon = hudFade;
+            switch (player.role) 
             {
                 case "WARRIOR":
                     _spriteBatch.Draw(warriorIcon, new Vector2(50, 21) * parent.currentScreenScale, null,
-                       hudFade, 0, Vector2.Zero, 0.07f * parent.currentScreenScale, SpriteEffects.None, 1);
+                       icon, 0, Vector2.Zero, 0.07f * parent.currentScreenScale, SpriteEffects.None, 1);
                     break;
                 case "ROGUE":
                     _spriteBatch.Draw(rogueIcon, new Vector2(50, 19) * parent.currentScreenScale, null,
-                       hudFade, 0, Vector2.Zero, 0.108f * parent.currentScreenScale, SpriteEffects.None, 1);
+                       icon, 0, Vector2.Zero, 0.108f * parent.currentScreenScale, SpriteEffects.None, 1);
                     break;
                 case "MAGE":
                     _spriteBatch.Draw(mageIcon, new Vector2(50, 21) * parent.currentScreenScale, null,
-                       hudFade, 0, Vector2.Zero, 0.07f * parent.currentScreenScale, SpriteEffects.None, 1);
+                       icon, 0, Vector2.Zero, 0.07f * parent.currentScreenScale, SpriteEffects.None, 1);
                     break;
                 default:
                     _spriteBatch.Draw(clericIcon, new Vector2(49, 19) * parent.currentScreenScale, null,
-                        hudFade, 0, Vector2.Zero, 0.071f * parent.currentScreenScale, SpriteEffects.None, 1);
+                        icon, 0, Vector2.Zero, 0.071f * parent.currentScreenScale, SpriteEffects.None, 1);
                     break;
             }
             #endregion
@@ -1114,7 +1303,7 @@ namespace TheDivineAdventure
                 case "WARRIOR":
                     #region Warrior Blending
                     //walk/run blending
-                    if (player.isWalking())
+                    if (player.IsWalking())
                     {
                         percent = player.vel / player.walkMax;
                         if (player.animWalkDir[player.BACKWARD])
@@ -1136,7 +1325,7 @@ namespace TheDivineAdventure
                             playerModel[BASE].UpdateBlendAnim(playerModel, BASE, WALKRIGHT, percent, playerAnimWeights);   //idle -> walkBack
                         }
                     }
-                    if (player.isRunning())
+                    if (player.IsRunning())
                     {
                         percent = 1;
                         playerModel[BASE].UpdateBlendAnim(playerModel, WALK, RUN, percent, playerAnimWeights);   //walk -> run
@@ -1197,7 +1386,7 @@ namespace TheDivineAdventure
                 case "ROGUE":
                     #region Rogue Blending
                     //walk/run blending
-                    if (player.isWalking())
+                    if (player.IsWalking())
                     {
                         percent = player.vel / player.walkMax;
                         if (player.animWalkDir[player.BACKWARD])
@@ -1223,7 +1412,7 @@ namespace TheDivineAdventure
                             playerModel[BASE].UpdateBlendAnim(playerModel, BASE, WALKRIGHT, percent, playerAnimWeights);   //idle -> walkBack
                         }
                     }
-                    if (player.isRunning())
+                    if (player.IsRunning())
                     {
                         percent = 1;
                         playerModel[BASE].UpdateBlendAnim(playerModel, WALK, RUN, percent, playerAnimWeights);   //walk -> run
@@ -1287,7 +1476,7 @@ namespace TheDivineAdventure
                 case "MAGE":
                     #region Mage Blending
                     //walk/run blending
-                    if (player.isWalking())
+                    if (player.IsWalking())
                     {
                         percent = player.vel / player.walkMax;
                         if (player.animWalkDir[player.BACKWARD])
@@ -1313,7 +1502,7 @@ namespace TheDivineAdventure
                             playerModel[BASE].UpdateBlendAnim(playerModel, BASE, WALKRIGHT, percent, playerAnimWeights);   //idle -> walkBack
                         }
                     }
-                    if (player.isRunning())
+                    if (player.IsRunning())
                     {
                         percent = 1;
                         playerModel[BASE].UpdateBlendAnim(playerModel, WALK, RUN, percent, playerAnimWeights);   //walk -> run
@@ -1377,7 +1566,7 @@ namespace TheDivineAdventure
                 case "CLERIC":
                     #region Cleric Blending
                     //walk/run blending
-                    if (player.isWalking() || player.isDrifting)
+                    if (player.IsWalking() || player.isDrifting)
                     {
                         percent = player.vel / player.walkMax;
                         if (player.animWalkDir[player.BACKWARD])
@@ -1403,7 +1592,7 @@ namespace TheDivineAdventure
                             playerModel[BASE].UpdateBlendAnim(playerModel, BASE, WALKRIGHT, percent, playerAnimWeights);   //idle -> walkBack
                         }
                     }
-                    if (player.isRunning())
+                    if (player.IsRunning())
                     {
                         percent = 1;
                         playerModel[BASE].UpdateBlendAnim(playerModel, WALK, RUN, percent, playerAnimWeights);   //walk -> run
@@ -1485,7 +1674,6 @@ namespace TheDivineAdventure
         }
         #endregion --blend animations--
 
-
         ////////////////////
         ///GETTER/SETTERS///
         ////////////////////
@@ -1502,7 +1690,6 @@ namespace TheDivineAdventure
             public List<Enemy> enemyList;   //Local enemies activated by spwaner
             private Random rand;            //random class
             private PlayScene parent;       //scene holding the spawner
-            private float enemyTimer, enemyTimerMax;
             private float spawnTimer, spawnTime;       //timer for spawnining enemies
             private int spawnRange;        //radius of general spawner
             public Shapes origin, perimiter;//shapes for drawing spawner
@@ -1510,7 +1697,7 @@ namespace TheDivineAdventure
             public bool isActive;           //sets whether to activate or update enemies
             private int[] spawnList;
             private bool enemysActivated;
-            private int activateRange;
+            readonly private int activateRange;
 
             #region <<Contructors>>
             //Constructor -- general spawner
@@ -1574,10 +1761,11 @@ namespace TheDivineAdventure
                 perimiter.Position = location;
 
             }
+            
             #endregion
 
             // spawn enemies around spawner
-            public void SpawnEnemy(int enemyType, int amt, GameTime gameTime)
+            public void SpawnEnemy(int enemyType, int amt)
             {
                 for (int i = 0; i < amt; i++)
                 {
@@ -1602,9 +1790,36 @@ namespace TheDivineAdventure
                 }
             }
 
-            public void Update(GameTime gameTime, Player player)
+            public void Load()
             {
-                if (!enemysActivated && spawnList[0] + spawnList[1] + spawnList[2] + spawnList[3] <= 0)
+                while (spawnList[0] + spawnList[1] + spawnList[2] + spawnList[3] > 0)
+                {
+                    if (spawnList[0] > 0)
+                    {
+                        SpawnEnemy(0, 1);
+                        spawnList[0]--;
+                    }
+                    if (spawnList[1] > 0)
+                    {
+                        SpawnEnemy(1, 1);
+                        spawnList[1]--;
+                    }
+                    if (spawnList[2] > 0)
+                    {
+                        SpawnEnemy(2, 1);
+                        spawnList[2]--;
+                    }
+                    if (spawnList[3] > 0)
+                    {
+                        SpawnEnemy(3, 1);
+                        spawnList[3]--;
+                    }
+                }
+            }
+
+            public void Update(Player player)
+            {
+                if (!enemysActivated)
                 {
                     if (Vector3.Distance(player.Pos, location) < activateRange)
                     {
@@ -1615,40 +1830,13 @@ namespace TheDivineAdventure
                         enemysActivated = true;
                     }
                 }
-                if (isActive)
-                {
-                    if (spawnList[0] + spawnList[1] + spawnList[2] + spawnList[3] > 0)
-                    {
-                        if (spawnTime <= spawnTimer) { spawnTime++; return; }
-                        if (spawnList[0] > 0)
-                        {
-                            SpawnEnemy(0, 1, gameTime);
-                            spawnList[0]--;
-                        }
-                        if (spawnList[1] > 0)
-                        {
-                            SpawnEnemy(1, 1, gameTime);
-                            spawnList[1]--;
-                        }
-                        if (spawnList[2] > 0)
-                        {
-                            SpawnEnemy(2, 1, gameTime);
-                            spawnList[2]--;
-                        }
-                        if (spawnList[3] > 0)
-                        {
-                            SpawnEnemy(3, 1, gameTime);
-                            spawnList[3]--;
-                        }
-                    }
-                }
             }
             //activate to spawner with list of enemies to spawn (Rarey used)
             public void ActivateSpawner(int[] spawnAmounts, GameTime gameTime)
             {
                 for(int i = 0; i < 4; i++)
                 {
-                    SpawnEnemy(i, spawnAmounts[i], gameTime);
+                    SpawnEnemy(i, spawnAmounts[i]);
                 }
                 isActive = true;
             }

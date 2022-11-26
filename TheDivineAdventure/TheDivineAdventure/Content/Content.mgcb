@@ -115,6 +115,9 @@
 #begin Level_Data/Level_1/MOD_L1_Room3_Stairs_Side.fbx
 /copy:Level_Data/Level_1/MOD_L1_Room3_Stairs_Side.fbx
 
+#begin Level_Data/Level_1/MOD_L1_Shield.fbx
+/copy:Level_Data/Level_1/MOD_L1_Shield.fbx
+
 #begin Level_Data/Level_1/MOD_L1_Stairs.fbx
 /copy:Level_Data/Level_1/MOD_L1_Stairs.fbx
 
@@ -129,6 +132,69 @@
 
 #begin Level_Data/Level_1/MOD_Misc_SkullPile01.fbx
 /copy:Level_Data/Level_1/MOD_Misc_SkullPile01.fbx
+
+#begin Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f1.png
+
+#begin Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f2.png
+
+#begin Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_Data/Level_1/ShieldAnimation/T_ANIM_PrideSHield_f3.png
+
+#begin Level_Data/Level_2/Level_2.xml
+/copy:Level_Data/Level_2/Level_2.xml
+
+#begin Level_Data/Level_2/MOD_L2_Beam.fbx
+/copy:Level_Data/Level_2/MOD_L2_Beam.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Crystal01.fbx
+/copy:Level_Data/Level_2/MOD_L2_Crystal01.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Crystal02.fbx
+/copy:Level_Data/Level_2/MOD_L2_Crystal02.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Crystal03.fbx
+/copy:Level_Data/Level_2/MOD_L2_Crystal03.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Crystal04.fbx
+/copy:Level_Data/Level_2/MOD_L2_Crystal04.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Hallway1.fbx
+/copy:Level_Data/Level_2/MOD_L2_Hallway1.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Intersection.fbx
+/copy:Level_Data/Level_2/MOD_L2_Intersection.fbx
+
+#begin Level_Data/Level_2/MOD_L2_Room1.fbx
+/copy:Level_Data/Level_2/MOD_L2_Room1.fbx
 
 #begin Level_Data/Test_level/TestFloor01.fbx
 /copy:Level_Data/Test_level/TestFloor01.fbx
@@ -331,6 +397,30 @@
 /processorParam:TextureFormat=Color
 /build:MOD_Minotaur/TEX_Minotaur.png
 
+#begin MOD_Pride/ANIM_Pride_Attack_Melee.fbx
+/copy:MOD_Pride/ANIM_Pride_Attack_Melee.fbx
+
+#begin MOD_Pride/ANIM_Pride_Attack_Range.fbx
+/copy:MOD_Pride/ANIM_Pride_Attack_Range.fbx
+
+#begin MOD_Pride/ANIM_Pride_Attack_Range_WU.fbx
+/copy:MOD_Pride/ANIM_Pride_Attack_Range_WU.fbx
+
+#begin MOD_Pride/ANIM_Pride_Base.fbx
+/copy:MOD_Pride/ANIM_Pride_Base.fbx
+
+#begin MOD_Pride/ANIM_Pride_Idle.fbx
+/copy:MOD_Pride/ANIM_Pride_Idle.fbx
+
+#begin MOD_Pride/ANIM_Pride_Recharge.fbx
+/copy:MOD_Pride/ANIM_Pride_Recharge.fbx
+
+#begin MOD_Pride/ANIM_Pride_Walk.fbx
+/copy:MOD_Pride/ANIM_Pride_Walk.fbx
+
+#begin MOD_Pride/MOD_PrideStatue.fbx
+/copy:MOD_Pride/MOD_PrideStatue.fbx
+
 #begin MOD_Revenant/ANIM_Revenant_Base.fbx
 /copy:MOD_Revenant/ANIM_Revenant_Base.fbx
 
@@ -409,12 +499,6 @@
 /processorParam:TextureFormat=Color
 /build:MOD_Rogue/TEX_Rogue.png
 
-#begin MOD_Terrain/TestLevel/TestFloor01.fbx
-/copy:MOD_Terrain/TestLevel/TestFloor01.fbx
-
-#begin MOD_Terrain/TestLevel/TestFloor02.fbx
-/copy:MOD_Terrain/TestLevel/TestFloor02.fbx
-
 #begin MOD_Warrior/ANIM_Warrior_AttackMain.fbx
 /copy:MOD_Warrior/ANIM_Warrior_AttackMain.fbx
 
@@ -488,25 +572,6 @@
 /processorParam:TextureFormat=NoChange
 /build:MODEL_ClericProjectile.fbx
 
-#begin MODEL_EnemyMelee.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=180
-/processorParam:RotationZ=0
-/processorParam:Scale=0.02
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_EnemyMelee.fbx
-
 #begin MODEL_EnemyProjectile.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -525,25 +590,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:MODEL_EnemyProjectile.fbx
-
-#begin MODEL_level1.fbx
-/importer:FbxImporter
-/processor:ModelProcessor
-/processorParam:ColorKeyColor=0,0,0,0
-/processorParam:ColorKeyEnabled=True
-/processorParam:DefaultEffect=BasicEffect
-/processorParam:GenerateMipmaps=True
-/processorParam:GenerateTangentFrames=False
-/processorParam:PremultiplyTextureAlpha=True
-/processorParam:PremultiplyVertexColors=True
-/processorParam:ResizeTexturesToPowerOfTwo=False
-/processorParam:RotationX=0
-/processorParam:RotationY=0
-/processorParam:RotationZ=0
-/processorParam:Scale=1
-/processorParam:SwapWindingOrder=False
-/processorParam:TextureFormat=Compressed
-/build:MODEL_level1.fbx
 
 #begin MODEL_PlayerProjectile.fbx
 /importer:FbxImporter
@@ -640,10 +686,41 @@
 /processorParam:TextureFormat=Compressed
 /build:MODEL_SpriteFrame.fbx
 
+#begin Music/MUS_BossMusic_L1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/MUS_BossMusic_L1.mp3
+
+#begin Music/MUS_CloseScene.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/MUS_CloseScene.mp3
+
+#begin Music/MUS_LevelMusic_L1.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/MUS_LevelMusic_L1.mp3
+
+#begin Music/MUS_LevelMusic_L2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/MUS_LevelMusic_L2.mp3
+
+#begin Music/MUS_MainTheme.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/MUS_MainTheme.mp3
+
 #begin SkinEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
+/processorParam:Defines=
 /build:SkinEffect.fx
 
 #begin SmallFont.spritefont
@@ -652,12 +729,6 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:SmallFont.spritefont
-
-#begin SONG_LevelTheme.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:SONG_LevelTheme.mp3
 
 #begin SOUND_DivineSpell.wav
 /importer:WavImporter
@@ -707,6 +778,96 @@
 /processorParam:Quality=Best
 /build:SOUND_TradeOff.wav
 
+#begin SoundFX/SND_ButtonClick01.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_ButtonClick01.wav
+
+#begin SoundFX/SND_ButtonClick02.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_ButtonClick02.wav
+
+#begin SoundFX/SND_ButtonPress_L1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_ButtonPress_L1.wav
+
+#begin SoundFX/SND_DeathSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_DeathSound.wav
+
+#begin SoundFX/SND_Doors_L1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_Doors_L1.wav
+
+#begin SoundFX/SND_HoundAttack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_HoundAttack.wav
+
+#begin SoundFX/SND_Lava.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_Lava.wav
+
+#begin SoundFX/SND_MagePrimary.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_MagePrimary.wav
+
+#begin SoundFX/SND_MageSecondary.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_MageSecondary.wav
+
+#begin SoundFX/SND_Menu_Open.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_Menu_Open.wav
+
+#begin SoundFX/SND_MinotaurCharge.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/SND_MinotaurCharge.wav
+
+#begin TEX_Arcane_Projectile_Lightning_Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Arcane_Projectile_Lightning_Sheet.png
+
+#begin TEX_BlueCrystal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_BlueCrystal.png
+
 #begin TEX_BoneBloody01.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -718,6 +879,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_BoneBloody01.png
+
+#begin TEX_BossBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_BossBar.png
+
+#begin TEX_BossBar_Under.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_BossBar_Under.png
 
 #begin TEX_Brimstone.png
 /importer:TextureImporter
@@ -754,6 +939,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_CharacterSelect_FrontPlate.png
+
+#begin TEX_Cleric.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Cleric.png
 
 #begin TEX_Cleric_Icon.png
 /importer:TextureImporter
@@ -899,6 +1096,42 @@
 /processorParam:TextureFormat=Color
 /build:TEX_Floor01.png
 
+#begin TEX_Floor02.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Floor02.png
+
+#begin TEX_Floor04.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Floor04.png
+
+#begin TEX_GreenCrystal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_GreenCrystal.png
+
 #begin TEX_HealthBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -982,6 +1215,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_Level1Preview.png
+
+#begin TEX_Level2Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Level2Button.png
+
+#begin TEX_Level2Preview.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Level2Preview.png
 
 #begin TEX_LevelEndScreen_Back.png
 /importer:TextureImporter
@@ -1067,6 +1324,18 @@
 /processorParam:TextureFormat=Color
 /build:TEX_Pause_Menu.png
 
+#begin TEX_Pride.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Pride.png
+
 #begin TEX_Pride_Painting.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1079,7 +1348,7 @@
 /processorParam:TextureFormat=Color
 /build:TEX_Pride_Painting.png
 
-#begin TEX_ProgressionIcon.png
+#begin TEX_PrideStatue.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1089,7 +1358,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TEX_ProgressionIcon.png
+/build:TEX_PrideStatue.png
 
 #begin TEX_RArrowButton1.png
 /importer:TextureImporter
@@ -1102,6 +1371,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_RArrowButton1.png
+
+#begin TEX_RedCrystal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_RedCrystal.png
 
 #begin TEX_Rogue.png
 /importer:TextureImporter
@@ -1343,6 +1624,18 @@
 /processorParam:TextureFormat=Color
 /build:TEX_TitleScreen_Front.png
 
+#begin TEX_Wall01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_Wall01.png
+
 #begin TEX_WallBrazier.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1378,4 +1671,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TEX_Warrior_Icon.png
+
+#begin TEX_WhiteCrystal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TEX_WhiteCrystal.png
 

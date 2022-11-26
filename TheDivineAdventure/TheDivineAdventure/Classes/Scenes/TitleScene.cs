@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace TheDivineAdventure
 {
@@ -9,7 +10,7 @@ namespace TheDivineAdventure
     {
         private Texture2D titleScreenBack, TitleScreenFront, distantDemonSheet, titleLightning01, titleLightning02,
             titleLightning03, emberSheet01, titleLava;
-        private Button titleStartGame, titleScoreboard, titleSettings, titleCredits, titleQuitGame;
+        private Button titleStartGame, titleSettings, titleCredits, titleQuitGame;
         private AnimatedSprite[] titleDemons, titleEmbers;
         private bool glowState;
         private int glowRef;
@@ -47,10 +48,15 @@ namespace TheDivineAdventure
             glowRef = 0;
             //create menu buttons
             titleStartGame = new Button(new Vector2(247, 686), new Vector2(366, 60),parent.currentScreenScale);
-            titleScoreboard = new Button(new Vector2(247, 750), new Vector2(366, 60),parent.currentScreenScale);
-            titleSettings = new Button(new Vector2(247, 812), new Vector2(366, 60),parent.currentScreenScale);
-            titleCredits = new Button(new Vector2(247, 870), new Vector2(366, 60),parent.currentScreenScale);
-            titleQuitGame = new Button(new Vector2(247, 928), new Vector2(366, 60),parent.currentScreenScale);
+            titleSettings = new Button(new Vector2(247, 750), new Vector2(366, 60),parent.currentScreenScale);
+            titleCredits = new Button(new Vector2(247, 812), new Vector2(366, 60),parent.currentScreenScale);
+            titleQuitGame = new Button(new Vector2(247, 870), new Vector2(366, 60),parent.currentScreenScale);
+
+            if (MediaPlayer.State != MediaState.Playing)
+            {
+                MediaPlayer.Stop();
+                MediaPlayer.Play(parent.gameTheme);
+            }
         }
 
         public override void LoadContent()
@@ -73,15 +79,13 @@ namespace TheDivineAdventure
             //get mouse clocks and check buttons
             if (parent.mouseState.LeftButton == ButtonState.Pressed && parent.lastMouseState.LeftButton != ButtonState.Pressed)
             {
+                Game1.gameSounds[0].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
+
                 if (titleStartGame.IsPressed())
                 {
                     parent.currentScene = "LEVEL_SELECT";
                     parent.ReloadContent();
                     parent.levelSelectScene.Initialize();
-                    return;
-                }
-                if (titleScoreboard.IsPressed())
-                {
                     return;
                 }
                 if (titleSettings.IsPressed())
@@ -135,10 +139,10 @@ namespace TheDivineAdventure
             //draw background demons
             foreach (AnimatedSprite demon in titleDemons)
             {
-                if (demon.Pos.X > _graphics.PreferredBackBufferWidth)
+                if (demon.Pos.X * parent.currentScreenScale.X > _graphics.PreferredBackBufferWidth)
                 {
                     demon.Pos = new Vector2(-1 * rand.Next(1500) *parent.currentScreenScale.X, rand.Next(600) *parent.currentScreenScale.Y);
-                    demon.Scale = 1 - (rand.Next(50) / 100f);
+                    demon.Scale = 1f - (rand.Next(50) / 100f);
                     demon.Tint = new Color(Color.White, demon.Scale);
                 }
                 else

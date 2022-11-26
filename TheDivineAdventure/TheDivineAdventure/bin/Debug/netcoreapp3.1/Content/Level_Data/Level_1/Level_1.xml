@@ -2,6 +2,7 @@
 <level_1>
 	<level_data>
 		<level_id>1</level_id>
+		<max_score>10000</max_score>
 		<fog_color>(0.2,0,0,1)</fog_color>
 		<fog_range>210</fog_range>
 		<player_spawn>(0,40,0)</player_spawn>
@@ -14,7 +15,12 @@
 			<prefab_name>room 1 macro</prefab_name>
 			<pos>(0,0,0)</pos>
 			<rot>(0,0,0)</rot>
-			
+
+			<source_light>
+				<pos>(0,50,0)</pos>
+				<color>(154,49,49)</color>
+				<strength>25</strength>
+			</source_light>
 			<floor>
 				<pos>(0,-11,0)</pos>
 				<coll_bounds>(220,1,220)</coll_bounds>
@@ -23,7 +29,7 @@
 			<spawner>
 				<pos>(0,34,0)</pos>
 				<range>140</range>
-				<spawn_list>(4,8,0,5)</spawn_list>
+				<spawn_list>(2,4,0,3)</spawn_list>
 				<starts_active>false</starts_active>
 			</spawner>
 			
@@ -757,6 +763,26 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -869,6 +895,26 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -1010,6 +1056,27 @@
 			<pos>(256,0,0)</pos>
 			<rot>(0,180,0)</rot>
 
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			
 			<static_mesh>
 				<model>MOD_L1_Hallway02.fbx</model>
 				<pos>(0,24.45,0)</pos>
@@ -1129,6 +1196,28 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			
+			
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -1459,6 +1548,27 @@
 				<coll_bounds>(130,130,130)</coll_bounds>
 				<rot>(0,0,0)</rot>
 			</static_mesh>
+
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
 
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
@@ -1986,6 +2096,26 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -2098,6 +2228,28 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -2210,6 +2362,28 @@
 				<rot>(0,0,0)</rot>
 			</static_mesh>
 
+
+			<source_light>
+				<pos>(-32,25,16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,25,-16)</pos>
+				<color>(154,83,199)</color>
+				<strength>4</strength>
+			</source_light>
+			<source_light>
+				<pos>(-32,23,-16)</pos>
+				<color>(142,49,49)</color>
+				<strength>4</strength>
+			</source_light>
+
 			<floor>
 				<pos>(-32.5,-0.4,0)</pos>
 				<coll_bounds>(75,1,45)</coll_bounds>
@@ -2227,6 +2401,21 @@
 				<rot>(0,0,0)</rot>
 			</static_collision_mesh>
 		</prefab>
+
+		<!--mission_trigger_02-->
+		<prefab>
+			<prefab_name>mission_trigger_02</prefab_name>
+			<pos>(0,0,-646)</pos>
+			<rot>(0,0,0)</rot>
+
+			<mission_trigger_box>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(60,60,30)</coll_bounds>
+				<rot>(0,0,0)</rot>
+				<uses>1</uses>
+				<target_id>2</target_id>
+			</mission_trigger_box>
+		</prefab>
 	</room>
 	<!--Lava Room-->
 	<room>
@@ -2243,22 +2432,9 @@
 				<rot>(0,0,0)</rot>
 			</floor>
 
-			<death_box>
-				<pos>(25,-20,0)</pos>
-				<coll_bounds>(400,1,300)</coll_bounds>
-				<rot>(0,0,0)</rot>
-			</death_box>
-
 			<static_mesh>
 				<model>MOD_L1_Room2.fbx</model>
 				<pos>(0,0,0)</pos>
-				<coll_bounds>(130,130,130)</coll_bounds>
-				<rot>(0,0,0)</rot>
-			</static_mesh>
-
-			<static_mesh>
-				<model>MOD_L1_Room2_Lava.fbx</model>
-				<pos>(0,2,0)</pos>
 				<coll_bounds>(130,130,130)</coll_bounds>
 				<rot>(0,0,0)</rot>
 			</static_mesh>
@@ -2332,6 +2508,51 @@
 				<coll_bounds>(1,75,180)</coll_bounds>
 				<rot>(0,-105,0)</rot>
 			</static_collision_mesh>
+		</prefab>
+		
+		<!--lava-->
+		<prefab>
+			<prefab_name>lava</prefab_name>
+			<pos>(-661.5,0.1,0)</pos>
+			<rot>(0,180,0)</rot>
+
+
+			<static_mesh>
+				<model>MOD_L1_Room2_Lava.fbx</model>
+				<pos>(0,2,0)</pos>
+				<coll_bounds>(230,230,230)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_mesh>
+
+			<death_box>
+				<pos>(25,-20,0)</pos>
+				<coll_bounds>(400,1,300)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</death_box>
+
+			<source_light>
+				<pos>(25,0,200)</pos>
+				<color>(162,73,18)</color>
+				<strength>65</strength>
+			</source_light>
+
+			<source_light>
+				<pos>(100,0,-200)</pos>
+				<color>(162,73,18)</color>
+				<strength>65</strength>
+			</source_light>
+			
+			<source_light>
+				<pos>(100,0,200)</pos>
+				<color>(162,73,18)</color>
+				<strength>65</strength>				
+			</source_light>
+
+			<source_light>
+				<pos>(25,0,-200)</pos>
+				<color>(162,73,18)</color>
+				<strength>65</strength>
+			</source_light>
 		</prefab>
 
 		<!--spawner_01-->
@@ -2414,6 +2635,18 @@
 				<coll_bounds>(300,200,2)</coll_bounds>
 				<rot>(0,90,0)</rot>
 			</static_collision_mesh>
+
+			<source_light>
+				<pos>(280,70,0)</pos>
+				<color>(154,83,199)</color>
+				<strength>180</strength>
+			</source_light>
+
+			<source_light>
+				<pos>(280,50,0)</pos>
+				<color>(142,49,49)</color>
+				<strength>180</strength>
+			</source_light>
 			
 			<!--side_walls-->
 			<static_collision_mesh>
@@ -2459,7 +2692,7 @@
 
 			<spawner>
 				<pos>(0,0,0)</pos>
-				<range>50</range>
+				<range>30</range>
 				<spawn_list>(0,0,0,3)</spawn_list>
 				<starts_active>false</starts_active>
 				<activate_range>1000</activate_range>
@@ -2472,7 +2705,7 @@
 
 			<spawner>
 				<pos>(0,0,0)</pos>
-				<range>50</range>
+				<range>30</range>
 				<spawn_list>(0,0,0,3)</spawn_list>
 				<starts_active>false</starts_active>
 				<activate_range>1000</activate_range>
@@ -2485,7 +2718,7 @@
 
 			<spawner>
 				<pos>(0,0,0)</pos>
-				<range>50</range>
+				<range>30</range>
 				<spawn_list>(0,0,0,3)</spawn_list>
 				<starts_active>false</starts_active>
 				<activate_range>1000</activate_range>
@@ -2498,7 +2731,7 @@
 
 			<spawner>
 				<pos>(0,0,0)</pos>
-				<range>50</range>
+				<range>30</range>
 				<spawn_list>(0,0,0,3)</spawn_list>
 				<starts_active>false</starts_active>
 				<activate_range>1000</activate_range>
@@ -4762,6 +4995,71 @@
 				<right_door_rot>-63</right_door_rot>
 				<closeable>true</closeable>
 			</door>
+		</prefab>
+
+
+		<!--Shield-->
+		<prefab>
+			<prefab_name>pride_painting</prefab_name>
+			<pos>(0,15,-1045)</pos>
+			<rot>(0,0,0)</rot>
+
+			<source_light>
+				<pos>(0,0,0)</pos>
+				<color>(190,49,49)</color>
+				<strength>75</strength>
+			</source_light>
+
+			<source_light>
+				<pos>(0,0,-10)</pos>
+				<color>(190,49,49)</color>
+				<strength>25</strength>
+			</source_light>
+			<source_light>
+				<pos>(0,0,10)</pos>
+				<color>(190,49,49)</color>
+				<strength>25</strength>
+			</source_light>
+			
+			<static_mesh>
+				<model>MOD_L1_Shield.fbx</model>
+				<animated_tex>ShieldAnimation\</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f3</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f3</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f3</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f2</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<animated_tex>T_ANIM_PrideShield_f1</animated_tex>
+				<pos>(0,0,0)</pos>
+				<coll_bounds>(50,50,50)</coll_bounds>
+				<rot>(0,-90,0)</rot>
+			</static_mesh>
+
+
+			<static_collision_mesh>
+				<pos>(0,50,0)</pos>
+				<coll_bounds>(40,100,5)</coll_bounds>
+				<rot>(0,0,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(25,50,0)</pos>
+				<coll_bounds>(70,100,5)</coll_bounds>
+				<rot>(0,20,0)</rot>
+			</static_collision_mesh>
+			<static_collision_mesh>
+				<pos>(-25,50,0)</pos>
+				<coll_bounds>(70,100,5)</coll_bounds>
+				<rot>(0,-20,0)</rot>
+			</static_collision_mesh>
 		</prefab>
 	</room>
 </level_1>

@@ -83,7 +83,7 @@ namespace TheDivineAdventure
             {
                 isMeleeAttacking = true;
                 if (attDurTimer < attackLength) { attDurTimer += 1; return; }
-
+                soundEffects[1].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
                 AttackPattern.MinotaurMain(world.Translation + world.Backward * 15, world.Backward, rot, attackDamage, projList, cam);
 
                 foreach (Attack p in projList)
@@ -123,7 +123,8 @@ namespace TheDivineAdventure
 
             if (boundingCollider.Intersects(player.boundingCollider))
             {
-                AttackPattern.MinotaurCharge(world.Translation + world.Backward * 15, world.Backward, rot, 65f, projList, cam, vel*3);
+                soundEffects[3].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
+                AttackPattern.MinotaurCharge(world.Translation + world.Backward * 15, world.Backward, rot, 65f, projList, cam, vel*2);
                 player.outsideForceDir += (world.Down * 0.5f);
                 player.outsideVelocity += 3;
                 walkDir = ManageCollision(player.world, walkDir);

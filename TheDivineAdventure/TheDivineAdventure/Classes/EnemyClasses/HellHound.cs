@@ -29,7 +29,7 @@ namespace TheDivineAdventure
 
             attackRange = 20;
             attackSpeed = 40;
-            attackDamage = 5f;
+            attackDamage = 10f;
             attackLength = 20f;
 
             animations[IDLE] = loader.Load("MOD_HellHound/ANIM_Hellhound_Idle.fbx", "MOD_HellHound", true, 4, skinFx, rescale: 2.2f, yRotation: -90);
@@ -69,7 +69,7 @@ namespace TheDivineAdventure
             if (attDurTimer < attackLength) { attDurTimer += 1; return; }
 
             //perform attack
-            soundEffects[0].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
+            soundEffects[2].Play(volume: volume, pitch: 0.0f, pan: 0.0f);
             AttackPattern.HoundBite(world.Translation + world.Backward * 5, world.Backward * 2, rot, attackDamage, projList, cam);
 
             //process projectile

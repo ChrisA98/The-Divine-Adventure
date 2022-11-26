@@ -160,6 +160,7 @@ namespace TheDivineAdventure
             //escape to exit settings without saving
             if ((Keyboard.GetState().IsKeyDown(Keys.Escape) && parent.lastKeyboard.IsKeyUp(Keys.Escape)))
             {
+                Game1.gameSounds[0].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
                 settingsCancel.IsActive = true;
                 parent.currentScene = parent.lastScene;
                 return;
@@ -183,6 +184,9 @@ namespace TheDivineAdventure
             //check what mouse is clicking for page selector
             if (parent.mouseState.LeftButton == ButtonState.Pressed)
             {
+                if (parent.lastMouseState.LeftButton != ButtonState.Pressed)
+                    Game1.gameSounds[0].Play(volume: GameSettings.Settings["SFXVolume"], pitch: 0.0f, pan: 0.0f);
+
                 if (settingsPage1.IsPressed())
                 {
                     settingsPage1.IsActive = true;

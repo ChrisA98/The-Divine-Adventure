@@ -12,7 +12,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+using Microsoft.Xna.Framework.Audio;
+using System.Collections.Generic;
 using System;
 
 namespace TheDivineAdventure
@@ -58,11 +59,7 @@ namespace TheDivineAdventure
         // 2D Assets
         public SpriteFont BigFont, creditsFont, smallFont;
         public Texture2D cursor, cursorPress, whiteBox;
-        public Rectangle healthBarRec, secondBarRec;
         public bool showCursor;
-
-        // Distance to end
-        public int levelLength;
 
         //game world variables
         public readonly float gravity = 0.1f;
@@ -71,7 +68,9 @@ namespace TheDivineAdventure
         public Color textGold;
 
         // Sound
-        private Song gameTheme;
+        public Song gameTheme;
+        public static  List<SoundEffect> gameSounds = new List<SoundEffect>();
+        public static float volume = 1;
 
         //Random class
         public Random rand;
@@ -110,8 +109,8 @@ namespace TheDivineAdventure
                 settings = GameSettings.ReadSettings();
 
                 //set resolution to preferrence
-                _graphics.PreferredBackBufferWidth = Int32.Parse(settings[0,1]);
-                _graphics.PreferredBackBufferHeight = Int32.Parse(settings[1, 1]);
+                _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
                 //set preferred window mode
                 switch (Int32.Parse(settings[2, 1]))
@@ -134,22 +133,23 @@ namespace TheDivineAdventure
                 MediaPlayer.IsRepeating = true;
                 Player.volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
                 Enemy.volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
+                volume = float.Parse(settings[4, 1]) * float.Parse(settings[6, 1]);
 
             }
-            
             //// Set initial screen size
             //// (Determine size of display)
             int desktop_width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int desktop_height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
             //// (Apply the determined size)
             _graphics.PreferredBackBufferWidth = desktop_width;
             _graphics.PreferredBackBufferHeight = desktop_height;
+
 
             _graphics.ApplyChanges();
 
             #endregion -- Settings End --
            
-            
             //set game window
             _gameWindow = Window;
 
@@ -171,8 +171,6 @@ namespace TheDivineAdventure
             titleScene.Initialize();
 
             currentScene = "TITLE";
-
-            MediaPlayer.Play(gameTheme);
         }
 
         //most content loading has been offloaded to neaten things up a bit. I'm keeping some things here that I haven't
@@ -189,9 +187,20 @@ namespace TheDivineAdventure
             //set font color
             textGold = new Color(175, 127, 16);
 
-
             // Load sounds
-            gameTheme = Content.Load<Song>("levelTheme");
+            Content.RootDirectory = @"Content\Music";
+            gameTheme = Content.Load<Song>("MUS_MainTheme");
+
+            Content.RootDirectory = @"Content\SoundFX";
+            gameSounds.Add(Content.Load<SoundEffect>("SND_ButtonClick01"));     //0
+            gameSounds.Add(Content.Load<SoundEffect>("SND_ButtonClick02"));     //1
+            gameSounds.Add(Content.Load<SoundEffect>("SND_Menu_Open"));         //2
+            gameSounds.Add(Content.Load<SoundEffect>("SND_Lava"));              //3
+            gameSounds.Add(Content.Load<SoundEffect>("SND_Doors_L1"));          //4
+            gameSounds.Add(Content.Load<SoundEffect>("SND_DeathSound"));        //5
+            gameSounds.Add(Content.Load<SoundEffect>("SND_DeathSound"));        //6
+            gameSounds.Add(Content.Load<SoundEffect>("SND_ButtonPress_L1"));    //7
+            Content.RootDirectory = "Content";
 
             //Cursor texture
             cursor = Content.Load<Texture2D>("TEX_cursor");
@@ -320,7 +329,6 @@ namespace TheDivineAdventure
             UnloadContent();
             LoadContent();
             currentScreenScale = new Vector2(_graphics.PreferredBackBufferWidth / 1920f, _graphics.PreferredBackBufferHeight / 1080f);
-
         }
 
         public void LoadPlayScene()

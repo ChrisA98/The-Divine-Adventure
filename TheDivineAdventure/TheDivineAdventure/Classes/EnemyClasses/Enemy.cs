@@ -89,7 +89,7 @@ namespace TheDivineAdventure
         /////////////////
         ///CONSTRUCTOR///
         /////////////////
-        public Enemy(List<SoundEffect> s, string role_, Vector3 spawnLoc, PlayScene parent, SkinModel model, ContentManager content)
+        public Enemy(List<SoundEffect> s, string role_, Vector3 spawnLoc, PlayScene parent, SkinModel? model, ContentManager content)
         {
             gpu = parent.gpu;
             soundEffects = s;
@@ -111,15 +111,18 @@ namespace TheDivineAdventure
             world = Matrix.CreateScale(1f) *
                         Matrix.CreateRotationY(MathHelper.ToRadians(Rot.Y)) *
                         Matrix.CreateTranslation(Pos);
+            
             isRunning = false;
-            cachedPosition = new List<Vector3>();
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
-            cachedPosition.Add(pos);
+            cachedPosition = new List<Vector3>
+            {
+                pos,
+                pos,
+                pos,
+                pos,
+                pos,
+                pos,
+                pos
+            };
             timeColiding = 0;
 
             //Loader and effect
@@ -127,7 +130,7 @@ namespace TheDivineAdventure
             loader.SetDefaultOptions(0.1f, "default_tex");
             animations = new SkinModel[7];
             skinFx = new SkinFx(content, parent.Camera, "SkinEffect");
-            animations[BASE] = model;
+            if (model != null) animations[BASE] = model;
 
             //wakeup timer
             wakeTime = rand.Next(1, 30);
@@ -210,8 +213,9 @@ namespace TheDivineAdventure
             attackTimer = rand.Next((int)(attackSpeed*-.5f),0);
         }
 
-        public void Damage(float amt, float force)
+        public virtual void Damage(float amt, float force)
         {
+            if (!isActive) isActive = true;
             health -= amt;
             pos -= world.Backward * force;
         }
@@ -355,6 +359,10 @@ namespace TheDivineAdventure
         {
             doRender = boundingCollider.Intersects(cam.renderSpace);
 
+
+            //dont render stuff out of view
+            if (!doRender) return;
+
             //animation updates
             if (parentScene.parent.currentScene != "PAUSE" && doRender)
             {
@@ -370,8 +378,6 @@ namespace TheDivineAdventure
             MakeLocal();
             BlendAnims(gametime);
 
-            //dont render stuff out of view
-            if (!doRender) return;
 
             for (int i = 0; i < animations[0].meshes.Length; i++)
             {

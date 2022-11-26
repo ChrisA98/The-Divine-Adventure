@@ -502,12 +502,12 @@ Objects:  {
 	Video: 2082092766208, "Video::base_color_texture", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column01.png"
-			P: "RelPath", "KString", "XRefUrl", "", "..\Textures\TEX_Column01.png"
+			P: "Path", "KString", "XRefUrl", "", "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Floor01.png"
+			P: "RelPath", "KString", "XRefUrl", "", "..\Textures\TEX_Floor01.png"
 		}
 		UseMipMap: 0
-		Filename: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column01.png"
-		RelativeFilename: "..\Textures\TEX_Column01.png"
+		Filename: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Floor01.png"
+		RelativeFilename: "..\Textures\TEX_Floor01.png"
 	}
 	Video: 2082092771488, "Video::base_color_texture", "Clip" {
 		Type: "Clip"
@@ -546,8 +546,8 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::base_color_texture"
-		FileName: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column01.png"
-		RelativeFilename: "..\Textures\TEX_Column01.png"
+		FileName: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Floor01.png"
+		RelativeFilename: "..\Textures\TEX_Floor01.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"

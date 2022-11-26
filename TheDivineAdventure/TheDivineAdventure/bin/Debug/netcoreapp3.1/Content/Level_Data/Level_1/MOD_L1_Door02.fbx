@@ -982,12 +982,12 @@ Objects:  {
 	Video: 2700463458256, "Video::base_color_texture10", "Clip" {
 		Type: "Clip"
 		Properties70:  {
-			P: "Path", "KString", "XRefUrl", "", "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column02.png"
-			P: "RelPath", "KString", "XRefUrl", "", "..\Textures\TEX_Column02.png"
+			P: "Path", "KString", "XRefUrl", "", "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_PrideStatue.png"
+			P: "RelPath", "KString", "XRefUrl", "", "..\Textures\TEX_PrideStatue.png"
 		}
 		UseMipMap: 0
-		Filename: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column02.png"
-		RelativeFilename: "..\Textures\TEX_Column02.png"
+		Filename: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_PrideStatue.png"
+		RelativeFilename: "..\Textures\TEX_PrideStatue.png"
 	}
 	Texture: 2700463450096, "Texture::base_color_texture10", "" {
 		Type: "TextureVideoClip"
@@ -999,8 +999,8 @@ Objects:  {
 			P: "UseMaterial", "bool", "", "",1
 		}
 		Media: "Video::base_color_texture10"
-		FileName: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_Column02.png"
-		RelativeFilename: "..\Textures\TEX_Column02.png"
+		FileName: "D:\Holder\School\CSC495\TheDivineAdventure\3DModels\Terrain\Textures\TEX_PrideStatue.png"
+		RelativeFilename: "..\Textures\TEX_PrideStatue.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"
